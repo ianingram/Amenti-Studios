@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amenti Studios</title>
+<!-- ===========================================================================
+     AMENTI STUDIOS · front of house
+     ---------------------------------------------------------------------------
+     TWO REPOS, AND THE LINE BETWEEN THEM IS AUDIENCE, NOT FILE TYPE.
+
+       Amenti-Readings   the workshop. Cue sheets, the cast, the chapter maps,
+                         the player, the cutting tool. Nobody visiting a
+                         theatre needs cut.js.
+       Amenti-Studios    this. The productions as the public meets them.
+
+     The split was made at one production rather than three, because moving a
+     lobby is cheap and moving an established address is not.
+
+     THE AUDIO IS IN NEITHER. It renders to R2 keyed by
+     TTS_MODEL + voice + style + text, so there is no artefact to file.
+
+     A PRODUCTION IS A FOLDER. Add one below and add the folder; there is no
+     build step and no index to regenerate. The count of voices is read live
+     from the workshop's cast.json so a recast cannot leave this page stale.
+     =========================================================================== -->
+<style>
+  :root{
+    --ink:#07090c; --mist:#9ab0a6; --pale:#d6e8df;
+    --gold:#e0a53c; --rule:rgba(255,255,255,.08);
+    --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+    --serif:Georgia,'Times New Roman',serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--ink);color:var(--pale);
+    font-family:var(--mono);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+
+  .top{padding:16vh 22px 0;text-align:center}
+  .mark{font-family:var(--serif);font-size:clamp(34px,6.4vw,70px);letter-spacing:.14em;
+    color:#fff;margin:0;line-height:1}
+  .tag{font-size:10px;letter-spacing:.42em;color:var(--gold);text-transform:uppercase;
+    margin-top:16px}
+  .blurb{max-width:560px;margin:26px auto 0;font-size:12px;line-height:2;color:var(--mist)}
+  .rule{height:1px;max-width:560px;margin:46px auto 0;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+
+  .wrap{max-width:1000px;margin:0 auto;padding:52px 22px 100px}
+  .band{font-size:10px;letter-spacing:.36em;color:var(--gold);text-transform:uppercase;
+    text-align:center;margin:0 0 26px}
+
+  .bills{display:grid;gap:26px}
+  @media(min-width:860px){.bills{grid-template-columns:1fr 1fr}}
+
+  .bill{position:relative;display:block;border:1px solid var(--rule);overflow:hidden;
+    background:#090c10}
+  .bill:hover{border-color:rgba(224,165,60,.5)}
+  .bill .art{height:236px;background-size:cover;background-position:center 42%;
+    filter:saturate(.72);transition:transform 1.4s ease, filter 1.4s ease}
+  .bill:hover .art{transform:scale(1.04);filter:saturate(.95)}
+  .bill .shade{position:absolute;left:0;right:0;top:0;height:236px;pointer-events:none;
+    background:linear-gradient(180deg,rgba(7,9,12,.1) 0%,rgba(7,9,12,.05) 48%,
+               rgba(9,12,16,.96) 100%)}
+  .bill .meta{position:relative;padding:0 18px 20px;margin-top:-54px}
+  .bill h2{font-family:var(--serif);font-weight:400;font-size:30px;margin:0;color:#fff;
+    letter-spacing:.05em;text-shadow:0 2px 24px rgba(0,0,0,.9)}
+  .bill .by{font-size:10px;letter-spacing:.26em;color:var(--mist);text-transform:uppercase;
+    margin-top:8px}
+  .bill .line{font-size:11px;color:#7d8d85;margin-top:12px;line-height:1.8}
+  .bill .state{font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--gold);margin-top:12px}
+  .bill.soon{opacity:.62}
+  .bill.soon .state{color:#5f6f67}
+  .bill.soon:hover{border-color:var(--rule)}
+  .bill.soon:hover .art{transform:none;filter:saturate(.72)}
+  .noart{height:236px;display:flex;align-items:center;justify-content:center;
+    font-size:40px;color:#243029;background:
+      repeating-linear-gradient(45deg,#0a0e12 0 12px,#0c1116 12px 24px)}
+
+  .foot{margin-top:64px;text-align:center;font-size:10px;color:#4c5c54;line-height:2}
+  .foot a{color:#6c7c74;border-bottom:1px solid rgba(255,255,255,.1)}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1 class="mark">AMENTI STUDIOS</h1>
+  <div class="tag">Staged readings</div>
+  <p class="blurb">
+    Public-domain works, cast from the Amenti Library of Legends. Every voice is a
+    historical figure drawn from a ledger of more than a thousand, each carrying
+    their own dialect and manner.
+  </p>
+  <div class="rule"></div>
+</div>
+
+<div class="wrap">
+  <div class="band">Now in production</div>
+  <div class="bills" id="bills"></div>
+
+  <div class="foot">
+    Ingram Manor LLC &middot; 2026 &middot; All Rights Reserved<br>
+    Scripts and tools live in <a href="https://github.com/ianingram/Amenti-Readings">Amenti-Readings</a>.
+    The texts are public domain; the productions are not.
+  </div>
+</div>
+
+<script>
+/* The workshop. This page reads from it rather than keeping its own copy of
+   anything, so a recast or a new episode cannot leave the lobby stale. */
+const WORKSHOP = 'https://raw.githubusercontent.com/ianingram/Amenti-Readings/main/';
+
+const PRODUCTIONS = [
+  { key:'dracula', title:'Dracula', author:'Bram Stoker', year:1897,
+    art:'dracula/dracula-hero.jpg', href:'dracula/', ready:true,
+    line:'Epistolary, and already written as a cast recording — Stoker names the '
+       + 'document type at the head of every chapter.' },
+  { key:'a-christmas-carol', title:'A Christmas Carol', author:'Charles Dickens', year:1843,
+    art:null, href:null, ready:false,
+    line:'One narrator, five staves. Dickens toured it as a staged reading for '
+       + 'fifteen years and wrote his own performing text.' }
+];
+
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,
+  c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function card(p, counts){
+  const c = counts[p.key];
+  const state = p.ready
+    ? (c ? `${c.voices} voices &middot; ${c.scripted} of ${c.chapters} chapters` : 'in production')
+    : 'in rehearsal';
+  const art = p.art
+    ? `<div class="art" style="background-image:url('${p.art}')"></div><div class="shade"></div>`
+    : `<div class="noart">&#9672;</div><div class="shade"></div>`;
+  const body = `
+    ${art}
+    <div class="meta">
+      <h2>${esc(p.title)}</h2>
+      <div class="by">${esc(p.author)} &middot; ${p.year}</div>
+      <div class="line">${esc(p.line)}</div>
+      <div class="state">${state}</div>
+    </div>`;
+  return p.href
+    ? `<a class="bill" href="${p.href}">${body}</a>`
+    : `<div class="bill soon">${body}</div>`;
+}
+
+/* Counts come from the workshop so they cannot drift. If it is unreachable —
+   a local file, a network fault — the bills still draw, without the counts.
+   A lobby that empties itself because a fetch failed is worse than one that
+   is merely less specific. */
+Promise.all([
+  fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null),
+  fetch(WORKSHOP+'dracula/index.json').then(r=>r.json()).catch(()=>null)
+]).then(([cast, dracula]) => {
+  const counts = {};
+  if (cast && dracula) {
+    counts.dracula = {
+      voices: Object.keys((cast.roles||{}).dracula||{}).length,
+      chapters: (dracula.chapters||[]).length,
+      scripted: (dracula.chapters||[]).filter(c=>c.status==='scripted').length
+    };
+  }
+  document.getElementById('bills').innerHTML =
+    PRODUCTIONS.map(p => card(p, counts)).join('');
+});
+</script>
+</body>
+</html>
