@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/dracula/index.html · 2026-10-02 04:38 UTC -->
+<!-- Amenti-Studios/dracula/index.html · 2026-10-02 06:20 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -342,7 +342,7 @@ Promise.all([
      building. The four scripts below put the stage here.
 
      IT IS THE SAME ENGINE, NOT A SECOND ONE. amenti-core.bundle.js is loaded
-     from the Amenti.live repo over jsDelivr — the same file Page1 loads, the
+     from the Amenti.live repo — the same file Page1 loads, the
      same chunker, the same style composition, and the same R2 cache. The
      cache key is TTS_MODEL + voice + style + text and contains no origin, so
      a cue rendered on Amenti.live is already paid for here.
@@ -355,15 +355,23 @@ Promise.all([
      OPTIONS from https://ianingram.github.io with the origin echoed back, so
      nothing needed changing server-side.
 
+     NOT OVER JSDELIVR. @main on jsDelivr is cached 12 h at the edge and
+     7 DAYS in the browser (max-age=604800). On 2 Oct it was still serving
+     the bundle from before the voice bus, two hours after the commit —
+     Amenti.throttle.voiceBus was undefined on this page while the repo was
+     correct. GitHub Pages serves the same files at max-age=600, same origin
+     as this page. A stale engine is the silent kind of wrong.
+
      ORDER IS LOAD-BEARING: bundle publishes Amenti.throttle; reader publishes
      Amenti.reading; casting wraps the reader's nameFor so an override wins;
      playbill draws both. Each refuses to start and says so if the one before
      it is missing.
      ───────────────────────────────────────────────────────────────────── -->
-<script src="https://cdn.jsdelivr.net/gh/ianingram/Amenti.live@main/amenti-core.bundle.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/ianingram/Amenti-Readings@main/player/reader.js?v=1"></script>
-<script src="https://cdn.jsdelivr.net/gh/ianingram/Amenti-Readings@main/player/casting.js?v=1"></script>
-<script src="https://cdn.jsdelivr.net/gh/ianingram/Amenti-Readings@main/player/playbill.js?v=1"></script>
+<script src="https://ianingram.github.io/Amenti.live/amenti-core.bundle.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/reader.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/casting.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/playbill.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/sound.js"></script>
 <script>
 /* ─── THE BED ───────────────────────────────────────────────────────────
    Wind and a sparse piano under the landing, built on the rules in the
@@ -379,8 +387,15 @@ Promise.all([
    even. exponentialRampToValueAtTime cannot reach zero, so it ramps to
    0.0001 and is then set to 0.
 
-   IT DEGRADES TO NOTHING. If a file is missing the control simply does not
-   appear. No error, no broken icon, no half-working toggle. */
+   IT DEGRADES TO NOTHING. The files are probed on load, before the control
+   fades in at 8 s, so a missing bed hides the control instead of offering
+   it and then vanishing on the click.
+
+   ONE AUDIO CONTEXT. The bed plays on the engine's context
+   (Amenti.throttle.audioContext), the one the voice bus lives on, so a
+   reading opened from the bill shares a clock with it and can duck it. A
+   second context could never be ducked. Its own context is the fallback
+   only when the engine did not load, and it says so. */
 (function () {
   var BASE = 'https://raw.githubusercontent.com/ianingram/Amenti-Studios/main/dracula/';
   var TRACKS = [
@@ -390,6 +405,27 @@ Promise.all([
   var btn = document.getElementById('snd');
   if (!btn) return;
   var ctx = null, nodes = [], on = false, loading = false;
+
+  Promise.all(TRACKS.map(function (t) {
+    return fetch(BASE + t.file, { method: 'HEAD' })
+      .then(function (r) { return r.ok; })
+      .catch(function () { return false; });
+  })).then(function (ok) {
+    if (ok.indexOf(true) < 0) {
+      btn.style.display = 'none';
+      console.log('[sound] no bed files yet at ' + BASE + ' — control hidden.');
+    }
+  });
+
+  function getCtx() {
+    var T = window.Amenti && window.Amenti.throttle;
+    if (T && typeof T.audioContext === 'function') {
+      console.log('[sound] bed on the engine context');
+      return T.audioContext();
+    }
+    console.warn('[sound] engine context unavailable — bed on its own context, cannot be ducked');
+    return new (window.AudioContext || window.webkitAudioContext)();
+  }
 
   function fade(g, to, secs) {
     var t = ctx.currentTime;
@@ -406,7 +442,8 @@ Promise.all([
   function start() {
     if (loading) return;
     loading = true;
-    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    ctx = getCtx();
+    if (ctx.state === 'suspended') ctx.resume();
     Promise.all(TRACKS.map(function (t) {
       return fetch(BASE + t.file)
         .then(function (r) { if (!r.ok) throw 0; return r.arrayBuffer(); })
