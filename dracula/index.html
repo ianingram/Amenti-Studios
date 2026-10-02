@@ -237,10 +237,13 @@ Promise.all([
   document.querySelectorAll('.ch.on').forEach(row=>{
     row.onclick = () => {
       const ep = row.dataset.ep;
+      /* The bill opens HERE now. It used to send the visitor to Amenti.live
+         because the engine lived there; the engine is loaded on this page. */
+      if (window.Amenti && window.Amenti.playbill) { window.Amenti.playbill.open(ep); return; }
       const host = (window.parent !== window) ? window.parent : null;
-      if (host && host.Amenti && host.Amenti.playbill) host.Amenti.playbill.open(ep);
-      else alert('Open this production inside Amenti.live to hear it \u2014 the voices are '
-               + 'rendered by the speech engine there.\n\n  Amenti.playbill.open("'+ep+'")');
+      if (host && host.Amenti && host.Amenti.playbill) { host.Amenti.playbill.open(ep); return; }
+      alert('The speech engine did not load. Check the console \u2014 the reader says so '
+          + 'plainly rather than failing quietly.');
     };
   });
   document.getElementById('note').innerHTML =
@@ -266,5 +269,34 @@ Promise.all([
     'dracula/index.json directly.';
 });
 </script>
+<!-- ─── THE ENGINE ──────────────────────────────────────────────────────────
+     THE STAGE HAS TO BE IN THE SAME BUILDING AS THE THEATRE.
+     This page listed the chapters and then told the visitor to go to
+     Amenti.live to hear one, which is a theatre with the stage in another
+     building. The four scripts below put the stage here.
+
+     IT IS THE SAME ENGINE, NOT A SECOND ONE. amenti-core.bundle.js is loaded
+     from the Amenti.live repo over jsDelivr — the same file Page1 loads, the
+     same chunker, the same style composition, and the same R2 cache. The
+     cache key is TTS_MODEL + voice + style + text and contains no origin, so
+     a cue rendered on Amenti.live is already paid for here.
+
+     ONE CHUNKER, ONE STYLE COMPOSITION, ONE CACHE. Still true. A second
+     speech path would re-render the archive and is the Page2 condition the
+     Voice Path brief says to retire rather than reproduce.
+
+     CORS WAS ALREADY OPEN. amenti-proxy.ingram-ian.workers.dev answers
+     OPTIONS from https://ianingram.github.io with the origin echoed back, so
+     nothing needed changing server-side.
+
+     ORDER IS LOAD-BEARING: bundle publishes Amenti.throttle; reader publishes
+     Amenti.reading; casting wraps the reader's nameFor so an override wins;
+     playbill draws both. Each refuses to start and says so if the one before
+     it is missing.
+     ───────────────────────────────────────────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/gh/ianingram/Amenti.live@main/amenti-core.bundle.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ianingram/Amenti-Readings@main/player/reader.js?v=1"></script>
+<script src="https://cdn.jsdelivr.net/gh/ianingram/Amenti-Readings@main/player/casting.js?v=1"></script>
+<script src="https://cdn.jsdelivr.net/gh/ianingram/Amenti-Readings@main/player/playbill.js?v=1"></script>
 </body>
 </html>
