@@ -48,21 +48,27 @@
   .hero{position:relative;height:88vh;min-height:540px;overflow:hidden;background:#07090c}
   .shot{position:absolute;inset:-3%;
     background:url("dracula-hero.jpg") center 42%/cover no-repeat;
-    animation:push 48s ease-in-out infinite alternate;will-change:transform}
+    opacity:0;
+    animation:push 48s ease-in-out infinite alternate, reveal 5s 4.2s ease-out forwards;
+    will-change:transform,opacity}
+  @keyframes reveal{to{opacity:1}}
   @keyframes push{from{transform:scale(1)}to{transform:scale(1.06)}}
 
   /* the same frame again, blurred and drifting: fog, with no second asset */
   .drift{position:absolute;inset:-6%;
     background:url("dracula-hero.jpg") center 58%/cover no-repeat;
-    opacity:.2;filter:blur(14px) saturate(1.25);mix-blend-mode:screen;
-    animation:drift 104s linear infinite;will-change:transform}
+    opacity:0;filter:blur(14px) saturate(1.25);mix-blend-mode:screen;
+    animation:drift 104s linear infinite, driftin 5s 4.2s ease-out forwards;
+    will-change:transform,opacity}
+  @keyframes driftin{to{opacity:.2}}
   @keyframes drift{from{transform:translate3d(-2.5%,0,0)}to{transform:translate3d(2.5%,0,0)}}
 
   /* type needs somewhere to sit at both ends of the frame */
   /* two veils now: one along the LEFT so the block has ground to sit on,
      and a light one at the foot to carry the frame into the page. The top
      is left alone — the sun and the ridge are the picture. */
-  .veil{position:absolute;inset:0;pointer-events:none;
+  .veil{position:absolute;inset:0;pointer-events:none;opacity:0;
+    animation:reveal 5s 4.2s ease-out forwards;
     background:
       linear-gradient(90deg,rgba(7,9,12,.78) 0%,rgba(7,9,12,.5) 26%,
                       rgba(7,9,12,.12) 46%,rgba(7,9,12,0) 62%),
@@ -90,6 +96,16 @@
     opacity:0;animation:in 1.6s 2s forwards}
   .form{font-size:12px;letter-spacing:.2em;color:var(--pale);margin:10px 0 0;
     text-transform:uppercase;opacity:0;animation:in 1.6s 2.4s forwards}
+
+  /* THE MARK. It holds the empty space under the titles while the frame is
+     still black, and leaves as the photograph arrives — so the splash has a
+     foot and the hero is never competing with it. Drawn, not an asset. */
+  .mark{margin-top:46px;opacity:0;
+    animation:in 1.8s 3s forwards, markout 2.4s 4.4s ease-in forwards}
+  @keyframes markout{to{opacity:0}}
+  .mark svg{display:block;width:30px;height:46px;overflow:visible}
+  .mark line{stroke:var(--gold);stroke-width:1.1;opacity:.85}
+  .mark circle{fill:none;stroke:var(--gold);stroke-width:.8;opacity:.45}
   @keyframes in{to{opacity:1}}
 
   /* ── the production ────────────────────────────────────────────────── */
@@ -141,6 +157,7 @@
     .shot{animation:none}
     .drift{display:none}
     .studio,.presents,h1,.byline,.form{animation:none;opacity:1}
+    .drift{opacity:.2}
   }
 </style>
 </head>
@@ -156,6 +173,13 @@
     <h1>DRACULA</h1>
     <div class="byline">Bram Stoker &middot; 1897</div>
     <div class="form">Cast from the Amenti Interface Library of Legends</div>
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 30 46">
+        <line x1="15" y1="0"  x2="15" y2="46"/>
+        <line x1="2"  y1="14" x2="28" y2="14"/>
+        <circle cx="15" cy="14" r="7"/>
+      </svg>
+    </div>
   </div>
 </div>
 
