@@ -1,3 +1,4 @@
+<!-- Amenti-Studios/index.html · 2026-10-04 07:30 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -116,7 +117,7 @@ const PRODUCTIONS = [
     line:'Epistolary, and already written as a cast recording — Stoker names the '
        + 'document type at the head of every chapter.' },
   { key:'a-christmas-carol', title:'A Christmas Carol', author:'Charles Dickens', year:1843,
-    art:null, href:null, ready:false,
+    art:null, href:'a-christmas-carol/', ready:true, unit:'staves',
     line:'One narrator, five staves. Dickens toured it as a staged reading for '
        + 'fifteen years and wrote his own performing text.' }
 ];
@@ -127,7 +128,7 @@ const esc = s => String(s==null?'':s).replace(/[&<>"]/g,
 function card(p, counts){
   const c = counts[p.key];
   const state = p.ready
-    ? (c ? `${c.voices} voices &middot; ${c.scripted} of ${c.chapters} chapters` : 'in production')
+    ? (c ? `${c.voices} voices &middot; ${c.scripted} of ${c.chapters} ${p.unit||'chapters'}` : 'in production')
     : 'in rehearsal';
   const art = p.art
     ? `<div class="art" style="background-image:url('${p.art}')"></div><div class="shade"></div>`
@@ -149,18 +150,21 @@ function card(p, counts){
    a local file, a network fault — the bills still draw, without the counts.
    A lobby that empties itself because a fetch failed is worse than one that
    is merely less specific. */
-Promise.all([
-  fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null),
-  fetch(WORKSHOP+'dracula/index.json').then(r=>r.json()).catch(()=>null)
-]).then(([cast, dracula]) => {
+/* every ready production counts itself from its own index.json */
+const READY = PRODUCTIONS.filter(p => p.ready);
+Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].concat(
+  READY.map(p => fetch(WORKSHOP+p.key+'/index.json').then(r=>r.json()).catch(()=>null))
+)).then(([cast, ...idx]) => {
   const counts = {};
-  if (cast && dracula) {
-    counts.dracula = {
-      voices: Object.keys((cast.roles||{}).dracula||{}).length,
-      chapters: (dracula.chapters||[]).length,
-      scripted: (dracula.chapters||[]).filter(c=>c.status==='scripted').length
+  READY.forEach((p, i) => {
+    const ix = idx[i];
+    if (!cast || !ix) return;
+    counts[p.key] = {
+      voices: Object.keys((cast.roles||{})[p.key]||{}).length,
+      chapters: (ix.chapters||[]).length,
+      scripted: (ix.chapters||[]).filter(c=>c.status==='scripted').length
     };
-  }
+  });
   document.getElementById('bills').innerHTML =
     PRODUCTIONS.map(p => card(p, counts)).join('');
 });
