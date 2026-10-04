@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/a-christmas-carol/index.html · 2026-10-04 09:00 UTC -->
+<!-- Amenti-Studios/a-christmas-carol/index.html · 2026-10-04 10:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -242,7 +242,10 @@
 const RAW = 'https://raw.githubusercontent.com/ianingram/Amenti-Readings/main/';
 const ART = 'https://raw.githubusercontent.com/ianingram/Amenti.live/main/img/';
 const WORK = 'a-christmas-carol';
-const slug = s => String(s||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+/* the same rule as ingest.py's slug_key, so a page asks for exactly the file the
+   plate tool wrote: dots and apostrophes vanish (J.R.R. Tolkien -> jrr-tolkien),
+   everything else that is not a-z0-9 becomes one hyphen. */
+const slug = s => String(s||'').toLowerCase().replace(/[.'\u2019]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const esc  = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const ROLE = {'marley-s-ghost':'Marley’s Ghost','mr-fezziwig':'Mr Fezziwig','mrs-cratchit':'Mrs Cratchit'};
 const pretty = k => ROLE[k] || String(k).split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' ').replace(/\bOf\b/g,'of');

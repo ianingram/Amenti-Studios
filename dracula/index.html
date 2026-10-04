@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/dracula/index.html · 2026-10-02 06:20 UTC -->
+<!-- Amenti-Studios/dracula/index.html · 2026-10-04 10:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -250,7 +250,10 @@
    the same fetch it was already doing; only the host changed. */
 const RAW = 'https://raw.githubusercontent.com/ianingram/Amenti-Readings/main/';
 const ART = 'https://raw.githubusercontent.com/ianingram/Amenti.live/main/img/';
-const slug = s => String(s||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+/* the same rule as ingest.py's slug_key, so a page asks for exactly the file the
+   plate tool wrote: dots and apostrophes vanish (J.R.R. Tolkien -> jrr-tolkien),
+   everything else that is not a-z0-9 becomes one hyphen. */
+const slug = s => String(s||'').toLowerCase().replace(/[.'\u2019]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const esc  = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pretty = s => String(s).split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' ');
 

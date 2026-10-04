@@ -1,0 +1,379 @@
+<!-- Amenti-Studios/treasure-island/index.html · 2026-10-04 21:00 UTC -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Treasure Island · Amenti Studios</title>
+<!-- ===========================================================================
+     AMENTI STUDIOS · the production front for Treasure Island
+     ---------------------------------------------------------------------------
+     A SIBLING OF THE DRACULA AND CAROL PAGES. Same theatre, a different play:
+     the night is the sea off Black Hill Cove, and the motion is spray blown
+     sideways off the water instead of snow falling.
+
+     THE STILL IS THE LAST STEP, as it was for the Carol: .shot and .drift are
+     here and empty, so the image drops into two lines of CSS and nothing else
+     moves. The house cross holds the middle of the frame meanwhile.
+
+     IT READS THE PRODUCTION LIVE from Amenti-Readings (cast.json and
+     treasure-island/index.json), and falls back to the cast as written.
+     =========================================================================== -->
+<style>
+  :root{
+    --ink:#07090c; --mist:#9fb3bd; --pale:#dfe8ec;
+    --gold:#e3b55a; --rule:rgba(255,255,255,.08);
+    --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+    --serif:Georgia,'Times New Roman',serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--ink);color:var(--pale);
+    font-family:var(--mono);-webkit-font-smoothing:antialiased}
+
+  /* ── the City on Christmas Eve ─────────────────────────────────────── */
+  .hero{position:relative;height:88vh;min-height:540px;overflow:hidden;
+    background:radial-gradient(120% 90% at 70% 105%,#10262a 0%,#0a1619 45%,#07090c 82%)}
+  .shot{position:absolute;inset:-3%;background:none center 46%/cover no-repeat;opacity:0;
+    animation:push 48s ease-in-out infinite alternate, reveal 7s 11s ease-out forwards;
+    will-change:transform,opacity}
+  /* the same frame again, blurred and drifting: fog, with no second asset */
+  .drift{position:absolute;inset:-6%;background:none center 58%/cover no-repeat;
+    opacity:0;filter:blur(14px) saturate(1.1);mix-blend-mode:screen;
+    animation:drift 104s linear infinite, driftin 7s 11s ease-out forwards;will-change:transform,opacity}
+  @keyframes driftin{to{opacity:.16}}
+  @keyframes drift{from{transform:translate3d(-2.5%,0,0)}to{transform:translate3d(2.5%,0,0)}}
+  @keyframes reveal{to{opacity:1}}
+  @keyframes push{from{transform:scale(1)}to{transform:scale(1.06)}}
+  /* fog: the palpable brown air, very faint, drifting */
+  .fog{position:absolute;inset:-10%;pointer-events:none;opacity:0;
+    background:radial-gradient(60% 40% at 30% 70%,rgba(150,130,100,.10),transparent 70%),
+               radial-gradient(50% 35% at 75% 60%,rgba(140,140,130,.08),transparent 70%);
+    animation:fogdrift 90s linear infinite alternate, fogin 9s 4s ease-out forwards}
+  @keyframes fogin{to{opacity:1}}
+  @keyframes fogdrift{from{transform:translate3d(-3%,0,0)}to{transform:translate3d(3%,0,0)}}
+  canvas.snow{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;
+    animation:in 4s 1.5s forwards}
+  .veil{position:absolute;inset:0;pointer-events:none;
+    background:
+      linear-gradient(90deg,rgba(7,9,12,.82) 0%,rgba(7,9,12,.55) 24%,rgba(7,9,12,.15) 44%,rgba(7,9,12,0) 60%),
+      linear-gradient(180deg,rgba(7,9,12,0) 60%,rgba(7,9,12,.7) 88%,var(--ink) 100%)}
+
+  .titles{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;
+    align-items:flex-start;justify-content:center;text-align:left;
+    padding:0 20px 0 clamp(24px,7vw,110px)}
+  .studio{font-size:13px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;
+    opacity:0;animation:in 2s 1s forwards}
+  .presents{font-size:11px;letter-spacing:.3em;color:var(--mist);text-transform:uppercase;
+    margin-top:9px;opacity:0;animation:in 2s 2.2s forwards}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(34px,6.2vw,84px);
+    letter-spacing:.06em;margin:14px 0 0;color:#fff;line-height:1.02;
+    text-shadow:0 2px 60px rgba(0,0,0,.85),0 0 120px rgba(0,0,0,.6);
+    opacity:0;animation:in 2.6s 3.2s forwards}
+  .sub-title{font-family:var(--serif);font-style:italic;font-size:clamp(15px,1.6vw,19px);
+    color:var(--pale);margin:12px 0 0;opacity:0;animation:in 2s 4.4s forwards}
+  .byline{font-size:14px;letter-spacing:.26em;color:var(--pale);text-transform:uppercase;
+    margin:16px 0 0;text-shadow:0 1px 20px rgba(0,0,0,.9);opacity:0;animation:in 2s 5.4s forwards}
+  .form{font-size:12px;letter-spacing:.2em;color:var(--pale);margin:10px 0 0;
+    text-transform:uppercase;opacity:0;animation:in 2s 6.4s forwards}
+
+  /* THE MARK — the house cross, as on the Dracula page */
+  .mark{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    z-index:4;opacity:0;pointer-events:none;
+    animation:in 2.6s 7s forwards, markout 5s 15s ease-in forwards}
+  @keyframes markout{to{opacity:0}}
+  .mark svg{display:block;width:54px;height:82px;overflow:visible}
+  .mark line{stroke:var(--gold);stroke-width:1.1;opacity:.8}
+  .mark circle{fill:none;stroke:var(--gold);stroke-width:.8;opacity:.4}
+
+  .snd{position:absolute;right:20px;bottom:20px;z-index:5;display:flex;align-items:center;gap:9px;
+    background:rgba(7,9,12,.5);border:1px solid var(--rule);padding:8px 13px;cursor:pointer;
+    opacity:0;animation:in 2s 8s forwards;backdrop-filter:blur(6px);color:inherit;font:inherit}
+  .snd:hover{border-color:rgba(227,181,90,.5)}
+  .snd:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
+  .snd span{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--mist)}
+  .snd.on span{color:var(--gold)}
+  .snd svg{width:13px;height:13px;overflow:visible}
+  .snd line{stroke:var(--mist);stroke-width:1.2;stroke-linecap:round}
+  .snd.on line{stroke:var(--gold)}
+  .snd .w2,.snd .w3{opacity:0;transition:opacity .4s}
+  .snd.on .w2{opacity:.8}
+  .snd.on .w3{opacity:.45}
+  @keyframes in{to{opacity:1}}
+
+  /* ── the production (as the Dracula page) ─────────────────────────── */
+  .wrap{max-width:900px;margin:0 auto;padding:0 22px 90px;text-align:left}
+  .band{font-size:13px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;
+    text-align:center;margin:56px 0 5px;display:block;width:100%}
+  .sub{font-size:13px;color:#8ea3ad;text-align:center;margin-bottom:24px;display:block;width:100%}
+  .company{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+  .member{display:flex;gap:16px;align-items:center;padding:18px 18px;background:#090c10}
+  .member:hover{background:#0d1216}
+  .face{width:48px;height:64px;flex:0 0 48px;border:1px solid var(--rule);background-size:cover;
+    background-position:50% 16%;display:flex;align-items:center;justify-content:center;font-size:19px;
+    color:var(--gold);background-color:rgba(255,255,255,.03)}
+  .who{flex:1;min-width:0}
+  .role{font-family:var(--serif);font-size:20px;color:#fff}
+  .as{font-size:10px;letter-spacing:.22em;color:#7d8d95;text-transform:uppercase;margin:3px 0 2px}
+  .actor{font-size:16px;color:var(--gold)}
+  .dialect{font-size:13px;color:var(--mist);margin-top:3px}
+  .chapters{border:1px solid var(--rule)}
+  .ch{display:flex;gap:14px;align-items:baseline;padding:12px 16px;border-bottom:1px solid var(--rule);
+    font-size:14px;background:#090c10}
+  .ch:last-child{border-bottom:none}
+  .ch.on{background:rgba(227,181,90,.07);cursor:pointer}
+  .ch.on:hover,.ch.on:focus-visible{background:rgba(227,181,90,.14);outline:none}
+  .n{color:#6c7c84;font-size:12px;width:30px;flex:0 0 30px}
+  .doc{color:var(--mist);font-size:11px;letter-spacing:.12em;text-transform:uppercase;width:250px;
+    flex:0 0 250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sum{color:#9fb3bd;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ch.on .sum{color:var(--pale)}
+  .tag{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#6c7c84}
+  .ch.on .tag{color:var(--gold)}
+  .note{margin-top:16px;font-size:12px;color:#8ea3ad;text-align:center;line-height:1.9}
+  .foot{margin-top:38px;text-align:center;font-size:12px;color:#6c7c84;line-height:2}
+  @media(max-width:620px){
+    .doc{display:none}
+    .hero{height:74vh}
+    .titles{align-items:center;text-align:center;padding:0 18px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .shot,.fog{animation:none}
+    .shot{opacity:1}
+    .drift{display:none}
+    canvas.snow{display:none}
+    .studio,.presents,h1,.sub-title,.byline,.form,.snd{animation:none;opacity:1}
+    .mark{animation:none;opacity:0}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="shot"></div>
+  <div class="drift"></div>
+  <div class="fog"></div>
+  <canvas class="snow" id="snow" aria-hidden="true"></canvas>
+  <div class="veil"></div>
+  <div class="mark" aria-hidden="true">
+    <svg viewBox="0 0 54 82">
+      <line x1="27" y1="0"  x2="27" y2="82"/>
+      <line x1="3"  y1="25" x2="51" y2="25"/>
+      <circle cx="27" cy="25" r="12"/>
+    </svg>
+  </div>
+  <button class="snd" id="snd" aria-label="Turn sound on">
+    <svg viewBox="0 0 13 13" aria-hidden="true">
+      <line x1="2" y1="4" x2="2" y2="9"/>
+      <line class="w2" x1="6" y1="2" x2="6" y2="11"/>
+      <line class="w3" x1="10" y1="4.5" x2="10" y2="8.5"/>
+    </svg>
+    <span>sound</span>
+  </button>
+  <div class="titles">
+    <div class="studio"><a href="../" style="color:inherit;text-decoration:none">Amenti Studios</a></div>
+    <div class="presents">presents</div>
+    <h1>TREASURE<br>ISLAND</h1>
+    <div class="sub-title">If sailor tales to sailor tunes, storm and adventure, heat and cold&hellip;</div>
+    <div class="byline">Robert Louis Stevenson &middot; 1883</div>
+    <div class="form">Cast from the Amenti Interface Library of Legends</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="band">The Company</div>
+  <div class="sub" id="company-sub">&hellip;</div>
+  <div class="company" id="company"></div>
+
+  <div class="band">The Chapters</div>
+  <div class="sub" id="ch-sub"></div>
+  <div class="chapters" id="chapters"></div>
+
+  <div class="note" id="note"></div>
+  <div class="foot">
+    Ingram Manor LLC &middot; 2026 &middot; All Rights Reserved<br>
+    The text is public domain. The voices are not performances by the people named &mdash;
+    they are the ledger&rsquo;s record of how each figure spoke, used as a casting pool.
+  </div>
+</div>
+
+<script>
+/* ── SPRAY ────────────────────────────────────────────────────────────────
+   The Carol's snow canvas, turned on its side: fine spray blown off the water
+   at three depths, paused when the tab is hidden, absent under
+   prefers-reduced-motion. */
+(function () {
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c = document.getElementById('snow'); if (!c || !c.getContext) return;
+  var g = c.getContext('2d'), W, H, flakes = [], dpr = Math.min(2, window.devicePixelRatio || 1);
+  function size() { W = c.clientWidth; H = c.clientHeight; c.width = W * dpr; c.height = H * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0); }
+  size(); window.addEventListener('resize', size);
+  var n = Math.round(Math.min(160, (W * H) / 9000));
+  for (var i = 0; i < n; i++) {
+    var z = Math.random();
+    flakes.push({ x: Math.random() * W, y: Math.random() * H, z: z, r: 0.4 + z * 1.1,
+                  v: 0.25 + z * 0.9, s: Math.random() * 6.28, a: 0.12 + z * 0.35 });
+  }
+  var run = true;
+  document.addEventListener('visibilitychange', function () { run = !document.hidden; if (run) requestAnimationFrame(tick); });
+  function tick() {
+    if (!run) return;
+    g.clearRect(0, 0, W, H);
+    for (var i = 0; i < flakes.length; i++) {
+      var f = flakes[i]; f.x += 0.6 + f.z * 2.2; f.y += f.v * 0.25 + Math.sin(f.s) * 0.3; f.s += 0.02 + f.z * 0.01;
+      if (f.x > W + 4) { f.x = -4; f.y = Math.random() * H; }
+      g.globalAlpha = f.a; g.beginPath(); g.arc(f.x, f.y, f.r, 0, 6.283); g.fillStyle = '#eef4f6'; g.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
+const RAW = 'https://raw.githubusercontent.com/ianingram/Amenti-Readings/main/';
+const ART = 'https://raw.githubusercontent.com/ianingram/Amenti.live/main/img/';
+const WORK = 'treasure-island';
+/* the same rule as ingest.py's slug_key, so a page asks for exactly the file the
+   plate tool wrote: dots and apostrophes vanish (J.R.R. Tolkien -> jrr-tolkien),
+   everything else that is not a-z0-9 becomes one hyphen. */
+const slug = s => String(s||'').toLowerCase().replace(/[.'\u2019]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const esc  = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ROLE = {'dr-livesey':'Dr Livesey'};
+const pretty = k => ROLE[k] || String(k).split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' ').replace(/\bOf\b/g,'of');
+
+function face(el,name){
+  const img = new Image();
+  img.onload = () => { el.textContent=''; el.style.backgroundImage=`url("${ART}${slug(name)}-card.jpg")`; };
+  img.src = `${ART}${slug(name)}-card.jpg`;
+}
+function drawCompany(rows){
+  const co = document.getElementById('company');
+  co.innerHTML = rows.map(r => `
+    <div class="member">
+      <div class="face" data-name="${esc(r[1])}">&#9672;</div>
+      <div class="who">
+        <div class="role">${esc(r[0])}</div>
+        <div class="as">as played by</div>
+        <div class="actor">${esc(r[1])}</div>
+        <div class="dialect">${esc(r[2])}</div>
+      </div>
+    </div>`).join('');
+  co.querySelectorAll('.face').forEach(f => face(f, f.dataset.name));
+  document.getElementById('company-sub').textContent = rows.length + ' voices, drawn from the Amenti ledger';
+}
+function open(ep){
+  if (window.Amenti && window.Amenti.playbill) { window.Amenti.playbill.open(ep); return; }
+  alert('The speech engine did not load. The console says which part is missing.');
+}
+
+Promise.all([
+  fetch(RAW+'cast.json').then(r=>r.json()),
+  fetch(RAW+WORK+'/index.json').then(r=>r.json())
+]).then(([cast, idx]) => {
+  const roles = (cast.roles && cast.roles[WORK]) || {};
+  drawCompany(Object.keys(roles).map(k =>
+    [pretty(k), roles[k].ledger_name, (roles[k].ledger||'').split('\u00b7')[0].trim()]));
+  const ch = idx.chapters || [];
+  document.getElementById('ch-sub').textContent =
+    ch.length + ' chapters \u00b7 ' + ch.filter(c=>c.status==='scripted').length + ' ready to hear';
+  document.getElementById('chapters').innerHTML = ch.map(c => `
+    <div class="ch ${c.status==='scripted'?'on':''}" ${c.status==='scripted'?`data-ep="${esc(c.file)}" tabindex="0" role="button"`:''}>
+      <div class="n">${c.n}</div>
+      <div class="doc">${esc((c.document||'').split('\u00b7')[1] || c.document || '')}</div>
+      <div class="sum">${esc(c.summary||'')}</div>
+      <div class="tag">${c.status==='scripted'?'ready':''}</div>
+    </div>`).join('');
+  document.querySelectorAll('.ch.on').forEach(row=>{
+    row.onclick = () => open(row.dataset.ep);
+    row.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(row.dataset.ep); } };
+  });
+  document.getElementById('note').innerHTML =
+    'Stevenson reads Jim, as he read each chapter aloud at Braemar to the boy it was written for; the doctor tells his own three chapters.' +
+    '<br>Faces appear where a plate exists; a mark stands in where one does not yet.';
+}).catch(() => {
+  drawCompany([
+    ['Jim Hawkins','Robert Louis Stevenson','Scottish, quick and romantic'],
+    ['Dr Livesey','David Livingstone','Scottish, earnest and steadfast'],
+    ['Captain Smollett','James Cook','North Yorkshire, weathered and seafaring'],
+    ['Long John Silver','Richard III of England','English RP, sharp and maligned'],
+    ['Billy Bones','Ernest Shackleton','Anglo-Irish, indomitable and stoic'],
+    ['Israel Hands','Charles Babbage','English RP, inventive and irascible'],
+    ['Ben Gunn','James Joyce','Irish, intricate and musical'],
+    ['Squire Trelawney','Francis Drake','English RP, daring and bluff'],
+    ['Blind Pew','Alfred Hitchcock','English RP, droll and macabre']
+  ]);
+  document.getElementById('ch-sub').textContent = '34 chapters';
+  document.getElementById('note').innerHTML =
+    'Showing the cast as written &mdash; the live repo could not be reached, so this page is being viewed as a local file.';
+});
+</script>
+<!-- THE ENGINE — the same five files, from the same place, as the Dracula page. -->
+<script src="https://ianingram.github.io/Amenti.live/amenti-core.bundle.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/reader.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/casting.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/playbill.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/sound.js"></script>
+<script>
+/* ─── THE BED ───────────────────────────────────────────────────────────
+   The surf below the Admiral Benbow, under the title, when asked for. Same rules as the
+   Dracula page: probed before the control appears, every gain ramped, played
+   on the engine's audio context so a reading opened from the staves can duck
+   it, faded when the tab is hidden. When a stave begins, the bed steps aside
+   so the reading's own sound has the room. */
+(function () {
+  var TRACKS = [
+    { url: 'https://ianingram.github.io/Amenti-Readings/treasure-island/sound/cove.mp3', gain: 0.4 }
+  ];
+  var btn = document.getElementById('snd');
+  if (!btn) return;
+  var ctx = null, nodes = [], on = false, loading = false;
+  Promise.all(TRACKS.map(function (t) {
+    return fetch(t.url, { method: 'HEAD' }).then(function (r) { return r.ok; }).catch(function () { return false; });
+  })).then(function (ok) { if (ok.indexOf(true) < 0) btn.style.display = 'none'; });
+  function getCtx() {
+    var T = window.Amenti && window.Amenti.throttle;
+    if (T && typeof T.audioContext === 'function') return T.audioContext();
+    return new (window.AudioContext || window.webkitAudioContext)();
+  }
+  function fade(g, to, secs) {
+    var t = ctx.currentTime; g.gain.cancelScheduledValues(t);
+    g.gain.setValueAtTime(Math.max(g.gain.value, 0.0001), t);
+    if (to <= 0) { g.gain.exponentialRampToValueAtTime(0.0001, t + secs); g.gain.setValueAtTime(0, t + secs + 0.01); }
+    else g.gain.exponentialRampToValueAtTime(to, t + secs);
+  }
+  function start() {
+    if (loading) return; loading = true;
+    ctx = getCtx(); if (ctx.state === 'suspended') ctx.resume();
+    Promise.all(TRACKS.map(function (t) {
+      return fetch(t.url).then(function (r) { if (!r.ok) throw 0; return r.arrayBuffer(); })
+        .then(function (b) { return ctx.decodeAudioData(b); })
+        .then(function (buf) { return { buf: buf, gain: t.gain }; }).catch(function () { return null; });
+    })).then(function (loaded) {
+      var any = loaded.filter(Boolean);
+      if (!any.length) { btn.style.display = 'none'; return; }
+      any.forEach(function (t) {
+        var src = ctx.createBufferSource(); src.buffer = t.buf; src.loop = true;
+        var g = ctx.createGain(); g.gain.value = 0.0001;
+        src.connect(g); g.connect(ctx.destination); src.start(0); fade(g, t.gain, 6);
+        nodes.push({ g: g, target: t.gain });
+      });
+      on = true; btn.classList.add('on'); btn.setAttribute('aria-label', 'Turn sound off'); loading = false;
+    });
+  }
+  function set(v) {
+    on = v; btn.classList.toggle('on', on); btn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+    nodes.forEach(function (n) { fade(n.g, on ? n.target : 0, on ? 4 : 3); });
+  }
+  btn.onclick = function () { if (!ctx) { start(); return; } if (ctx.state === 'suspended') ctx.resume(); set(!on); };
+  /* a stave is beginning: the title bed steps aside */
+  var R = window.Amenti && window.Amenti.reading;
+  if (R && typeof R.play === 'function') {
+    var _play = R.play;
+    R.play = function () { if (on) set(false); return _play.apply(R, arguments); };
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (!ctx || !on) return;
+    nodes.forEach(function (n) { fade(n.g, document.hidden ? 0.0001 : n.target, 1.5); });
+  });
+})();
+</script>
+</body>
+</html>
