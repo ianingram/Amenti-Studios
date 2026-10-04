@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/a-christmas-carol/index.html · 2026-10-04 07:30 UTC -->
+<!-- Amenti-Studios/a-christmas-carol/index.html · 2026-10-04 08:30 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,10 +20,9 @@
      image is made it drops into one line of CSS and nothing else moves. Until
      then the frame is the night itself: a cold gradient and falling snow.
 
-     THE ONE MOMENT. Stave One turns on a door-knocker that is, for an instant,
-     "not a knocker, but Marley's face." The mark in the middle of the frame is
-     that knocker, and once — only once — it glows the colour of a bad lobster
-     in a dark cellar, and then is a knocker again.
+     THE MARK IS THE HOUSE MARK. The cross from the Dracula page holds the
+     middle of the frame, arrives with the titles and leaves after them — the
+     same glyph on every production, so the theatre signs its work.
 
      IT READS THE PRODUCTION LIVE from Amenti-Readings (cast.json and
      a-christmas-carol/index.json), and falls back to the cast as written if
@@ -80,19 +79,14 @@
   .form{font-size:12px;letter-spacing:.2em;color:var(--pale);margin:10px 0 0;
     text-transform:uppercase;opacity:0;animation:in 2s 6.4s forwards}
 
-  /* THE KNOCKER — and, once, Marley's face */
-  .mark{position:absolute;left:62%;top:50%;transform:translate(-50%,-50%);z-index:4;
-    opacity:0;pointer-events:none;animation:in 2.6s 7s forwards}
-  .mark svg{display:block;width:74px;height:96px;overflow:visible}
-  .mark .plate{fill:none;stroke:var(--gold);stroke-width:.9;opacity:.55}
-  .mark .ring{fill:none;stroke:var(--gold);stroke-width:1.4;opacity:.85}
-  .mark .face{opacity:0;fill:rgba(170,215,190,.0);stroke:rgba(190,235,210,.0);
-    animation:marley 6s 10.5s ease-in-out 1 forwards}
-  @keyframes marley{
-    0%{opacity:0;stroke:rgba(190,235,210,0)}
-    30%{opacity:1;stroke:rgba(190,235,210,.55);fill:rgba(170,215,190,.06)}
-    55%{opacity:1;stroke:rgba(190,235,210,.45);fill:rgba(170,215,190,.05)}
-    100%{opacity:0;stroke:rgba(190,235,210,0);fill:rgba(170,215,190,0)}}
+  /* THE MARK — the house cross, as on the Dracula page */
+  .mark{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    z-index:4;opacity:0;pointer-events:none;
+    animation:in 2.6s 7s forwards, markout 5s 15s ease-in forwards}
+  @keyframes markout{to{opacity:0}}
+  .mark svg{display:block;width:54px;height:82px;overflow:visible}
+  .mark line{stroke:var(--gold);stroke-width:1.1;opacity:.8}
+  .mark circle{fill:none;stroke:var(--gold);stroke-width:.8;opacity:.4}
 
   .snd{position:absolute;right:20px;bottom:20px;z-index:5;display:flex;align-items:center;gap:9px;
     background:rgba(7,9,12,.5);border:1px solid var(--rule);padding:8px 13px;cursor:pointer;
@@ -144,13 +138,12 @@
     .doc{display:none}
     .hero{height:74vh}
     .titles{align-items:center;text-align:center;padding:0 18px}
-    .mark{left:50%;top:22%}
   }
   @media(prefers-reduced-motion:reduce){
     .shot,.fog{animation:none}
     canvas.snow{display:none}
-    .studio,.presents,h1,.sub-title,.byline,.form,.mark,.snd{animation:none;opacity:1}
-    .mark .face{animation:none}
+    .studio,.presents,h1,.sub-title,.byline,.form,.snd{animation:none;opacity:1}
+    .mark{animation:none;opacity:0}
   }
 </style>
 </head>
@@ -162,13 +155,10 @@
   <canvas class="snow" id="snow" aria-hidden="true"></canvas>
   <div class="veil"></div>
   <div class="mark" aria-hidden="true">
-    <svg viewBox="0 0 74 96">
-      <path class="plate" d="M37 4 C52 4 60 14 60 28 C60 40 52 48 37 50 C22 48 14 40 14 28 C14 14 22 4 37 4 Z"/>
-      <g class="face">
-        <ellipse cx="37" cy="26" rx="15" ry="18"/>
-        <path d="M30 22 q2 -2 4 0 M40 22 q2 -2 4 0 M31 34 q6 4 12 0"/>
-      </g>
-      <circle class="ring" cx="37" cy="66" r="22"/>
+    <svg viewBox="0 0 54 82">
+      <line x1="27" y1="0"  x2="27" y2="82"/>
+      <line x1="3"  y1="25" x2="51" y2="25"/>
+      <circle cx="27" cy="25" r="12"/>
     </svg>
   </div>
   <button class="snd" id="snd" aria-label="Turn sound on">
