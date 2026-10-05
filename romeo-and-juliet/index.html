@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/romeo-and-juliet/index.html · 2026-10-05 13:00 UTC -->
+<!-- Amenti-Studios/romeo-and-juliet/index.html · 2026-10-05 21:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,18 +8,33 @@
 <!-- ===========================================================================
      AMENTI STUDIOS · the production front for Romeo and Juliet
      ---------------------------------------------------------------------------
-     A SIBLING OF THE DRACULA, CAROL AND TREASURE ISLAND PAGES. Same theatre, a
-     different play: a Verona night, and rose petals falling slowly through it
-     (the Carol's snow canvas, warmed and slowed). The still is the last step, as
-     before: .shot and .drift are here and empty. It reads the production live
-     from Amenti-Readings (cast.json, romeo-and-juliet/index.json).
+     "In fair Verona, where we lay our scene." The city is the hero, not the lovers.
+
+     ONE MOMENT: DAWN OVER VERONA. Three stills of the city from the cypress hills
+     are one sunrise in three stages — the mist before the light, the morning
+     breaking gold along the Adige, the sun up over the towers — and they dissolve
+     into each other once, slowly, then hold on the sunrise. As the light comes,
+     VERONA comes out of the mist with it: blurred and wide-spaced at first,
+     settling sharp. Nothing else moves. Reduced motion: the sunrise, still.
+
+     VERONA IS THE LARGEST THING ON THE PAGE, set in Roman capitals (Cinzel, after
+     the inscriptions of Verona's own Roman arena) across the dark rooftops at the
+     foot of the frame. The play's title sits beneath it, smaller, in Georgia italic.
+
+     The second still had two modern cars on the riverside road; they were painted
+     out (OpenCV inpaint) before it was saved. It reads the production live from
+     Amenti-Readings (cast.json, romeo-and-juliet/index.json), as before.
      =========================================================================== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#07090c; --mist:#9fb3bd; --pale:#dfe8ec;
     --gold:#e3b55a; --rule:rgba(255,255,255,.08);
     --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
     --serif:Georgia,'Times New Roman',serif;
+    --roman:'Cinzel','Trajan Pro',Georgia,serif;
+    --dawn:#e8c48a; --rose:#cdb6ad;
   }
   *{box-sizing:border-box}
   html,body{margin:0;background:var(--ink);color:var(--pale);
@@ -28,17 +43,40 @@
   /* ── the City on Christmas Eve ─────────────────────────────────────── */
   .hero{position:relative;height:88vh;min-height:540px;overflow:hidden;
     background:radial-gradient(120% 90% at 50% 110%,#2a1016 0%,#160a0e 45%,#08070a 82%)}
-  .shot{position:absolute;inset:-3%;background:none center 46%/cover no-repeat;opacity:0;
-    animation:push 48s ease-in-out infinite alternate, reveal 7s 11s ease-out forwards;
-    will-change:transform,opacity}
-  /* the same frame again, blurred and drifting: fog, with no second asset */
-  .drift{position:absolute;inset:-6%;background:none center 58%/cover no-repeat;
-    opacity:0;filter:blur(14px) saturate(1.1);mix-blend-mode:screen;
-    animation:drift 104s linear infinite, driftin 7s 11s ease-out forwards;will-change:transform,opacity}
-  @keyframes driftin{to{opacity:.16}}
-  @keyframes drift{from{transform:translate3d(-2.5%,0,0)}to{transform:translate3d(2.5%,0,0)}}
-  @keyframes reveal{to{opacity:1}}
-  @keyframes push{from{transform:scale(1)}to{transform:scale(1.06)}}
+  /* DAWN — three stills, one sunrise: each dissolves into the next, once, then the sunrise holds */
+  .dawn{position:absolute;inset:-3%;background:center 50%/cover no-repeat;opacity:0;will-change:opacity,transform;
+    animation:push 60s ease-out forwards}
+  .dawn.d1{background-image:url('verona-1-mist.jpg');animation:push 60s ease-out forwards, d1 26s ease-in-out forwards}
+  .dawn.d2{background-image:url('verona-2-morning.jpg');animation:push 60s 6s ease-out forwards, d2 26s ease-in-out forwards}
+  .dawn.d3{background-image:url('verona-3-sunrise.jpg');animation:push 60s 14s ease-out forwards, d3 26s ease-in-out forwards}
+  @keyframes d1{0%{opacity:0}12%{opacity:1}42%{opacity:1}60%{opacity:0}100%{opacity:0}}
+  @keyframes d2{0%,30%{opacity:0}52%{opacity:1}72%{opacity:1}92%{opacity:0}100%{opacity:0}}
+  @keyframes d3{0%,62%{opacity:0}96%,100%{opacity:1}}
+  @keyframes push{from{transform:scale(1.06)}to{transform:scale(1)}}
+  /* THE LIGHT — the sun's bloom and its rays, breathing, growing as the dawn completes */
+  .sun{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:0;
+    background:radial-gradient(28vmax 22vmax at var(--sx,74%) var(--sy,8%),rgba(255,214,150,.55),rgba(255,180,120,.18) 45%,rgba(0,0,0,0) 70%);
+    animation:sunrise 26s ease-in forwards, breathe 9s 26s ease-in-out infinite alternate}
+  @keyframes sunrise{0%{opacity:0}35%{opacity:.25}100%{opacity:.85}}
+  @keyframes breathe{from{opacity:.85}to{opacity:.62}}
+  .rays{position:absolute;inset:-20%;pointer-events:none;mix-blend-mode:screen;opacity:0;
+    background:repeating-conic-gradient(from 200deg at var(--sx,74%) var(--sy,8%),rgba(255,226,170,.0) 0deg,rgba(255,226,170,.10) 2deg,rgba(255,226,170,0) 5deg,rgba(255,226,170,0) 11deg);
+    -webkit-mask:radial-gradient(60% 70% at var(--sx,74%) var(--sy,8%),#000 0%,rgba(0,0,0,.4) 45%,transparent 75%);
+            mask:radial-gradient(60% 70% at var(--sx,74%) var(--sy,8%),#000 0%,rgba(0,0,0,.4) 45%,transparent 75%);
+    transform-origin:var(--sx,74%) var(--sy,8%);
+    animation:raysin 14s 12s ease-out forwards, sway 40s 12s ease-in-out infinite alternate}
+  @keyframes raysin{to{opacity:.9}}
+  @keyframes sway{from{transform:rotate(-2.5deg)}to{transform:rotate(2.5deg)}}
+  /* THE MIST — two banks drifting at different speeds, heavy at first light, thinning as the sun climbs */
+  .mist{position:absolute;left:-30%;right:-30%;pointer-events:none;mix-blend-mode:screen;filter:blur(18px)}
+  .mist.m1{top:38%;height:30%;background:linear-gradient(90deg,transparent,rgba(214,206,214,.22) 20%,rgba(230,214,206,.16) 55%,transparent 80%,rgba(214,206,214,.18));
+    animation:mistA 70s linear infinite alternate, thin 26s ease-in-out forwards}
+  .mist.m2{top:56%;height:22%;background:linear-gradient(90deg,rgba(200,206,214,.16),transparent 30%,rgba(222,210,200,.2) 60%,transparent);
+    animation:mistB 52s linear infinite alternate, thin 26s ease-in-out forwards}
+  @keyframes mistA{from{transform:translateX(-8%)}to{transform:translateX(8%)}}
+  @keyframes mistB{from{transform:translateX(9%)}to{transform:translateX(-9%)}}
+  @keyframes thin{0%{opacity:1}100%{opacity:.35}}
+  canvas.duel{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
   /* fog: the palpable brown air, very faint, drifting */
   .fog{position:absolute;inset:-10%;pointer-events:none;opacity:0;
     background:radial-gradient(60% 40% at 30% 70%,rgba(150,130,100,.10),transparent 70%),
@@ -50,20 +88,23 @@
     animation:in 4s 1.5s forwards}
   .veil{position:absolute;inset:0;pointer-events:none;
     background:
-      linear-gradient(90deg,rgba(7,9,12,.82) 0%,rgba(7,9,12,.55) 24%,rgba(7,9,12,.15) 44%,rgba(7,9,12,0) 60%),
-      linear-gradient(180deg,rgba(7,9,12,0) 60%,rgba(7,9,12,.7) 88%,var(--ink) 100%)}
+      linear-gradient(180deg,rgba(7,9,12,.35) 0%,rgba(7,9,12,0) 22%,rgba(7,9,12,0) 46%,rgba(7,9,12,.55) 72%,rgba(7,9,12,.9) 92%,var(--ink) 100%),
+      linear-gradient(90deg,rgba(7,9,12,.45) 0%,rgba(7,9,12,0) 55%)}
 
   .titles{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;
-    align-items:flex-start;justify-content:center;text-align:left;
+    align-items:flex-start;justify-content:flex-end;text-align:left;padding-bottom:clamp(36px,9vh,96px)!important;
     padding:0 20px 0 clamp(24px,7vw,110px)}
   .studio{font-size:13px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;
     opacity:0;animation:in 2s 1s forwards}
   .presents{font-size:11px;letter-spacing:.3em;color:var(--mist);text-transform:uppercase;
     margin-top:9px;opacity:0;animation:in 2s 2.2s forwards}
-  h1{font-family:var(--serif);font-weight:400;font-size:clamp(34px,6.2vw,84px);
-    letter-spacing:.06em;margin:14px 0 0;color:#fff;line-height:1.02;
-    text-shadow:0 2px 60px rgba(0,0,0,.85),0 0 120px rgba(0,0,0,.6);
-    opacity:0;animation:in 2.6s 3.2s forwards}
+  .verona{font-family:var(--roman);font-weight:400;font-size:clamp(76px,17.5vw,270px);line-height:.86;
+    letter-spacing:.14em;margin:0 0 0 -.04em;color:rgba(244,236,226,.94);
+    text-shadow:0 0 40px rgba(232,196,138,.18),0 2px 30px rgba(7,9,12,.45);
+    opacity:0;filter:blur(18px);animation:emerge 9s 9s cubic-bezier(.2,.6,.2,1) forwards}
+  @keyframes emerge{0%{opacity:0;filter:blur(18px);letter-spacing:.42em}55%{opacity:.85}100%{opacity:1;filter:blur(0);letter-spacing:.14em}}
+  h1{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(22px,2.9vw,40px);
+    color:var(--dawn);margin:.35em 0 .3em .06em;opacity:0;animation:in 3s 17s forwards}
   .sub-title{font-family:var(--serif);font-style:italic;font-size:clamp(15px,1.6vw,19px);
     color:var(--pale);margin:12px 0 0;opacity:0;animation:in 2s 4.4s forwards}
   .byline{font-size:14px;letter-spacing:.26em;color:var(--pale);text-transform:uppercase;
@@ -74,7 +115,7 @@
   /* THE MARK — the house cross, as on the Dracula page */
   .mark{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
     z-index:4;opacity:0;pointer-events:none;
-    animation:in 2.6s 7s forwards, markout 5s 15s ease-in forwards}
+    animation:in 2.4s 1.6s forwards, markout 3.5s 6s ease-in forwards}
   @keyframes markout{to{opacity:0}}
   .mark svg{display:block;width:54px;height:82px;overflow:visible}
   .mark line{stroke:var(--gold);stroke-width:1.1;opacity:.8}
@@ -130,12 +171,15 @@
     .doc{display:none}
     .hero{height:74vh}
     .titles{align-items:center;text-align:center;padding:0 18px}
+    .verona{font-size:clamp(46px,17vw,96px);letter-spacing:.05em;margin:0}
+    @keyframes emerge{0%{opacity:0;filter:blur(14px);letter-spacing:.2em}55%{opacity:.85}100%{opacity:1;filter:blur(0);letter-spacing:.05em}}
   }
   @media(prefers-reduced-motion:reduce){
-    .shot,.fog{animation:none}
-    .shot{opacity:1}
-    .drift{display:none}
-    canvas.snow{display:none}
+    .dawn,.fog,.mist,.rays,.sun{animation:none}
+    .sun{opacity:.75}.rays{opacity:.6}.mist{opacity:.35}
+    canvas.duel{display:none}
+    .dawn.d3{opacity:1;transform:none}
+    .verona{animation:none;opacity:1;filter:none}
     .studio,.presents,h1,.sub-title,.byline,.form,.snd{animation:none;opacity:1}
     .mark{animation:none;opacity:0}
   }
@@ -144,10 +188,17 @@
 <body>
 
 <div class="hero">
-  <div class="shot"></div>
-  <div class="drift"></div>
+  
+  
+  <div class="dawn d1"></div>
+  <div class="dawn d2"></div>
+  <div class="dawn d3"></div>
+  <div class="sun"></div>
+  <div class="rays"></div>
+  <div class="mist m1"></div>
+  <div class="mist m2"></div>
+  <canvas class="duel" id="duel" aria-hidden="true"></canvas>
   <div class="fog"></div>
-  <canvas class="snow" id="snow" aria-hidden="true"></canvas>
   <div class="veil"></div>
   <div class="mark" aria-hidden="true">
     <svg viewBox="0 0 54 82">
@@ -167,8 +218,9 @@
   <div class="titles">
     <div class="studio"><a href="../" style="color:inherit;text-decoration:none">Amenti Studios</a></div>
     <div class="presents">presents</div>
-    <h1>ROMEO<br>AND JULIET</h1>
-    <div class="sub-title">Two households, both alike in dignity, in fair Verona, where we lay our scene&hellip;</div>
+    <div class="sub-title">In fair Verona, where we lay our scene&hellip;</div>
+    <div class="verona" aria-hidden="true">VERONA</div>
+    <h1>Romeo and Juliet</h1>
     <div class="byline">William Shakespeare &middot; 1597</div>
     <div class="form">Cast from the Amenti Interface Library of Legends</div>
   </div>
@@ -352,10 +404,11 @@ Promise.all([
         nodes.push({ g: g, target: t.gain });
       });
       on = true; btn.classList.add('on'); btn.setAttribute('aria-label', 'Turn sound off'); loading = false;
+      window.RJ_BED = { ctx: function () { return ctx; }, on: function () { return on; } };
     });
   }
   function set(v) {
-    on = v; btn.classList.toggle('on', on); btn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+    on = v; window.RJ_BED = { ctx: function () { return ctx; }, on: function () { return on; } }; btn.classList.toggle('on', on); btn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
     nodes.forEach(function (n) { fade(n.g, on ? n.target : 0, on ? 4 : 3); });
   }
   btn.onclick = function () { if (!ctx) { start(); return; } if (ctx.state === 'suspended') ctx.resume(); set(!on); };
@@ -371,5 +424,6 @@ Promise.all([
   });
 })();
 </script>
+<script src="duel.js"></script>
 </body>
 </html>
