@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/dracula/index.html · 2026-10-04 10:00 UTC -->
+<!-- Amenti-Studios/dracula/index.html · 2026-10-06 08:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -400,10 +400,13 @@ Promise.all([
    second context could never be ducked. Its own context is the fallback
    only when the engine did not load, and it says so. */
 (function () {
-  var BASE = 'https://raw.githubusercontent.com/ianingram/Amenti-Studios/main/dracula/';
+  /* THE SOUNDTRACK (6 Oct 2026): The Voyage of the Demeter — the suite after the captain's
+     log, from the loading at Varna to the wreck at Whitby, 4/4 at 60 BPM with a muffled
+     heartbeat throughout. It lives with the production's sounds in Amenti-Readings, like the
+     Treasure Island theme, and loops. (Before this the title bed was wind.mp3 + piano.mp3.) */
+  var BASE = '';
   var TRACKS = [
-    { file: 'wind.mp3',  gain: 0.34 },   /* the pass: wind, snow, distance */
-    { file: 'piano.mp3', gain: 0.22 }    /* dread: sparse, low, unresolved */
+    { file: 'https://ianingram.github.io/Amenti-Readings/dracula/sound/voyage-of-the-demeter.mp3', gain: 0.6 }
   ];
   var btn = document.getElementById('snd');
   if (!btn) return;
