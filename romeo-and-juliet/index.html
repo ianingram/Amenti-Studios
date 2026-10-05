@@ -359,23 +359,25 @@ Promise.all([
 <script src="https://ianingram.github.io/Amenti-Readings/player/playbill.js"></script>
 <script src="https://ianingram.github.io/Amenti-Readings/player/sound.js"></script>
 <script>
-/* ─── THE BED ───────────────────────────────────────────────────────────
-   The lovers' theme and the garden at night, under the title, when asked for.
-   Dracula page: probed before the control appears, every gain ramped, played
-   on the engine's audio context so a reading opened from the staves can duck
-   it, faded when the tab is hidden. When a stave begins, the bed steps aside
-   so the reading's own sound has the room. */
+/* ─── THE SOUND: THE PROLOGUE, THEN THE LOVERS ─────────────────────────────
+   Press sound and the Chorus speaks his sonnet in time over the dawn — a line
+   to a bar, the kettle drum on every fourth beat, the swords on every
+   sixteenth. The duel on the bridge is driven by it: each clash you hear is a
+   star of steel on the bridge at that instant (duel.js reads RJ_BED.clashes()).
+   When the sonnet ends, the lovers' theme and the garden at night take over
+   and loop. Gains ramped, played on the engine's audio context so a reading
+   opened from the scenes can duck it, faded when the tab is hidden. */
 (function () {
-  var TRACKS = [
-    { url: 'https://ianingram.github.io/Amenti-Readings/romeo-and-juliet/sound/score-lovers.mp3', gain: 0.7 },
-    { url: 'https://ianingram.github.io/Amenti-Readings/romeo-and-juliet/sound/garden-night.mp3', gain: 0.5 }
-  ];
+  var BASE = 'https://ianingram.github.io/Amenti-Readings/romeo-and-juliet/sound/';
+  var PROLOGUE = { url: BASE + 'prologue-chorus.mp3', gain: 0.95 };
+  var BED = [{ url: BASE + 'score-lovers.mp3', gain: 0.7 }, { url: BASE + 'garden-night.mp3', gain: 0.5 }];
+  /* the swords in the Prologue: beat four of the bars that close each quatrain, and the couplet
+     (4/4 at 76, two bars in) — the same arithmetic as build-prologue.py */
+  var BT = 60 / 76, BAR = 4 * BT, CLASHES = [4, 8, 12, 14].map(function (l) { return (2 + l - 1) * BAR + 3 * BT; });
   var btn = document.getElementById('snd');
   if (!btn) return;
-  var ctx = null, nodes = [], on = false, loading = false;
-  Promise.all(TRACKS.map(function (t) {
-    return fetch(t.url, { method: 'HEAD' }).then(function (r) { return r.ok; }).catch(function () { return false; });
-  })).then(function (ok) { if (ok.indexOf(true) < 0) btn.style.display = 'none'; });
+  var ctx = null, nodes = [], on = false, loading = false, proStart = -1;
+  fetch(PROLOGUE.url, { method: 'HEAD' }).then(function (r) { if (!r.ok) btn.style.display = 'none'; })['catch'](function () { btn.style.display = 'none'; });
   function getCtx() {
     var T = window.Amenti && window.Amenti.throttle;
     if (T && typeof T.audioContext === 'function') return T.audioContext();
@@ -387,32 +389,46 @@ Promise.all([
     if (to <= 0) { g.gain.exponentialRampToValueAtTime(0.0001, t + secs); g.gain.setValueAtTime(0, t + secs + 0.01); }
     else g.gain.exponentialRampToValueAtTime(to, t + secs);
   }
+  function decode(t) {
+    return fetch(t.url).then(function (r) { if (!r.ok) throw 0; return r.arrayBuffer(); })
+      .then(function (b) { return ctx.decodeAudioData(b); }).then(function (buf) { return { buf: buf, gain: t.gain }; })['catch'](function () { return null; });
+  }
+  function play(t, loop, when, fadeIn) {
+    var src = ctx.createBufferSource(); src.buffer = t.buf; src.loop = loop;
+    var g = ctx.createGain(); g.gain.value = 0.0001;
+    src.connect(g); g.connect(ctx.destination); src.start(when);
+    var n = { g: g, target: t.gain, src: src }; nodes.push(n);
+    if (fadeIn) { g.gain.setValueAtTime(0.0001, when); g.gain.exponentialRampToValueAtTime(t.gain, when + fadeIn); }
+    else g.gain.setValueAtTime(t.gain, when);
+    return n;
+  }
+  function expose() {
+    window.RJ_BED = {
+      ctx: function () { return ctx; }, on: function () { return on; },
+      /* the Prologue's clashes as audio-clock times, while it is playing */
+      clashes: function () { return (proStart >= 0 && on) ? CLASHES.map(function (c) { return proStart + c; }) : []; },
+      prologue: function () { return proStart >= 0 && on && ctx && ctx.currentTime < proStart + 61; }
+    };
+  }
   function start() {
     if (loading) return; loading = true;
     ctx = getCtx(); if (ctx.state === 'suspended') ctx.resume();
-    Promise.all(TRACKS.map(function (t) {
-      return fetch(t.url).then(function (r) { if (!r.ok) throw 0; return r.arrayBuffer(); })
-        .then(function (b) { return ctx.decodeAudioData(b); })
-        .then(function (buf) { return { buf: buf, gain: t.gain }; }).catch(function () { return null; });
-    })).then(function (loaded) {
-      var any = loaded.filter(Boolean);
-      if (!any.length) { btn.style.display = 'none'; return; }
-      any.forEach(function (t) {
-        var src = ctx.createBufferSource(); src.buffer = t.buf; src.loop = true;
-        var g = ctx.createGain(); g.gain.value = 0.0001;
-        src.connect(g); g.connect(ctx.destination); src.start(0); fade(g, t.gain, 6);
-        nodes.push({ g: g, target: t.gain });
+    decode(PROLOGUE).then(function (pro) {
+      if (!pro) { btn.style.display = 'none'; return; }
+      var t0 = ctx.currentTime + 0.15; proStart = t0;
+      play(pro, false, t0, 0);
+      on = true; btn.classList.add('on'); btn.setAttribute('aria-label', 'Turn sound off'); loading = false; expose();
+      /* the lovers' theme and the garden take over as the sonnet's last chord dies */
+      Promise.all(BED.map(decode)).then(function (bed) {
+        bed.filter(Boolean).forEach(function (t) { play(t, true, t0 + pro.buf.duration - 3.5, 6); });
       });
-      on = true; btn.classList.add('on'); btn.setAttribute('aria-label', 'Turn sound off'); loading = false;
-      window.RJ_BED = { ctx: function () { return ctx; }, on: function () { return on; } };
     });
   }
   function set(v) {
-    on = v; window.RJ_BED = { ctx: function () { return ctx; }, on: function () { return on; } }; btn.classList.toggle('on', on); btn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
-    nodes.forEach(function (n) { fade(n.g, on ? n.target : 0, on ? 4 : 3); });
+    on = v; expose(); btn.classList.toggle('on', on); btn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+    nodes.forEach(function (n) { fade(n.g, on ? n.target : 0, on ? 3 : 2.5); });
   }
   btn.onclick = function () { if (!ctx) { start(); return; } if (ctx.state === 'suspended') ctx.resume(); set(!on); };
-  /* a stave is beginning: the title bed steps aside */
   var R = window.Amenti && window.Amenti.reading;
   if (R && typeof R.play === 'function') {
     var _play = R.play;

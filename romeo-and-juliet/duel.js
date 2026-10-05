@@ -9,8 +9,14 @@
 
    Not troops: two men on Ponte Pietra, small against the morning, fighting.
    Their blades catch the low sun — a glint on the tip as a blade turns, a
-   bright star where steel meets steel. When the title sound is on, each clash
-   is heard: the production's own tuned swords, far off across the water.
+   bright star where steel meets steel.
+
+   WITH THE PROLOGUE: when the sound is on, the Chorus speaks his sonnet and its
+   swords clash on the last word of each quatrain. Then the duel is HIS: the
+   men break, circle, wind up, and their broad blow lands — a big star of steel
+   on the bridge — at the exact instant the clash is heard. Between those, the
+   duel stays silent so the sonnet has the air. When the sonnet is done, the
+   duel goes back to its own phrase, its contacts heard far off across the water.
 
    The river glitters where the sun lies on it, a different stretch of water
    in each still, weighted by how much of that still is showing.
@@ -72,6 +78,7 @@
   }
   function hear(kind, strength) {
     var B = window.RJ_BED; if (!B || !B.on()) return;
+    if (B.prologue && B.prologue()) return;                                     /* the sonnet has the air */
     var ctx = B.ctx(); if (!ctx) return; loadSounds(ctx);
     var buf = BUFS[kind]; if (!buf) return;
     var src = ctx.createBufferSource(), gn = ctx.createGain(), lp = ctx.createBiquadFilter();
@@ -134,16 +141,29 @@
     });
     /* the duel, once the sunrise is showing */
     var vis = Math.max(0, (op[2] - 0.35) / 0.65);
+    var B = window.RJ_BED, pro = B && B.prologue && B.prologue(), ac = pro ? B.ctx().currentTime : 0;
+    if (pro) vis = Math.max(vis, 0.85);                                          /* the sonnet calls them out early if need be */
     if (vis > 0) {
       var tt = ((now - t0) / 1000) % LOOP, sway = Math.sin(tt * 1.3) * 3;
-      var ph = PHRASE.filter(function (e) { return Math.abs(e[0] - tt) < 0.35; })[0];
+      var ph = pro ? null : PHRASE.filter(function (e) { return Math.abs(e[0] - tt) < 0.35; })[0];
       var near = ph ? 1 - Math.abs(ph[0] - tt) / 0.35 : 0;                     /* how close to a contact */
+      if (pro) {                                                               /* the Prologue's swords: wind up over a beat, land on the clash */
+        B.clashes().forEach(function (c) { var d = c - ac; if (d > -0.4 && d < 0.8) near = Math.max(near, d > 0 ? 1 - d / 0.8 : 1 + d / 0.4); });
+        tt = ac;                                                               /* their circling follows the sonnet's clock */
+      }
       var aX = A0 + sway + near * 4, bX = B0 + sway - near * 3;
       var aA = 0.35 + near * 0.35 + Math.sin(tt * 3.1) * 0.15, bA = 0.3 + near * 0.4 + Math.cos(tt * 2.7) * 0.15;
       var tipA = figure(m3, aX, 0.5 + near * 0.8, aA, 9, vis, 1);
       var tipB = figure(m3, bX, 0.4 + near * 0.6, bA, 9, vis, -1);
+      /* the Prologue's clashes: a big star at the instant each is heard */
+      if (pro) B.clashes().forEach(function (c, k) {
+        var key = 'P' + Math.round(c * 10) + ':' + k;
+        if (ac >= c && ac < c + 0.5 && !clashes[key]) { clashes[key] = 1;            /* once, on the first frame at or after the clash */
+          (window.RJ_DUEL_LOG = window.RJ_DUEL_LOG || []).push({ clash: c, drawn: ac });      /* a probe can ask when each star was drawn */
+          glints.push({ x: (tipA.x + tipB.x) / 2, y: (tipA.y + tipB.y) / 2, t: 0, life: 0.7, r: 5.2 * Math.max(0.8, m3.c), a: 1 }); }
+      });
       /* contacts: a star where the blades meet, and the sound of it */
-      PHRASE.forEach(function (e, k) {
+      if (!pro) PHRASE.forEach(function (e, k) {
         var key = Math.floor((now - t0) / 1000 / LOOP) + ':' + k;
         if (tt >= e[0] && tt < e[0] + 0.06 && !clashes[key]) {
           clashes[key] = 1;
