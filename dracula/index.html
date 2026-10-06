@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/dracula/index.html · 2026-10-06 11:00 UTC -->
+<!-- Amenti-Studios/dracula/index.html · 2026-10-06 12:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,8 +81,6 @@
   .voy{position:absolute;inset:-3%;background:center 50%/cover no-repeat;opacity:0;
     transition:opacity 4s ease-in-out;animation:push 48s ease-in-out infinite alternate;will-change:opacity,transform}
   .voy.on{opacity:1}
-  .v0{background-image:url('dracula-hero.jpg')} .v1{background-image:url('voyage-1.jpg')} .v2{background-image:url('voyage-2.jpg')} .v3{background-image:url('voyage-3.jpg')}
-  .v4{background-image:url('voyage-4.jpg')} .v5{background-image:url('voyage-5.jpg')} .v6{background-image:url('voyage-6.jpg')}
   .flash{position:absolute;inset:0;background:#e8eeff;opacity:0;pointer-events:none;mix-blend-mode:screen}
   .flash.go{animation:bolt .9s ease-out}
   @keyframes bolt{0%{opacity:0}6%{opacity:.75}14%{opacity:.1}22%{opacity:.55}100%{opacity:0}}
@@ -219,8 +217,7 @@
 <div class="hero">
   <div class="shot"></div>
   <div class="drift"></div>
-  <div class="voy v0"></div><div class="voy v1"></div><div class="voy v2"></div><div class="voy v3"></div>
-  <div class="voy v4"></div><div class="voy v5"></div><div class="voy v6"></div>
+  <div id="voyage"></div>
   <div class="flash" id="flash"></div>
   <div class="voycap" id="voycap"></div>
   <div class="veil"></div>
@@ -528,23 +525,35 @@ Promise.all([
    the audio clock modulo the track's length, so it holds through the loop. */
 (function () {
   var hero = document.querySelector('.hero'), btn = document.getElementById('snd');
-  var layers = [].slice.call(document.querySelectorAll('.voy')), flash = document.getElementById('flash'), cap = document.getElementById('voycap');
-  if (!hero || !btn || !layers.length) return;
-  var SCENES = [[0, 'The road to Varna · the boxes go down to the sea'], [40, 'Varna · 6 July'], [98, 'Under way'], [140, 'At sea · the crew uneasy'],
-                [248, 'The fog · the captain alone'], [260, 'Off Whitby · the storm'], [340, 'Whitby · the wreck']];
+  var box = document.getElementById('voyage'), flash = document.getElementById('flash'), cap = document.getElementById('voycap');
+  if (!hero || !btn || !box) return;
+  /* ALL 24 Demeter stills (four of each scene, 6 Oct 2026), in story order: [start s, image, caption — shown when it changes] */
+  var V = 'voyage/', SCENES = [
+    [0, 'dracula-hero.jpg', 'The road to Varna · the boxes go down to the sea'],
+    [40, V + 'varna-1.jpg', 'Varna · 6 July'], [54.5, V + 'varna-2.jpg'], [69, V + 'varna-3.jpg'], [83.5, V + 'varna-4.jpg'],
+    [98, V + 'underway-1.jpg', 'Under way'], [108.5, V + 'underway-2.jpg'], [119, V + 'underway-3.jpg'], [129.5, V + 'underway-4.jpg'],
+    [140, V + 'deck-1.jpg', 'At sea · the crew uneasy'], [160, V + 'deck-2.jpg'], [180, V + 'deck-3.jpg'], [200, V + 'deck-4.jpg'],
+    [220, V + 'fog-2.jpg', 'Night · the mate'], [232, V + 'fog-3.jpg'], [244, V + 'fog-1.jpg', 'The fog · the captain alone'], [252, V + 'fog-4.jpg'],
+    [260, V + 'storm-1.jpg', 'Off Whitby · the storm'], [280, V + 'storm-2.jpg'], [300, V + 'storm-3.jpg'], [320, V + 'storm-4.jpg'],
+    [340, V + 'wreck-1.jpg', 'Whitby · the wreck'], [347, V + 'wreck-2.jpg'], [354, V + 'wreck-3.jpg'], [361, V + 'wreck-4.jpg']];
+  var layers = SCENES.map(function (sc) { var d = document.createElement('div'); d.className = 'voy'; d.dataset.bg = sc[1]; box.appendChild(d); return d; });
+  function prime(i) { var l = layers[i]; if (l && !l.style.backgroundImage) l.style.backgroundImage = "url('" + l.dataset.bg + "')"; }
+  var lastCap = '';
   var BOLTS = [280, 296, 304, 312, 324, 332, 340];
   var shown = -1, fired = {};
   function frame() {
     var D = window.DEMETER, on = btn.classList.contains('on');
     if (!D || !on) {
-      if (shown !== -1) { layers.forEach(function (l) { l.classList.remove('on'); }); cap.classList.remove('on'); hero.classList.remove('voyage'); shown = -1; }
+      if (shown !== -1) { layers.forEach(function (l) { l.classList.remove('on'); }); cap.classList.remove('on'); hero.classList.remove('voyage'); shown = -1; lastCap = ''; }
       return requestAnimationFrame(frame);
     }
     var t = D.ctx.currentTime - D.t0, lap = Math.floor(t / D.dur), pos = t - lap * D.dur, k = 0;
     for (var i = 0; i < SCENES.length; i++) if (pos >= SCENES[i][0]) k = i;
+    prime(k); prime(k + 1); if (k === SCENES.length - 1) prime(0);
     if (k !== shown) {
       layers.forEach(function (l, j) { l.classList.toggle('on', j === k); });
-      cap.classList.remove('on'); (function (txt) { setTimeout(function () { cap.textContent = txt; cap.classList.add('on'); }, 1200); })(SCENES[k][1]);
+      var txt = SCENES[k][2];
+      if (txt && txt !== lastCap) { lastCap = txt; cap.classList.remove('on'); setTimeout(function () { cap.textContent = txt; cap.classList.add('on'); }, 1200); }
       hero.classList.add('voyage'); shown = k;
     }
     BOLTS.forEach(function (b, j) {
