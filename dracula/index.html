@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/dracula/index.html · 2026-10-06 12:00 UTC -->
+<!-- Amenti-Studios/dracula/index.html · 2026-10-06 13:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,9 +81,21 @@
   .voy{position:absolute;inset:-3%;background:center 50%/cover no-repeat;opacity:0;
     transition:opacity 4s ease-in-out;animation:push 48s ease-in-out infinite alternate;will-change:opacity,transform}
   .voy.on{opacity:1}
-  .flash{position:absolute;inset:0;background:#e8eeff;opacity:0;pointer-events:none;mix-blend-mode:screen}
-  .flash.go{animation:bolt .9s ease-out}
-  @keyframes bolt{0%{opacity:0}6%{opacity:.75}14%{opacity:.1}22%{opacity:.55}100%{opacity:0}}
+  /* LIGHTNING (v6, Ian: "more visceral — the lightning should flash on the page"). Four things at once
+     on every strike: the WHOLE PAGE strobes white (fixed, over everything) in real lightning's
+     stutter — flash, dark, flash, flicker; the picture is blown bright; a forked bolt is drawn
+     across the sky; and the frame shudders. Reduced-motion: none of it. */
+  .flash{position:fixed;inset:0;z-index:50;background:#eef3ff;opacity:0;pointer-events:none}
+  .flash.go{animation:strobe 1.25s linear}
+  @keyframes strobe{0%{opacity:0}3%{opacity:.92}7%{opacity:.05}11%{opacity:.85}15%{opacity:.15}
+    19%{opacity:.55}24%{opacity:0}34%{opacity:.25}38%{opacity:0}100%{opacity:0}}
+  .hero.struck .voy.on{animation:blown 1.1s ease-out}
+  @keyframes blown{0%{filter:brightness(1)}4%{filter:brightness(2.6) contrast(1.35) saturate(.5)}
+    12%{filter:brightness(1.1)}16%{filter:brightness(2.1) contrast(1.25) saturate(.6)}40%{filter:brightness(1.15)}100%{filter:brightness(1)}}
+  .hero.struck{animation:shudder .5s ease-out}
+  @keyframes shudder{0%,100%{transform:translate(0,0)}10%{transform:translate(-5px,3px)}20%{transform:translate(4px,-3px)}
+    30%{transform:translate(-3px,2px)}45%{transform:translate(2px,-1px)}60%{transform:translate(-1px,1px)}}
+  canvas.bolt{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
   .voycap{position:absolute;right:clamp(20px,4vw,48px);top:clamp(18px,4vh,40px);z-index:4;font-size:11px;
     letter-spacing:.3em;text-transform:uppercase;color:var(--pale);opacity:0;transition:opacity 2.5s;
     text-shadow:0 1px 14px rgba(0,0,0,.9)}
@@ -218,6 +230,7 @@
   <div class="shot"></div>
   <div class="drift"></div>
   <div id="voyage"></div>
+  <canvas class="bolt" id="bolt" aria-hidden="true"></canvas>
   <div class="flash" id="flash"></div>
   <div class="voycap" id="voycap"></div>
   <div class="veil"></div>
@@ -541,6 +554,35 @@ Promise.all([
   var lastCap = '';
   var BOLTS = [280, 296, 304, 312, 324, 332, 340];
   var shown = -1, fired = {};
+  /* a strike: the page strobes, the picture blows out, a forked bolt tears down the sky, the frame shudders */
+  var cv = document.getElementById('bolt'), cx = cv && cv.getContext ? cv.getContext('2d') : null;
+  function fork(x, y, len, ang, w, depth) {                    // a jagged bolt, with branches
+    var pts = [[x, y]], seg = 18 + Math.random() * 14;
+    for (var d = 0; d < len; d += seg) {
+      ang += (Math.random() - 0.5) * 0.9; x += Math.sin(ang) * seg; y += Math.cos(ang) * seg; pts.push([x, y]);
+      if (depth < 2 && Math.random() < 0.09) fork(x, y, len * (0.25 + Math.random() * 0.3), ang + (Math.random() < 0.5 ? -0.7 : 0.7), w * 0.5, depth + 1);
+    }
+    cx.lineWidth = w; cx.beginPath(); cx.moveTo(pts[0][0], pts[0][1]);
+    for (var i = 1; i < pts.length; i++) cx.lineTo(pts[i][0], pts[i][1]); cx.stroke();
+  }
+  function drawBolt(alpha) {
+    var W = cv.width = cv.clientWidth * (window.devicePixelRatio || 1), H = cv.height = cv.clientHeight * (window.devicePixelRatio || 1);
+    cx.clearRect(0, 0, W, H); if (!alpha) return;
+    cx.save(); cx.globalAlpha = alpha; cx.strokeStyle = '#f4f7ff'; cx.shadowColor = '#a9c4ff'; cx.shadowBlur = 28 * (window.devicePixelRatio || 1);
+    cx.lineCap = 'round'; cx.lineJoin = 'round';
+    fork(W * (0.45 + Math.random() * 0.45), 0, H * (0.55 + Math.random() * 0.35), (Math.random() - 0.5) * 0.4, 3.2 * (window.devicePixelRatio || 1), 0);
+    cx.restore();
+  }
+  function strike(j) {
+    flash.classList.remove('go'); hero.classList.remove('struck'); void flash.offsetWidth;
+    flash.classList.add('go'); hero.classList.add('struck');
+    setTimeout(function () { hero.classList.remove('struck'); }, 1200);
+    if (!cx) return;
+    drawBolt(1);                                                       // one bolt, flickering as real lightning does
+    [[0, 1], [90, 0], [140, 0.85], [230, 0], [420, 0.4], [480, 0]].forEach(function (f) {
+      setTimeout(function () { cv.style.opacity = f[1]; if (!f[1] && f[0] === 480) drawBolt(0); }, f[0]);
+    });
+  }
   function frame() {
     var D = window.DEMETER, on = btn.classList.contains('on');
     if (!D || !on) {
@@ -558,7 +600,7 @@ Promise.all([
     }
     BOLTS.forEach(function (b, j) {
       var key = lap + ':' + j;
-      if (pos >= b && pos < b + 0.5 && !fired[key]) { fired[key] = 1; flash.classList.remove('go'); void flash.offsetWidth; flash.classList.add('go'); }
+      if (pos >= b && pos < b + 0.5 && !fired[key]) { fired[key] = 1; strike(j); }
     });
     requestAnimationFrame(frame);
   }
