@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/index.html · 2026-10-06 07:00 UTC -->
+<!-- Amenti-Studios/index.html · 2026-10-06 23:30 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,7 +25,15 @@
      build step and no index to regenerate. The count of voices is read live
      from the workshop's cast.json so a recast cannot leave this page stale.
      =========================================================================== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap" rel="stylesheet">
+<link rel="preload" href="fonts/amenti-display-700.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  /* AMENTI DISPLAY — the house face from Amenti.live (derived from Orbitron, OFL-1.1), for the wordmark */
+  @font-face{font-family:'Amenti Display';font-weight:400;font-display:swap;src:url('fonts/amenti-display-400.woff2') format('woff2')}
+  @font-face{font-family:'Amenti Display';font-weight:700;font-display:swap;src:url('fonts/amenti-display-700.woff2') format('woff2')}
+  @font-face{font-family:'Amenti Display';font-weight:900;font-display:swap;src:url('fonts/amenti-display-900.woff2') format('woff2')}
   :root{
     --ink:#07090c; --mist:#9ab0a6; --pale:#d6e8df;
     --gold:#e0a53c; --rule:rgba(255,255,255,.08);
@@ -38,11 +46,23 @@
   a{color:inherit;text-decoration:none}
 
   .top{padding:16vh 22px 0;text-align:center}
-  .mark{font-family:var(--serif);font-size:clamp(34px,6.4vw,70px);letter-spacing:.14em;
+  /* THE PYRAMID — Page One's pyramid, turning slowly in three dimensions over the wordmark: four
+     faces lit from the upper right, stone courses, the gold capstone, its light breathing, and a
+     thin beam rising from the apex. Reduced motion: it stands still. */
+  .pyramid{display:block;width:clamp(96px,11vw,136px);height:auto;margin:-34px auto 18px;overflow:visible}
+  .py-halo{transform-origin:0 -92px;transform-box:view-box;animation:beacon 4.5s ease-in-out infinite}
+  @keyframes beacon{0%,100%{opacity:.55;transform:scale(.9)}50%{opacity:1;transform:scale(1.12)}}
+  .py-beam{animation:beam 3.2s ease-in-out infinite}
+  @keyframes beam{0%,100%{opacity:.55}50%{opacity:1}}
+  @media (prefers-reduced-motion:reduce){.py-halo,.py-beam{animation:none}}
+  @media (max-width:600px){.pyramid{margin-top:8px}}
+  .blurb .credit{display:block;margin-top:14px;color:#e6c77a}
+  .mark{font-family:'Amenti Display',var(--serif);font-weight:700;font-size:clamp(30px,5.6vw,64px);letter-spacing:.12em;
     color:#fff;margin:0;line-height:1}
   .tag{font-size:10px;letter-spacing:.42em;color:var(--gold);text-transform:uppercase;
     margin-top:16px}
-  .blurb{max-width:560px;margin:26px auto 0;font-size:12px;line-height:2;color:var(--mist)}
+  .blurb{max-width:640px;margin:22px auto 0;font-family:'Pinyon Script','Snell Roundhand','Apple Chancery',cursive;
+    font-size:clamp(22px,2.6vw,29px);line-height:1.55;color:#d9cfb8;letter-spacing:.01em}
   .rule{height:1px;max-width:560px;margin:46px auto 0;
     background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 
@@ -85,18 +105,28 @@
 <body>
 
 <div class="top">
+  <svg class="pyramid" id="pyramid" viewBox="-120 -330 240 362" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="pyBeam" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff4c0" stop-opacity=".95"/><stop offset=".25" stop-color="#f8d060" stop-opacity=".55"/><stop offset="1" stop-color="#d4a017" stop-opacity="0"/></linearGradient>
+      <radialGradient id="pyHalo" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff4c0" stop-opacity=".9"/><stop offset=".35" stop-color="#f8d060" stop-opacity=".35"/><stop offset="1" stop-color="#d4a017" stop-opacity="0"/></radialGradient>
+    </defs>
+    <rect class="py-beam" x="-1" y="-330" width="2" height="240" fill="url(#pyBeam)"/>
+    <g id="pyFaces"></g>
+    <circle class="py-halo" cx="0" cy="-92" r="46" fill="url(#pyHalo)"/>
+  </svg>
   <h1 class="mark">AMENTI STUDIOS</h1>
   <div class="tag">Staged readings</div>
   <p class="blurb">
     Public-domain works, cast from the Amenti Library of Legends. Every voice is a
     historical figure drawn from a ledger of more than two thousand, each carrying
     their own dialect and manner.
+    <span class="credit">Produced and directed by Ian Ingram.</span>
   </p>
   <div class="rule"></div>
 </div>
 
 <div class="wrap">
-  <div class="band">Now in production</div>
+  <div class="band">Now playing</div>
   <div class="bills" id="bills"></div>
 
   <div class="foot">
@@ -180,6 +210,80 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
   document.getElementById('bills').innerHTML =
     PRODUCTIONS.map(p => card(p, counts)).join('');
 });
+</script>
+<script>
+/* THE TURNING PYRAMID — a square pyramid (Giza's proportions) rotating about its axis, seen from a
+   little above. Shading done properly (v2):
+     · each face's OUTWARD normal (pointing away from the pyramid's centre), so the faces turned to
+       the light are bright and the others fall into shadow — never the reverse;
+     · only faces turned toward the viewer are drawn (two or three, seen from above), back to front;
+     · light from the upper right, in front: Lambert diffuse plus a little ambient, so the shadow
+       side is dark stone, not black;
+     · each face graded from apex to base (light gathers at the top, the base sits in shade);
+     · the ridges catch a highlight where a lit face meets the edge; the base edge is gold;
+     · the capstone's gold brightens and dims with its face's light.
+   One turn every 28 seconds. */
+(function () {
+  var g = document.getElementById('pyFaces'), svg = document.getElementById('pyramid'); if (!g || !svg) return;
+  var NS = 'http://www.w3.org/2000/svg', A = 78, H = 100, E = 0.2, CAP = 0.17, COURSES = 9;
+  var STONE_DARK = [24, 19, 12], STONE_LIT = [196, 158, 88], GOLD_DARK = [120, 88, 24], GOLD_LIT = [255, 226, 140];
+  var AMB = 0.16, L = [0.62, 0.55, 0.56], VIEW = [0, Math.sin(E), Math.cos(E)];
+  var n_ = Math.hypot(L[0], L[1], L[2]); L = L.map(function (v) { return v / n_; });
+  var defs = svg.querySelector('defs');
+  function mix(a, b, t) { return a.map(function (v, j) { return Math.round(v + (b[j] - v) * t); }); }
+  function rgb(c) { return 'rgb(' + c.join(',') + ')'; }
+  var faces = [0, 1, 2, 3].map(function (k) {
+    var f = { g: document.createElementNS(NS, 'g') };
+    f.grad = document.createElementNS(NS, 'linearGradient'); f.grad.id = 'pyF' + k; f.grad.setAttribute('gradientUnits', 'userSpaceOnUse');
+    f.s0 = document.createElementNS(NS, 'stop'); f.s0.setAttribute('offset', '0'); f.s1 = document.createElementNS(NS, 'stop'); f.s1.setAttribute('offset', '1');
+    f.grad.appendChild(f.s0); f.grad.appendChild(f.s1); defs.appendChild(f.grad);
+    f.body = document.createElementNS(NS, 'polygon'); f.body.setAttribute('fill', 'url(#pyF' + k + ')');
+    f.lines = document.createElementNS(NS, 'path'); f.lines.setAttribute('fill', 'none'); f.lines.setAttribute('stroke-width', '0.9');
+    f.cap = document.createElementNS(NS, 'polygon');
+    f.ridge = document.createElementNS(NS, 'path'); f.ridge.setAttribute('fill', 'none'); f.ridge.setAttribute('stroke-width', '1'); f.ridge.setAttribute('stroke-linecap', 'round');
+    f.base = document.createElementNS(NS, 'path'); f.base.setAttribute('fill', 'none'); f.base.setAttribute('stroke', '#c9a24a'); f.base.setAttribute('stroke-width', '1.3');
+    [f.body, f.lines, f.cap, f.ridge, f.base].forEach(function (e) { f.g.appendChild(e); }); g.appendChild(f.g); return f;
+  });
+  function proj(p) { return [+(p[0]).toFixed(2), +(-p[1] * Math.cos(E) + p[2] * Math.sin(E)).toFixed(2)]; }
+  function lerp2(P, Q, t) { return [P[0] + (Q[0] - P[0]) * t, P[1] + (Q[1] - P[1]) * t]; }
+  function draw(th) {
+    var c = Math.cos(th), s_ = Math.sin(th), centre = [0, H / 4, 0], apex = [0, H, 0];
+    var base = [[-A, 0, -A], [A, 0, -A], [A, 0, A], [-A, 0, A]].map(function (p) { return [p[0] * c + p[2] * s_, 0, -p[0] * s_ + p[2] * c]; });
+    var vis = [];
+    for (var i = 0; i < 4; i++) {
+      var b1 = base[i], b2 = base[(i + 1) % 4];
+      var u = [b1[0] - apex[0], b1[1] - apex[1], b1[2] - apex[2]], v = [b2[0] - apex[0], b2[1] - apex[1], b2[2] - apex[2]];
+      var n = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]], m = Math.hypot(n[0], n[1], n[2]);
+      n = n.map(function (x) { return x / m; });
+      var fc = [(apex[0] + b1[0] + b2[0]) / 3 - centre[0], (apex[1] + b1[1] + b2[1]) / 3 - centre[1], (apex[2] + b1[2] + b2[2]) / 3 - centre[2]];
+      if (n[0] * fc[0] + n[1] * fc[1] + n[2] * fc[2] < 0) n = n.map(function (x) { return -x; });        // outward
+      var facing = n[0] * VIEW[0] + n[1] * VIEW[1] + n[2] * VIEW[2];
+      if (facing <= 0.002) continue;                                                                     // turned away: not drawn
+      var diff = Math.max(0, n[0] * L[0] + n[1] * L[1] + n[2] * L[2]);
+      vis.push({ b1: b1, b2: b2, depth: (b1[2] + b2[2]) / 2, light: AMB + (1 - AMB) * diff });
+    }
+    vis.sort(function (a, b) { return a.depth - b.depth; });
+    faces.forEach(function (f, k) {
+      var o = vis[k]; if (!o) { f.g.setAttribute('visibility', 'hidden'); return; } f.g.setAttribute('visibility', 'visible');
+      var P = proj(apex), Q = proj(o.b1), R = proj(o.b2), col = mix(STONE_DARK, STONE_LIT, o.light);
+      var top = mix(col, [255, 236, 190], 0.12 * o.light), bottom = col.map(function (x) { return Math.round(x * 0.62); });
+      var by = Math.max(Q[1], R[1]);
+      f.grad.setAttribute('x1', 0); f.grad.setAttribute('y1', P[1]); f.grad.setAttribute('x2', 0); f.grad.setAttribute('y2', by);
+      f.s0.setAttribute('stop-color', rgb(top)); f.s1.setAttribute('stop-color', rgb(bottom));
+      f.body.setAttribute('points', P + ' ' + Q + ' ' + R);
+      var d = '';
+      for (var j = 1; j < COURSES; j++) { var tt = CAP + (1 - CAP) * j / COURSES, q = lerp2(P, Q, tt), r = lerp2(P, R, tt); d += 'M' + q + 'L' + r; }
+      f.lines.setAttribute('d', d); f.lines.setAttribute('stroke', rgb(col.map(function (x) { return Math.round(x * 0.45); })));
+      f.cap.setAttribute('points', P + ' ' + lerp2(P, Q, CAP) + ' ' + lerp2(P, R, CAP)); f.cap.setAttribute('fill', rgb(mix(GOLD_DARK, GOLD_LIT, o.light)));
+      f.ridge.setAttribute('d', 'M' + P + 'L' + Q + 'M' + P + 'L' + R);
+      f.ridge.setAttribute('stroke', rgb(mix(col, [255, 240, 200], 0.35))); f.ridge.setAttribute('stroke-opacity', (0.15 + 0.5 * o.light).toFixed(2));
+      f.base.setAttribute('d', 'M' + Q + 'L' + R); f.base.setAttribute('stroke-opacity', (0.25 + 0.55 * o.light).toFixed(2));
+    });
+  }
+  var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches, t0 = performance.now();
+  function frame(now) { draw(0.6 + (now - t0) / 1000 * (2 * Math.PI / 28)); requestAnimationFrame(frame); }
+  draw(0.6); if (!still) requestAnimationFrame(frame);
+})();
 </script>
 </body>
 </html>
