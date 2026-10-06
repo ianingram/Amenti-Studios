@@ -1,0 +1,141 @@
+<!-- Amenti-Studios/upload.html · 2026-10-06 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Upload · Amenti Studios</title>
+<!-- ===========================================================================
+     THE MEDIA DOOR. Drop clips and stills of any size here; they go straight to
+     the amenti-media Worker's R2 bucket — not through GitHub, so no 25 MB limit —
+     and each comes back with a link the Studios pages can play from.
+     The upload key is kept only in this browser (localStorage), never in the page.
+     =========================================================================== -->
+<style>
+  :root{--ink:#07090c;--panel:#0d1117;--rule:#1d2530;--gold:#c9a24a;--pale:#c9d1d9;--mist:#7d8a99;--ok:#6fbf8f;--bad:#d77a6a;
+    --mono:ui-monospace,Menlo,Consolas,monospace;--serif:Georgia,'Times New Roman',serif}
+  *{box-sizing:border-box} body{margin:0;background:var(--ink);color:var(--pale);font-family:var(--mono);font-size:14px}
+  main{max-width:860px;margin:0 auto;padding:48px 22px 80px}
+  h1{font-family:var(--serif);font-weight:400;letter-spacing:.08em;font-size:34px;margin:0;color:#fff}
+  .sub{color:var(--gold);letter-spacing:.3em;font-size:11px;text-transform:uppercase;margin:8px 0 28px}
+  label{display:block;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mist);margin:16px 0 6px}
+  input,select{width:100%;background:var(--panel);border:1px solid var(--rule);color:var(--pale);padding:10px 12px;font:inherit;border-radius:4px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px} @media(max-width:640px){.row{grid-template-columns:1fr}}
+  #drop{margin-top:26px;border:2px dashed var(--rule);border-radius:8px;padding:56px 20px;text-align:center;color:var(--mist);cursor:pointer;transition:.2s}
+  #drop.over{border-color:var(--gold);color:var(--gold);background:#11161d}
+  #drop b{display:block;color:var(--pale);font-family:var(--serif);font-weight:400;font-size:22px;margin-bottom:8px}
+  .file{border:1px solid var(--rule);border-radius:6px;padding:12px 14px;margin-top:12px;background:var(--panel)}
+  .file .top{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+  .name{color:#fff;word-break:break-all} .size{color:var(--mist);white-space:nowrap}
+  .bar{height:4px;background:var(--rule);border-radius:2px;margin:10px 0 6px;overflow:hidden} .bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .2s}
+  .msg{font-size:12px;color:var(--mist)} .msg.ok{color:var(--ok)} .msg.bad{color:var(--bad)}
+  .link{display:flex;gap:8px;margin-top:8px} .link input{font-size:12px}
+  button{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:8px 12px;font:inherit;font-size:12px;border-radius:4px;cursor:pointer;white-space:nowrap}
+  button:hover{background:var(--gold);color:var(--ink)}
+  h2{font-family:var(--serif);font-weight:400;color:#fff;margin:44px 0 6px;font-size:22px}
+  #stored .file{display:flex;justify-content:space-between;gap:12px;align-items:center}
+  .note{color:var(--mist);font-size:12px;line-height:1.6}
+</style>
+</head>
+<body>
+<main>
+  <h1>THE MEDIA DOOR</h1>
+  <div class="sub">Amenti Studios · upload clips & stills of any size</div>
+
+  <div class="row">
+    <div><label for="folder">Production</label>
+      <select id="folder">
+        <option value="treasure-island/">Treasure Island</option>
+        <option value="quo-vadis/">Quo Vadis</option>
+        <option value="dracula/">Dracula</option>
+        <option value="romeo-and-juliet/">Romeo and Juliet</option>
+        <option value="a-christmas-carol/">A Christmas Carol</option>
+        <option value="julius-caesar/">Julius Caesar</option>
+        <option value="misc/">Other</option>
+      </select></div>
+    <div><label for="key">Upload key</label><input id="key" type="password" placeholder="the UPLOAD_KEY you set in Cloudflare" autocomplete="off"></div>
+  </div>
+  <label for="worker">Media Worker address</label>
+  <input id="worker" value="https://amenti-media.ingram-ian.workers.dev">
+
+  <div id="drop"><b>Drop files here</b>or click to choose · mp4, jpeg, png, mp3 · any size up to 100 MB each</div>
+  <input id="pick" type="file" multiple hidden>
+  <div id="queue"></div>
+
+  <h2>Already stored</h2>
+  <p class="note">Everything in the chosen production's folder. Claude can read this list too, so after uploading just say "it's uploaded".</p>
+  <div id="stored"><p class="note">Choose a production above.</p></div>
+</main>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var keyEl = $('key'), workerEl = $('worker'), folderEl = $('folder');
+  try { keyEl.value = localStorage.getItem('amenti-media-key') || ''; workerEl.value = localStorage.getItem('amenti-media-worker') || workerEl.value; } catch (e) {}
+  keyEl.onchange = function () { try { localStorage.setItem('amenti-media-key', keyEl.value); } catch (e) {} };
+  workerEl.onchange = function () { try { localStorage.setItem('amenti-media-worker', workerEl.value.replace(/\/+$/, '')); } catch (e) {} listStored(); };
+  folderEl.onchange = listStored;
+  var base = function () { return workerEl.value.replace(/\/+$/, ''); };
+  var mb = function (n) { return (n / 1048576).toFixed(1) + ' MB'; };
+  var safe = function (n) { return n.replace(/[^\w\-. ]/g, '_').replace(/\s+/g, '-'); };
+
+  var drop = $('drop'), pick = $('pick');
+  drop.onclick = function () { pick.click(); };
+  pick.onchange = function () { queue([].slice.call(pick.files)); pick.value = ''; };
+  ['dragenter', 'dragover'].forEach(function (e) { drop.addEventListener(e, function (ev) { ev.preventDefault(); drop.classList.add('over'); }); });
+  ['dragleave', 'drop'].forEach(function (e) { drop.addEventListener(e, function (ev) { ev.preventDefault(); drop.classList.remove('over'); }); });
+  drop.addEventListener('drop', function (ev) { queue([].slice.call(ev.dataTransfer.files)); });
+
+  var waiting = [], busy = false;
+  function queue(files) {
+    if (!keyEl.value) { alert('Enter the upload key first.'); return; }
+    files.forEach(function (f) {
+      var row = document.createElement('div'); row.className = 'file';
+      row.innerHTML = '<div class="top"><span class="name"></span><span class="size"></span></div><div class="bar"><i></i></div><div class="msg">waiting…</div>';
+      row.querySelector('.name').textContent = folderEl.value + safe(f.name);
+      row.querySelector('.size').textContent = mb(f.size);
+      $('queue').prepend(row); waiting.push({ f: f, row: row, path: folderEl.value + safe(f.name) });
+    });
+    next();
+  }
+  function next() {
+    if (busy || !waiting.length) return;
+    busy = true; var job = waiting.shift(), msg = job.row.querySelector('.msg'), bar = job.row.querySelector('.bar i');
+    if (job.f.size > 100 * 1048576) { msg.textContent = 'too large — over 100 MB'; msg.className = 'msg bad'; busy = false; return next(); }
+    var x = new XMLHttpRequest();
+    x.open('PUT', base() + '/upload/' + job.path.split('/').map(encodeURIComponent).join('/'));
+    x.setRequestHeader('X-Upload-Key', keyEl.value);
+    if (job.f.type) x.setRequestHeader('Content-Type', job.f.type);
+    x.upload.onprogress = function (e) { if (e.lengthComputable) { bar.style.width = (100 * e.loaded / e.total) + '%'; msg.textContent = 'uploading… ' + Math.round(100 * e.loaded / e.total) + '%'; } };
+    x.onload = function () {
+      var r = {}; try { r = JSON.parse(x.responseText); } catch (e) {}
+      if (x.status === 200 && r.ok) {
+        bar.style.width = '100%'; msg.textContent = 'stored'; msg.className = 'msg ok';
+        var l = document.createElement('div'); l.className = 'link';
+        l.innerHTML = '<input readonly><button>copy link</button>'; l.querySelector('input').value = r.url;
+        l.querySelector('button').onclick = function () { l.querySelector('input').select(); document.execCommand('copy'); this.textContent = 'copied'; };
+        job.row.appendChild(l); listStored();
+      } else { msg.textContent = 'failed: ' + (r.error || ('HTTP ' + x.status)); msg.className = 'msg bad'; }
+      busy = false; next();
+    };
+    x.onerror = function () { msg.textContent = 'failed: could not reach the Worker — check its address'; msg.className = 'msg bad'; busy = false; next(); };
+    x.send(job.f);
+  }
+  function listStored() {
+    var box = $('stored');
+    fetch(base() + '/list?prefix=' + encodeURIComponent(folderEl.value)).then(function (r) { return r.json(); }).then(function (items) {
+      if (!items.length) { box.innerHTML = '<p class="note">Nothing stored for this production yet.</p>'; return; }
+      box.innerHTML = '';
+      items.sort(function (a, b) { return a.path < b.path ? -1 : 1; }).forEach(function (o) {
+        var d = document.createElement('div'); d.className = 'file';
+        d.innerHTML = '<a class="name" target="_blank"></a><span class="size"></span>';
+        d.querySelector('a').href = o.url; d.querySelector('a').textContent = o.path; d.querySelector('.size').textContent = mb(o.size);
+        box.appendChild(d);
+      });
+    }).catch(function () { box.innerHTML = '<p class="note">Could not reach the media Worker yet — check its address above.</p>'; });
+  }
+  listStored();
+})();
+</script>
+</body>
+</html>
