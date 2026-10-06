@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/dracula/index.html · 2026-10-06 10:00 UTC -->
+<!-- Amenti-Studios/dracula/index.html · 2026-10-06 11:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,13 +75,13 @@
   /* THE VOYAGE (6 Oct 2026). When the sound plays The Voyage of the Demeter, the
      frame leaves the pass and follows the ship: Varna, under way, the deck as the
      crew turns, the fog and the captain alone, the storm off Whitby, the wreck.
-     Six stills, each dissolving into the next at its place in the track, read from
+     The road first — the pass, the boxes going down to the sea — then six stills, each dissolving into the next at its place in the track (v5 suite, 6 minutes: a 40-second prologue on the road), read from
      the audio clock so the picture and the music cannot drift apart; a flash of
      lightning across the storm at every thunder strike. Sound off: back to the pass. */
   .voy{position:absolute;inset:-3%;background:center 50%/cover no-repeat;opacity:0;
     transition:opacity 4s ease-in-out;animation:push 48s ease-in-out infinite alternate;will-change:opacity,transform}
   .voy.on{opacity:1}
-  .v1{background-image:url('voyage-1.jpg')} .v2{background-image:url('voyage-2.jpg')} .v3{background-image:url('voyage-3.jpg')}
+  .v0{background-image:url('dracula-hero.jpg')} .v1{background-image:url('voyage-1.jpg')} .v2{background-image:url('voyage-2.jpg')} .v3{background-image:url('voyage-3.jpg')}
   .v4{background-image:url('voyage-4.jpg')} .v5{background-image:url('voyage-5.jpg')} .v6{background-image:url('voyage-6.jpg')}
   .flash{position:absolute;inset:0;background:#e8eeff;opacity:0;pointer-events:none;mix-blend-mode:screen}
   .flash.go{animation:bolt .9s ease-out}
@@ -219,7 +219,7 @@
 <div class="hero">
   <div class="shot"></div>
   <div class="drift"></div>
-  <div class="voy v1"></div><div class="voy v2"></div><div class="voy v3"></div>
+  <div class="voy v0"></div><div class="voy v1"></div><div class="voy v2"></div><div class="voy v3"></div>
   <div class="voy v4"></div><div class="voy v5"></div><div class="voy v6"></div>
   <div class="flash" id="flash"></div>
   <div class="voycap" id="voycap"></div>
@@ -530,9 +530,9 @@ Promise.all([
   var hero = document.querySelector('.hero'), btn = document.getElementById('snd');
   var layers = [].slice.call(document.querySelectorAll('.voy')), flash = document.getElementById('flash'), cap = document.getElementById('voycap');
   if (!hero || !btn || !layers.length) return;
-  var SCENES = [[0, 'Varna · 6 July'], [70, 'Under way'], [112, 'At sea · the crew uneasy'], [240, 'The fog · the captain alone'],
-                [256, 'Off Whitby · the storm'], [352, 'Whitby · the wreck']];
-  var BOLTS = [276, 292, 308, 324, 336, 344, 352];
+  var SCENES = [[0, 'The road to Varna · the boxes go down to the sea'], [40, 'Varna · 6 July'], [98, 'Under way'], [140, 'At sea · the crew uneasy'],
+                [248, 'The fog · the captain alone'], [260, 'Off Whitby · the storm'], [340, 'Whitby · the wreck']];
+  var BOLTS = [280, 296, 304, 312, 324, 332, 340];
   var shown = -1, fired = {};
   function frame() {
     var D = window.DEMETER, on = btn.classList.contains('on');
