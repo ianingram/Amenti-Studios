@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/index.html · 2026-10-05 19:00 UTC -->
+<!-- Amenti-Studios/index.html · 2026-10-06 12:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -89,7 +89,7 @@
   <div class="tag">Staged readings</div>
   <p class="blurb">
     Public-domain works, cast from the Amenti Library of Legends. Every voice is a
-    historical figure drawn from a ledger of more than a thousand, each carrying
+    historical figure drawn from a ledger of more than two thousand, each carrying
     their own dialect and manner.
   </p>
   <div class="rule"></div>
@@ -121,13 +121,17 @@ const PRODUCTIONS = [
     line:'One narrator, five staves. Dickens toured it as a staged reading for '
        + 'fifteen years and wrote his own performing text.' },
   { key:'treasure-island', title:'Treasure Island', author:'Robert Louis Stevenson', year:1883,
-    art:null, href:'treasure-island/', ready:true,
+    art:'treasure-island/voyage/s00.jpg', href:'treasure-island/', ready:true,
     line:'Begun from a map drawn on a rainy afternoon at Braemar, and read aloud '
        + 'a chapter a day to the boy it was drawn for.' },
   { key:'romeo-and-juliet', title:'Romeo and Juliet', author:'William Shakespeare', year:1597,
     art:'romeo-and-juliet/verona-3-sunrise.jpg', href:'romeo-and-juliet/', ready:true, unit:'scenes',
     line:'In fair Verona, where we lay our scene. A play is already a cast recording: '
-       + 'every speech carries its speaker\u2019s name. Juliet by Joan of Arc.' }
+       + 'every speech carries its speaker\u2019s name. Juliet by Joan of Arc.' },
+  { key:'quo-vadis', title:'Quo Vadis', author:'Henryk Sienkiewicz', year:1896,
+    art:null, href:null, ready:true,
+    line:'Rome under Nero, and the real Romans play themselves \u2014 Petronius, Nero, '
+       + 'Seneca, Peter and Paul. Lygia by Helen Keller. Its stage is still being built.' }
 ];
 
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,

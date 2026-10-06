@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/treasure-island/index.html · 2026-10-05 01:00 UTC -->
+<!-- Amenti-Studios/treasure-island/index.html · 2026-10-06 06:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,16 +33,29 @@
   /* ── the City on Christmas Eve ─────────────────────────────────────── */
   .hero{position:relative;height:88vh;min-height:540px;overflow:hidden;
     background:radial-gradient(120% 90% at 70% 105%,#10262a 0%,#0a1619 45%,#07090c 82%)}
-  .shot{position:absolute;inset:-3%;background:none center 46%/cover no-repeat;opacity:0;
+  .shot{position:absolute;inset:-3%;background:url('voyage/s00.jpg') center 46%/cover no-repeat;opacity:0;
     animation:push 48s ease-in-out infinite alternate, reveal 7s 11s ease-out forwards;
     will-change:transform,opacity}
   /* the same frame again, blurred and drifting: fog, with no second asset */
-  .drift{position:absolute;inset:-6%;background:none center 58%/cover no-repeat;
+  .drift{position:absolute;inset:-6%;background:url('voyage/s00.jpg') center 58%/cover no-repeat;
     opacity:0;filter:blur(14px) saturate(1.1);mix-blend-mode:screen;
     animation:drift 104s linear infinite, driftin 7s 11s ease-out forwards;will-change:transform,opacity}
   @keyframes driftin{to{opacity:.16}}
   @keyframes drift{from{transform:translate3d(-2.5%,0,0)}to{transform:translate3d(2.5%,0,0)}}
   @keyframes reveal{to{opacity:1}}
+  /* THE VOYAGE (6 Oct 2026). With the sound on, the frame follows 'Fifteen Men': the
+     Hispaniola at anchor and under way, all hands, the landing, the fight, the boat
+     adrift at sunset. Midjourney clips (served from the amenti-media bucket) and stills
+     (voyage/), each placed on its moment in the song and read from the audio clock, so
+     picture and music cannot drift apart. Sound off: back to the still. */
+  .scene{position:absolute;inset:-3%;opacity:0;transition:opacity 3s ease-in-out;
+    background:center 50%/cover no-repeat;animation:push 30s ease-in-out infinite alternate;will-change:opacity,transform}
+  video.scene{width:106%;height:106%;object-fit:cover}
+  .scene.on{opacity:1}
+  .voycap{position:absolute;right:clamp(20px,4vw,48px);top:clamp(18px,4vh,40px);z-index:4;font-size:11px;
+    letter-spacing:.3em;text-transform:uppercase;color:var(--pale);opacity:0;transition:opacity 2.5s;text-shadow:0 1px 14px rgba(0,0,0,.9)}
+  .voycap.on{opacity:.85}
+  .titles{transition:opacity 4s} .hero.voyage .titles{opacity:.35}
   @keyframes push{from{transform:scale(1)}to{transform:scale(1.06)}}
   /* fog: the palpable brown air, very faint, drifting */
   .fog{position:absolute;inset:-10%;pointer-events:none;opacity:0;
@@ -151,6 +164,8 @@
 <div class="hero">
   <div class="shot"></div>
   <div class="drift"></div>
+  <div class="voyage" id="voyage"></div>
+  <div class="voycap" id="voycap"></div>
   <div class="fog"></div>
   <canvas class="snow" id="snow" aria-hidden="true"></canvas>
   <div class="veil"></div>
@@ -353,6 +368,7 @@ Promise.all([
         var src = ctx.createBufferSource(); src.buffer = t.buf; src.loop = true;
         var g = ctx.createGain(); g.gain.value = 0.0001;
         src.connect(g); g.connect(ctx.destination); src.start(0); fade(g, t.gain, 6);
+        window.TI_THEME = { ctx: ctx, t0: ctx.currentTime, dur: t.buf.duration };   /* the voyage reads this clock */
         nodes.push({ g: g, target: t.gain });
       });
       on = true; btn.classList.add('on'); btn.setAttribute('aria-label', 'Turn sound off'); loading = false;
@@ -373,6 +389,74 @@ Promise.all([
     if (!ctx || !on) return;
     nodes.forEach(function (n) { fade(n.g, document.hidden ? 0.0001 : n.target, 1.5); });
   });
+})();
+</script>
+<script>
+/* ─── THE VOYAGE ──────────────────────────────────────────────────────────
+   Each scene starts where its part of 'Fifteen Men' starts (seconds into the
+   240-second theme): the calm sea, "All hands on deck!" at 0:28, the crew's
+   chant, the verse at 1:30, the battle from 1:37, the drums, the coda adrift
+   from 2:55. A clip plays once from 'from' to 'to' and holds its last frame;
+   a still pushes in slowly. Clips stream from the amenti-media bucket. */
+(function () {
+  var hero = document.querySelector('.hero'), btn = document.getElementById('snd'), box = document.getElementById('voyage'), cap = document.getElementById('voycap');
+  if (!hero || !btn || !box) return;
+  var R2 = 'https://amenti-media.ingram-ian.workers.dev/m/treasure-island/';
+  var A = 'cinematic_still_18th-century_two-masted_schooner_the_Hispanio_22e57eef-4ee5-43cf-a811-0abdec92dd19_';
+  var B = 'cinematic_still_18th-century_two-masted_schooner_the_Hispanio_38d729fa-d87a-4d6e-9a68-614f75579de9_';
+  var SCENES = [
+    [0,   'img', 'voyage/s00.jpg',           'The Hispaniola · at anchor'],
+    [14,  'vid', R2 + A + '2.mp4', 0, 5.2,   'The Hispaniola'],
+    [28,  'vid', R2 + A + '0.mp4', 0, 5.2,   'All hands on deck'],
+    [40,  'img', 'voyage/s03.jpg',           'Off Treasure Island'],
+    [52,  'vid', R2 + B + '1.mp4', 0, 3.6,   'The anchorage'],
+    [64,  'img', 'voyage/s02.jpg',           'Under the Spy-glass'],
+    [78,  'img', 'voyage/s04.jpg',           'The landing'],
+    [90,  'img', 'voyage/s06.jpg',           'Pull for the shore'],
+    [97,  'img', 'voyage/s08.jpg',           'Surf and gunfire'],
+    [112, 'img', 'voyage/s05.jpg',           'The jolly-boat'],
+    [126, 'vid', R2 + B + '0.mp4', 0, 3.6,   'The ship'],
+    [138, 'vid', R2 + A + '3.mp4', 0, 5.2,   'The ship'],
+    [150, 'img', 'voyage/s01.jpg',           'Mist on the anchorage'],
+    [158, 'img', 'voyage/s09.jpg',           'Close quarters'],
+    [175, 'img', 'voyage/s07.jpg',           'Ashore'],
+    [195, 'img', 'voyage/s10.jpg',           'Adrift at sunset'],
+    [220, 'img', 'voyage/s11.jpg',           'Treasure Island']
+  ];
+  var els = SCENES.map(function (sc) {
+    var el;
+    if (sc[1] === 'vid') {
+      el = document.createElement('video'); el.muted = true; el.playsInline = true; el.setAttribute('playsinline', ''); el.preload = 'none';
+      el.dataset.src = sc[2]; el.dataset.from = sc[3]; el.dataset.to = sc[4];
+      el.addEventListener('timeupdate', function () { if (el.currentTime >= +el.dataset.to - 0.05) el.pause(); });   /* hold the last frame */
+    } else { el = document.createElement('div'); el.dataset.bg = sc[2]; }
+    el.className = 'scene'; box.appendChild(el); return el;
+  });
+  function prime(i) {                                   /* load a scene just before it is needed */
+    var el = els[i]; if (!el || el.dataset.primed) return; el.dataset.primed = 1;
+    if (el.tagName === 'VIDEO') { el.preload = 'auto'; el.src = el.dataset.src; }
+    else el.style.backgroundImage = "url('" + el.dataset.bg + "')";
+  }
+  function show(i) {
+    els.forEach(function (el, j) { el.classList.toggle('on', j === i); });
+    var el = els[i], sc = SCENES[i];
+    if (el.tagName === 'VIDEO') { try { el.currentTime = +el.dataset.from; } catch (e) {} var p = el.play(); if (p && p.catch) p.catch(function () {}); }
+    cap.classList.remove('on'); setTimeout(function () { cap.textContent = sc[sc.length - 1]; cap.classList.add('on'); }, 1200);
+  }
+  var shown = -1;
+  function frame() {
+    var T = window.TI_THEME, on = btn.classList.contains('on');
+    if (!T || !on) {
+      if (shown !== -1) { els.forEach(function (el) { el.classList.remove('on'); if (el.pause) el.pause(); }); cap.classList.remove('on'); hero.classList.remove('voyage'); shown = -1; }
+      return requestAnimationFrame(frame);
+    }
+    var t = (T.ctx.currentTime - T.t0) % T.dur, k = 0;
+    for (var i = 0; i < SCENES.length; i++) if (t >= SCENES[i][0]) k = i;
+    prime(k); prime(k + 1); if (k === SCENES.length - 1) prime(0);
+    if (k !== shown) { hero.classList.add('voyage'); show(k); shown = k; }
+    requestAnimationFrame(frame);
+  }
+  if (!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) requestAnimationFrame(frame);
 })();
 </script>
 </body>
