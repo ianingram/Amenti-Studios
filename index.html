@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/index.html · 2026-10-07 04:00 UTC -->
+<!-- Amenti-Studios/index.html · 2026-10-07 05:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -109,7 +109,7 @@
 <body>
 
 <div class="top">
-  <div class="sea" id="sea" aria-label="The Amenti pyramid standing in the sea; drag to turn it" role="img">
+  <div class="sea" id="sea" aria-label="The pyramids of Giza standing in the Nile flood under the real sky; drag to walk round them" role="img">
     <canvas id="seaCanvas"></canvas>
   </div>
   <div class="skybar"><span id="seaClock">GIZA</span>
@@ -235,6 +235,10 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
    Polaris, Sirius, Orion's belt, Vega and Aldebaran. The clock runs at an hour every four
    seconds. The real Sun lights the stone; the Moon lights it faintly at night. Two skies:
    TONIGHT, and 2560 BC — the sky the builders saw, Thuban almost at the pole.
+   v7: GIZA AS IT IS — the three pyramids at their real places and sizes, standing in the Nile's
+   flood (the inundation reached the plateau's foot every year), the desert escarpment for a far
+   shore, feluccas at true scale, honest light (dark stone by night, moonlit; sunlit by day), the
+   white Tura casing in 2560 BC. The time signatures are gone.
    v5: CLOSE TO THE GROUND — the eye just above the water, the pyramid near, in true perspective.
    Drag (or swipe) to turn the pyramid; drag up or down to raise or lower your eye; let go and it coasts to its
    slow turn again. Reduced motion: it stands still and the ships are moored, but it still turns
@@ -245,7 +249,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
   var ctx = cv.getContext('2d'), off = document.createElement('canvas'), octx = off.getContext('2d');
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var DPR = 1, W = 0, HS = 0, HZ = 0, A = 60, H = 77, CX = 0, BASE = 0, AXIS = 0;
-  var E0 = 14, E = E0, yaw = 0.6, D = 900, F = 800;  /* E: the eye's height above the water (world units); D: its distance */
+  var E0 = 14, E = E0, yaw = 0.6, D = 1500, F = 800;  /* E: the eye's height above the water (world units); D: its distance */
   var vel = 0, AUTO = 2 * Math.PI / 60, dragging = false;
   var STONE_DARK = [24, 19, 12], STONE_LIT = [196, 158, 88], GOLD_DARK = [120, 88, 24], GOLD_LIT = [255, 226, 140];
   var AMB = 0.16, L = norm([0.62, 0.55, 0.56]);
@@ -289,7 +293,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
     cv.width = off.width = Math.round(W * DPR); cv.height = off.height = Math.round(HS * DPR);
     HZ = Math.round(HS * 0.64); CX = W / 2;
     A = 100; H = 127;                                                             // world units: half-base 100, Giza's height 127
-    var S = Math.max(44, Math.min(118, W * (W < 700 ? 0.12 : 0.075)));   // v6: further off — smaller, flatter perspective F = S * D / A;                // the base's half-width on screen, close up
+    var S = Math.max(52, Math.min(150, W * (W < 700 ? 0.15 : 0.098)));   // v7: Khufu's half-base on screen, the group in view F = S * D / A;                // the base's half-width on screen, close up
     BASE = HZ; AXIS = HZ + F * E0 / D;                                            // the waterline at the pyramid's foot
     buildCoast(); if (!ships.length) seedShips();
   }
@@ -297,7 +301,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
     var r = rnd(1897);
     ['left', 'right'].forEach(function (side) {
       coast[side] = [0.44, 0.36, 0.27].map(function (reach, k) {
-        var pts = [], n = 48, peak = HS * [0.05, 0.1, 0.17][k], shore = HS * [0.0, 0.035, 0.085][k];
+        var pts = [], n = 48, peak = HS * [0.035, 0.06, 0.1][k], shore = HS * [0.0, 0.035, 0.085][k];
         var ph = [r() * 6, r() * 6, r() * 6];
         for (var i = 0; i <= n; i++) {
           var f = i / n, x = f * W * reach, edge = 1 - f;            // edge = 1 at the page edge
@@ -305,7 +309,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
           var water = HZ + shore * edge * edge;                       // the shoreline comes toward us
           pts.push([side === 'left' ? x : W - x, water - Math.max(0, hill), water]);
         }
-        return { pts: pts, col: [[22, 36, 52], [14, 24, 35], [9, 15, 22]][k], k: k };
+        return { pts: pts, col: [[30, 28, 28], [21, 19, 18], [13, 12, 11]][k], day: [[150, 130, 100], [116, 96, 70], [84, 68, 48]][k], k: k };
       });
     });
   }
@@ -321,85 +325,98 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
     });
   }
 
-  // ── the pyramid ──
-  function faces3d() {
-    var c = Math.cos(yaw), s = Math.sin(yaw), apex = [0, H, 0], centre = [0, H / 4, 0], CAM = [0, E, D];
-    var base = [[-A, 0, -A], [A, 0, -A], [A, 0, A], [-A, 0, A]].map(function (p) { return [p[0] * c + p[2] * s, 0, -p[0] * s + p[2] * c]; });
+  // ── the pyramids of Giza ──
+  // Three, at their real positions and sizes, from their coordinates (world units: 0.87 to the metre;
+  // +x east, -z north, Khufu at the origin). Khafre stands on bedrock some 10 m higher. Turning the
+  // scene walks you round Khufu, and the other two swing into view to the south-west.
+  var MT = 0.87, BUILT = false;
+  var GIZA3 = [
+    { name: 'Khufu',    x: 0,           z: 0,          a: 115.2 * MT, h: 146.6 * MT, y: 0,       cap: true },
+    { name: 'Khafre',   x: -328 * MT,   z: 344 * MT,   a: 107.5 * MT, h: 143.5 * MT, y: 10 * MT },
+    { name: 'Menkaure', x: -588 * MT,   z: 743 * MT,   a: 51.2 * MT,  h: 65.5 * MT,  y: 0 }];
+  // today the stepped core shows (warm sandstone-coloured limestone); in 2560 BC the white Tura casing, smooth
+  var CORE = { dark: [16, 14, 12], lit: [206, 178, 128] }, CASING = { dark: [22, 22, 24], lit: [240, 234, 218] };
+  function rot(p) { var c = Math.cos(yaw), s = Math.sin(yaw); return [p[0] * c + p[2] * s, p[1], -p[0] * s + p[2] * c]; }
+  function pyrFaces(pyr, mirror) {
+    var c = Math.cos(yaw), s = Math.sin(yaw), CAM = [0, E, D], m = mirror ? -1 : 1;
+    function T(p) { var r = rot(p); return [r[0], r[1] * m, r[2]]; }
+    var apex = T([pyr.x, pyr.y + pyr.h, pyr.z]), centre = T([pyr.x, pyr.y + pyr.h / 4, pyr.z]);
+    var base = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(function (q) { return T([pyr.x + q[0] * pyr.a, pyr.y, pyr.z + q[1] * pyr.a]); });
     var out = [];
     for (var i = 0; i < 4; i++) {
-      var b1 = base[i], b2 = base[(i + 1) % 4], u = [b1[0], b1[1] - H, b1[2]], v = [b2[0], b2[1] - H, b2[2]];
+      var b1 = base[i], b2 = base[(i + 1) % 4];
+      if (D - Math.max(b1[2], b2[2], apex[2]) < 160) continue;                 // never draw what is behind the eye
+      var u = [b1[0] - apex[0], b1[1] - apex[1], b1[2] - apex[2]], v = [b2[0] - apex[0], b2[1] - apex[1], b2[2] - apex[2]];
       var n = norm([u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]]);
-      var fc = [(b1[0] + b2[0]) / 3, (H + b1[1] + b2[1]) / 3 - centre[1], (b1[2] + b2[2]) / 3];
-      if (n[0] * fc[0] + n[1] * fc[1] + n[2] * fc[2] < 0) n = [-n[0], -n[1], -n[2]];
-      var fp = [(b1[0] + b2[0]) / 3, (H + b1[1] + b2[1]) / 3, (b1[2] + b2[2]) / 3], tc = norm([CAM[0] - fp[0], CAM[1] - fp[1], CAM[2] - fp[2]]);
-      var facing = n[0] * tc[0] + n[1] * tc[1] + n[2] * tc[2];                      // turned toward the eye
+      var fp = [(apex[0] + b1[0] + b2[0]) / 3, (apex[1] + b1[1] + b2[1]) / 3, (apex[2] + b1[2] + b2[2]) / 3];
+      if (n[0] * (fp[0] - centre[0]) + n[1] * (fp[1] - centre[1]) + n[2] * (fp[2] - centre[2]) < 0) n = [-n[0], -n[1], -n[2]];
+      var tc = norm([CAM[0] - fp[0], CAM[1] - fp[1], CAM[2] - fp[2]]), facing = n[0] * tc[0] + n[1] * tc[1] + n[2] * tc[2];
       if (facing <= 0.002) continue;
-      var nw = [n[0] * c - n[2] * s, n[1], n[0] * s + n[2] * c], lit = 0;   // the normal in the world: +x east, -z north
-      if (SKY.sun) {
+      var nw = [n[0] * c - n[2] * s, n[1] * m, n[0] * s + n[2] * c], lit = 0;     // the real face's normal in the world
+      if (SKY.sun) {                                                            // HONEST LIGHT: the Sun by day, the Moon faintly by night
         var sv = vec(SKY.sun.az, SKY.sun.alt), up = Math.max(0, Math.min(1, (SKY.sun.alt + 2) / 8));
         lit += up * 0.95 * Math.max(0, nw[0] * sv[0] + nw[1] * sv[1] + nw[2] * sv[2]);
         var mv = vec(SKY.moon.az, SKY.moon.alt), mup = Math.max(0, Math.min(1, (SKY.moon.alt + 1) / 6)) * (1 - up);
-        lit += mup * 0.35 * Math.max(0, nw[0] * mv[0] + nw[1] * mv[1] + nw[2] * mv[2]);
-      } else lit = 0.85 * Math.max(0, n[0] * L[0] + n[1] * L[1] + n[2] * L[2]);
-      var fill = 0.22 * Math.max(0, n[0] * L[0] + n[1] * L[1] + n[2] * L[2]);
-      out.push({ i: i, apex: apex, b1: b1, b2: b2, depth: (b1[2] + b2[2]) / 2, facing: facing, light: Math.min(1, AMB + lit + fill) });
+        var full = 0.5 - 0.5 * Math.cos((SKY.phase || 0) * Math.PI / 180);       // a full moon lights more than a crescent
+        lit += mup * (0.12 + 0.3 * full) * Math.max(0, nw[0] * mv[0] + nw[1] * mv[1] + nw[2] * mv[2]);
+        lit += (1 - up) * 0.05 + up * 0.12;                                      // sky light
+      } else lit = 0.5 * Math.max(0, n[0] * L[0] + n[1] * L[1] + n[2] * L[2]);
+      out.push({ apex: apex, b1: b1, b2: b2, depth: (b1[2] + b2[2]) / 2, facing: facing, light: Math.min(1, 0.04 + lit) });
     }
     return out.sort(function (a, b) { return a.depth - b.depth; });
   }
   function P(p) { var k = F / (D - p[2]); return [CX + p[0] * k, HZ - (p[1] - E) * k]; }   // true perspective from a low eye
   function lerp(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; }
-  function drawPyramid(g) {
-    var CAP = 0.17;
-    faces3d().forEach(function (o) {
-      var p = P(o.apex), q = P(o.b1), r = P(o.b2), col = mix(STONE_DARK, STONE_LIT, o.light);
-      var by = Math.max(q[1], r[1]), gr = g.createLinearGradient(0, p[1], 0, by);
-      gr.addColorStop(0, rgb(mix(col, [255, 236, 190], 0.12 * o.light))); gr.addColorStop(1, rgb(col.map(function (x) { return x * 0.62; })));
-      g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.lineTo(r[0], r[1]); g.closePath(); g.fillStyle = gr; g.fill();
-      g.strokeStyle = rgb(col.map(function (x) { return x * 0.5; }), 0.55); g.lineWidth = 0.8; g.beginPath();
-      for (var j = 1; j < 9; j++) { var t = CAP + (1 - CAP) * j / 9, a = lerp(p, q, t), b = lerp(p, r, t); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); }
-      g.stroke();
-      // the time signature, engraved in gold on the face's own plane
-      var m = lerp(q, r, 0.5), ax = [(r[0] - q[0]) / 200, (r[1] - q[1]) / 200], ay = [(m[0] - p[0]) / 100, (m[1] - p[1]) / 100];
-      if (ax[0] * ay[1] - ax[1] * ay[0] < 0) ax = [-ax[0], -ax[1]];
-      var vis = Math.min(1, o.facing * 3.2);
-      if (vis > 0.05) {
-        g.save(); g.setTransform(DPR * ax[0], DPR * ax[1], DPR * ay[0], DPR * ay[1], DPR * p[0], DPR * p[1]);
-        g.font = '700 36px "Cormorant Garamond", Georgia, serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
-        var gold = mix(GOLD_DARK, GOLD_LIT, o.light), num = String({ 1: 1, 2: 2, 3: 3, 0: 4 }[o.i]);
-        g.globalAlpha = vis * 0.8; g.fillStyle = 'rgba(10,8,4,.85)';
-        g.fillText(num, 1.4, 50.5); g.fillText('4', 1.4, 79.5);                 // the cut
-        g.globalAlpha = vis; g.fillStyle = rgb(gold);
-        g.fillText(num, 0, 49); g.fillText('4', 0, 78);                     // the gold
-        g.restore();
-      }
-      g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(lerp(p, q, CAP)[0], lerp(p, q, CAP)[1]); g.lineTo(lerp(p, r, CAP)[0], lerp(p, r, CAP)[1]); g.closePath();
-      g.fillStyle = rgb(mix(GOLD_DARK, GOLD_LIT, o.light)); g.fill();
-      g.lineCap = 'round'; g.lineWidth = 1; g.strokeStyle = rgb(mix(col, [255, 240, 200], 0.35), 0.15 + 0.5 * o.light);
-      g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.moveTo(p[0], p[1]); g.lineTo(r[0], r[1]); g.stroke();
-      g.lineWidth = 1.3; g.strokeStyle = 'rgba(201,162,74,' + (0.25 + 0.55 * o.light).toFixed(2) + ')';
-      g.beginPath(); g.moveTo(q[0], q[1]); g.lineTo(r[0], r[1]); g.stroke();
+  function drawGiza(g, mirror) {
+    var order = GIZA3.slice().sort(function (a, b) { return rot([a.x, 0, a.z])[2] - rot([b.x, 0, b.z])[2]; });   // far first
+    var stone = BUILT ? CASING : CORE;
+    order.forEach(function (pyr) {
+      pyrFaces(pyr, mirror).forEach(function (o) {
+        var p = P(o.apex), q = P(o.b1), r = P(o.b2), col = mix(stone.dark, stone.lit, o.light);
+        var by = Math.max(q[1], r[1]), gr = g.createLinearGradient(0, p[1], 0, by);
+        gr.addColorStop(0, rgb(col)); gr.addColorStop(1, rgb(col.map(function (x) { return x * 0.72; })));
+        g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.lineTo(r[0], r[1]); g.closePath(); g.fillStyle = gr; g.fill();
+        var tall = Math.abs(by - p[1]);
+        if (!BUILT && tall > 30 && !(pyr.name === 'Khafre')) {                 // the stepped courses, where the core is bare
+          var nC = Math.min(22, Math.round(tall / 6));
+          g.strokeStyle = rgb(col.map(function (x) { return x * 0.55; }), 0.5); g.lineWidth = 0.6; g.beginPath();
+          for (var j = 1; j < nC; j++) { var t = j / nC, a = lerp(p, q, t), b = lerp(p, r, t); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); }
+          g.stroke();
+        }
+        if (!BUILT && pyr.name === 'Khafre') {                                  // Khafre keeps a cap of its casing near the top
+          var cq = lerp(p, q, 0.2), cr = lerp(p, r, 0.2);
+          g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(cq[0], cq[1]); g.lineTo(cr[0], cr[1]); g.closePath();
+          g.fillStyle = rgb(mix(CASING.dark, CASING.lit, o.light * 0.9)); g.fill();
+        }
+        if (pyr.cap) {                                                           // Khufu's gilded pyramidion
+          var aq = lerp(p, q, 0.08), ar = lerp(p, r, 0.08);
+          g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(aq[0], aq[1]); g.lineTo(ar[0], ar[1]); g.closePath();
+          g.fillStyle = rgb(mix([150, 110, 30], [255, 226, 140], Math.max(0.45, o.light))); g.fill();
+        }
+        g.lineWidth = 0.8; g.strokeStyle = rgb(mix(col, [255, 245, 220], 0.3), 0.12 + 0.45 * o.light);   // the ridges catch the light
+        g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.moveTo(p[0], p[1]); g.lineTo(r[0], r[1]); g.stroke();
+      });
     });
   }
   function drawBeam(g, t, apex) {
     var pulse = 0.55 + 0.45 * Math.sin(t * 2 * Math.PI / 4.5);
     var gb = g.createLinearGradient(0, apex[1], 0, 0);
     gb.addColorStop(0, 'rgba(255,244,192,' + (0.75 + 0.25 * pulse) + ')'); gb.addColorStop(0.3, 'rgba(248,208,96,.4)'); gb.addColorStop(1, 'rgba(212,160,23,0)');
-    g.fillStyle = gb; g.fillRect(apex[0] - 0.9, 0, 1.8, apex[1]);
-    var rh = F * A / D * (0.5 + 0.22 * pulse), halo = g.createRadialGradient(apex[0], apex[1], 0, apex[0], apex[1], rh);
-    halo.addColorStop(0, 'rgba(255,244,192,.9)'); halo.addColorStop(0.35, 'rgba(248,208,96,.32)'); halo.addColorStop(1, 'rgba(212,160,23,0)');
+    g.fillStyle = gb; g.fillRect(apex[0] - 0.8, 0, 1.6, apex[1]);
+    var rh = F * A / D * (0.32 + 0.14 * pulse), halo = g.createRadialGradient(apex[0], apex[1], 0, apex[0], apex[1], rh);
+    halo.addColorStop(0, 'rgba(255,244,192,.85)'); halo.addColorStop(0.35, 'rgba(248,208,96,.28)'); halo.addColorStop(1, 'rgba(212,160,23,0)');
     g.fillStyle = halo; g.beginPath(); g.arc(apex[0], apex[1], rh, 0, 7); g.fill();
   }
 
-  // ── the ship glyph ──
+  // ── a felucca: the Nile's boat, a low hull and one great lateen sail on a slanting yard ──
   function ship(g, x, y, w, dir, sails, alpha) {
     g.save(); g.translate(x, y); g.scale(dir, 1); g.globalAlpha = alpha;
-    g.fillStyle = '#0b1219'; g.beginPath();                                  // hull
-    g.moveTo(-w * 0.5, -w * 0.06); g.lineTo(w * 0.5, -w * 0.06); g.lineTo(w * 0.36, w * 0.12); g.lineTo(-w * 0.4, w * 0.12); g.closePath(); g.fill();
-    g.strokeStyle = 'rgba(190,200,210,.5)'; g.lineWidth = Math.max(0.6, w * 0.03);
-    g.beginPath(); g.moveTo(0, -w * 0.06); g.lineTo(0, -w * 0.95); g.stroke(); // mast
-    g.fillStyle = 'rgba(214,206,186,.82)'; g.beginPath();                     // mainsail
-    g.moveTo(w * 0.03, -w * 0.9); g.lineTo(w * 0.03, -w * 0.12); g.lineTo(-w * 0.38, -w * 0.14); g.closePath(); g.fill();
-    if (sails > 1) { g.beginPath(); g.moveTo(w * 0.07, -w * 0.82); g.lineTo(w * 0.46, -w * 0.12); g.lineTo(w * 0.07, -w * 0.12); g.closePath(); g.fillStyle = 'rgba(200,194,176,.7)'; g.fill(); }
+    g.fillStyle = '#0b0f14'; g.beginPath();
+    g.moveTo(-w * 0.5, -w * 0.08); g.quadraticCurveTo(0, w * 0.16, w * 0.5, -w * 0.1); g.lineTo(w * 0.38, w * 0.03); g.lineTo(-w * 0.38, w * 0.03); g.closePath(); g.fill();
+    g.strokeStyle = 'rgba(160,150,130,.55)'; g.lineWidth = Math.max(0.5, w * 0.03);
+    g.beginPath(); g.moveTo(w * 0.05, -w * 0.02); g.lineTo(w * 0.12, -w * 0.62); g.stroke();                  // the mast, raked
+    g.fillStyle = 'rgba(220,210,186,.85)'; g.beginPath();                                                   // the lateen sail
+    g.moveTo(-w * 0.42, -w * 0.06); g.lineTo(w * 0.42, -w * 1.05); g.lineTo(w * 0.1, -w * 0.06); g.closePath(); g.fill();
     g.restore();
   }
 
@@ -499,13 +516,13 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
       g.fillStyle = 'rgba(140,180,220,' + (0.05 + 0.04 * Math.sin(t * 1.3 + k)) + ')'; g.fillRect(xx, yy, ww, 1);
     }
     // the reflection of the pyramid: render it off-canvas, then lay it on the water in rippling slices
-    var apex = P([0, H, 0]);
-    octx.setTransform(DPR, 0, 0, DPR, 0, 0); octx.clearRect(0, 0, W, HS); drawPyramid(octx);
-    var SA = F * A / D, refLen = (AXIS - apex[1]) * 1.05, x0 = CX - SA * 1.9, sw = SA * 3.8;
-    for (var y = AXIS; y < Math.min(HS, AXIS + refLen); y += 2) {
-      var src = 2 * AXIS - y, f = (y - AXIS) / refLen, dx = Math.sin(y * 0.19 + t * 2.1) * (0.6 + 3.2 * f) + Math.sin(y * 0.07 - t * 1.3) * 1.2 * f;
-      g.globalAlpha = 0.5 * (1 - f) * (1 - f);
-      g.drawImage(off, x0 * DPR, src * DPR, sw * DPR, 2 * DPR, x0 + dx, y, sw, 2);
+    var apex = P(rot([0, GIZA3[0].h, 0]));
+    octx.setTransform(DPR, 0, 0, DPR, 0, 0); octx.clearRect(0, 0, W, HS); drawGiza(octx, true);   // the mirrored pyramids, below the water
+    var refLen = (HS - HZ);                                                     // lay the reflection on the water, rippling
+    for (var y = HZ; y < HS; y += 2) {
+      var f = (y - HZ) / refLen, dx = Math.sin(y * 0.19 + t * 2.1) * (0.4 + 2.6 * f) + Math.sin(y * 0.07 - t * 1.3) * f;
+      g.globalAlpha = 0.42 * Math.pow(1 - f, 1.6);
+      g.drawImage(off, 0, y * DPR, W * DPR, 2 * DPR, dx, y, W, 2);
     }
     g.globalAlpha = 1;
     // the beacon's path on the water
@@ -518,10 +535,10 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
     ships.sort(function (a, b) { return a.d - b.d; });
     var behind = [], front = [];
     ships.forEach(function (s) {
-      var y = HZ + 3 + Math.pow(s.d, 1.5) * (HS - HZ) * 0.72, w = 7 + s.d * 30;
-      if (!still) s.x += s.dir * (5 + s.d * 16) * dt;
+      var y = HZ + 2 + Math.pow(s.d, 1.6) * (HS - HZ) * 0.7, w = 3.5 + s.d * 13;   // feluccas, at the pyramids' true scale
+      if (!still) s.x += s.dir * (2 + s.d * 7) * dt;
       if (s.x < -60) s.x = W + 50; if (s.x > W + 60) s.x = -50;
-      (y < AXIS + 6 ? behind : front).push([s, y, w]);   // near the foot: behind the pyramid
+      (y < AXIS + 3 ? behind : front).push([s, y, w]);   // near the foot: behind the pyramids
     });
     function drawShip(o) {
       var s = o[0], y = o[1] + Math.sin(t * 1.6 + s.bob) * 0.6, w = o[2], a = 0.35 + 0.65 * Math.min(1, s.d * 3);
@@ -532,7 +549,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
     }
     behind.forEach(drawShip);
     drawBeam(g, t, apex);
-    drawPyramid(g);
+    drawGiza(g, false);
     front.forEach(drawShip);
     // the coast, far to near, over everything at the edges (ships slip behind the headlands)
     [0, 1, 2].forEach(function (k) {
@@ -540,7 +557,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
         var lay = coast[side][k]; g.beginPath();
         lay.pts.forEach(function (p, i) { i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]); });
         for (var i = lay.pts.length - 1; i >= 0; i--) g.lineTo(lay.pts[i][0], lay.pts[i][2] + 1);
-        g.closePath(); g.fillStyle = rgb(lay.col); g.fill();
+        g.closePath(); g.fillStyle = rgb(mix(lay.col, lay.day, day * 0.85)); g.fill();
       });
     });
     updateReadout(now);
@@ -571,6 +588,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
   [].forEach.call(document.querySelectorAll('[data-sky]'), function (b) {
     b.addEventListener('click', function () {
       [].forEach.call(document.querySelectorAll('[data-sky]'), function (x) { x.classList.toggle('on', x === b); });
+      BUILT = b.dataset.sky !== 'now';
       if (b.dataset.sky === 'now') SIM = Date.now();
       else { var d = new Date(); d.setUTCFullYear(-2559); d.setUTCHours(16, 0, 0, 0); SIM = d.getTime(); }   // 2560 BC, dusk at Giza
       skyAt = 0; wake();
