@@ -27,7 +27,7 @@
      =========================================================================== -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
 <link rel="preload" href="fonts/amenti-display-700.woff2" as="font" type="font/woff2" crossorigin>
 <style>
   /* AMENTI DISPLAY — the house face from Amenti.live (derived from Orbitron, OFL-1.1), for the wordmark */
@@ -46,7 +46,7 @@
   a{color:inherit;text-decoration:none}
 
   .top{padding:16vh 22px 0;text-align:center}
-  /* THE PYRAMID — Page One's pyramid, turning slowly in three dimensions over the wordmark: four
+  /* THE PYRAMID — Page One's pyramid, turning slowly in three dimensions (one turn a minute) over the wordmark: four
      faces lit from the upper right, stone courses, the gold capstone, its light breathing, and a
      thin beam rising from the apex. Reduced motion: it stands still. */
   .pyramid{display:block;width:clamp(96px,11vw,136px);height:auto;margin:-34px auto 18px;overflow:visible}
@@ -56,13 +56,15 @@
   @keyframes beam{0%,100%{opacity:.55}50%{opacity:1}}
   @media (prefers-reduced-motion:reduce){.py-halo,.py-beam{animation:none}}
   @media (max-width:600px){.pyramid{margin-top:8px}}
-  .blurb .credit{display:block;margin-top:14px;color:#e6c77a}
+  .blurb .credit{display:block;margin-top:18px;font-family:'Pinyon Script','Snell Roundhand','Apple Chancery',cursive;
+    font-size:clamp(21px,2.3vw,30px);line-height:1.3;color:#e2c375}
   .mark{font-family:'Amenti Display',var(--serif);font-weight:700;font-size:clamp(30px,5.6vw,64px);letter-spacing:.12em;
     color:#fff;margin:0;line-height:1}
   .tag{font-size:10px;letter-spacing:.42em;color:var(--gold);text-transform:uppercase;
     margin-top:16px}
-  .blurb{max-width:640px;margin:22px auto 0;font-family:'Pinyon Script','Snell Roundhand','Apple Chancery',cursive;
-    font-size:clamp(22px,2.6vw,29px);line-height:1.55;color:#d9cfb8;letter-spacing:.01em}
+  /* the introduction: a quiet programme serif; the script is kept for the credit alone, as a signature */
+  .blurb{max-width:560px;margin:26px auto 0;font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+    font-size:clamp(17px,1.55vw,20px);line-height:1.7;color:#b8b1a3;letter-spacing:.005em}
   .rule{height:1px;max-width:560px;margin:46px auto 0;
     background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 
@@ -120,7 +122,7 @@
     Public-domain works, cast from the Amenti Library of Legends. Every voice is a
     historical figure drawn from a ledger of more than two thousand, each carrying
     their own dialect and manner.
-    <span class="credit">Produced and directed by Ian Ingram.</span>
+    <span class="credit">Produced and directed by Ian&nbsp;Ingram.</span>
   </p>
   <div class="rule"></div>
 </div>
@@ -222,7 +224,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
      · each face graded from apex to base (light gathers at the top, the base sits in shade);
      · the ridges catch a highlight where a lit face meets the edge; the base edge is gold;
      · the capstone's gold brightens and dims with its face's light.
-   One turn every 28 seconds. */
+   One turn a minute. */
 (function () {
   var g = document.getElementById('pyFaces'), svg = document.getElementById('pyramid'); if (!g || !svg) return;
   var NS = 'http://www.w3.org/2000/svg', A = 78, H = 100, E = 0.2, CAP = 0.17, COURSES = 9;
@@ -281,7 +283,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
     });
   }
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches, t0 = performance.now();
-  function frame(now) { draw(0.6 + (now - t0) / 1000 * (2 * Math.PI / 28)); requestAnimationFrame(frame); }
+  function frame(now) { draw(0.6 + (now - t0) / 1000 * (2 * Math.PI / 60)); requestAnimationFrame(frame); }
   draw(0.6); if (!still) requestAnimationFrame(frame);
 })();
 </script>
