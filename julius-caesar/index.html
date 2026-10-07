@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/julius-caesar/index.html · 2026-10-07 07:20 UTC -->
+<!-- Amenti-Studios/julius-caesar/index.html · 2026-10-07 08:40 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -151,7 +151,7 @@
   <div class="sub" id="company-sub">&hellip;</div>
   <div class="company" id="company"></div>
 
-  <div class="band">The Acts</div>
+  <div class="band">The Scenes</div>
   <div class="sub" id="ch-sub"></div>
   <div class="chapters" id="chapters"></div>
 
@@ -214,12 +214,18 @@ function drawCompany(rows){
       </div>
     </div>`).join('');
   co.querySelectorAll('.face').forEach(f => { if (f.dataset.name) face(f, f.dataset.name); });
-  const cast = rows.filter(r => r[1]).length;
-  document.getElementById('company-sub').textContent =
-    cast + ' Romans playing themselves, in their own voices from the Amenti ledger';
+  const voices = new Set(rows.filter(r => r[1]).map(r => r[1])).size;
+  document.getElementById('company-sub').textContent = rows.length + ' roles \u00b7 ' + voices +
+    ' voices from the Amenti ledger \u00b7 the Romans play themselves';
+}
+function open(ep){
+  if (window.Amenti && window.Amenti.playbill) { window.Amenti.playbill.open(ep); return; }
+  alert('The speech engine did not load. The console says which part is missing.');
 }
 function drawActs(ch){
-  document.getElementById('ch-sub').textContent = 'Five acts · in production';
+  const ready = ch.filter(c => c.ready).length;
+  document.getElementById('ch-sub').textContent = ready
+    ? ch.length + ' scenes \u00b7 ' + ready + ' ready to hear' : 'Five acts \u00b7 in production';
   document.getElementById('chapters').innerHTML = ch.map(c => `
     <div class="ch ${c.ready?'on':''}" ${c.ready?`data-ep="${esc(c.file)}" tabindex="0" role="button"`:''}>
       <div class="n">${esc(c.n)}</div>
@@ -227,7 +233,8 @@ function drawActs(ch){
       <div class="tag">${c.ready?'ready':''}</div>
     </div>`).join('');
   document.querySelectorAll('.ch.on').forEach(row=>{
-    row.onclick = () => window.Amenti && window.Amenti.playbill && window.Amenti.playbill.open(row.dataset.ep);
+    row.onclick = () => open(row.dataset.ep);
+    row.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(row.dataset.ep); } };
   });
 }
 
@@ -246,6 +253,12 @@ document.getElementById('note').innerHTML =
   'Shakespeare’s Rome, and the real Romans speak their own lines.' +
   '<br>Faces appear where a plate exists; a mark stands in where one does not yet.';
 </script>
+<!-- THE ENGINE — the same five files, from the same place, as the other productions. -->
+<script src="https://ianingram.github.io/Amenti.live/amenti-core.bundle.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/reader.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/casting.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/playbill.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/sound.js"></script>
 <script>
 /* ─── THE BED ───────────────────────────────────────────────────────────
    The Forum under the laurel, when asked for. Same rules as the other pages:
@@ -295,6 +308,12 @@ document.getElementById('note').innerHTML =
     nodes.forEach(function (n) { fade(n.g, on ? n.target : 0, on ? 3 : 3); });
   }
   btn.onclick = function () { if (!ctx) { start(); return; } if (ctx.state === 'suspended') ctx.resume(); set(!on); };
+  /* a scene is beginning: the Forum steps aside so the reading has the room */
+  var R = window.Amenti && window.Amenti.reading;
+  if (R && typeof R.play === 'function') {
+    var _play = R.play;
+    R.play = function () { if (on) set(false); return _play.apply(R, arguments); };
+  }
   document.addEventListener('visibilitychange', function () {
     if (!ctx || !on) return;
     nodes.forEach(function (n) { fade(n.g, document.hidden ? 0.0001 : n.target, 1.5); });
