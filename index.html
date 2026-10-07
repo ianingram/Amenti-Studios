@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/index.html · 2026-10-06 23:30 UTC -->
+<!-- Amenti-Studios/index.html · 2026-10-07 03:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,17 +45,18 @@
     font-family:var(--mono);-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
 
-  .top{padding:16vh 22px 0;text-align:center}
-  /* THE PYRAMID — Page One's pyramid, turning slowly in three dimensions (one turn a minute) over the wordmark: four
-     faces lit from the upper right, stone courses, the gold capstone, its light breathing, and a
-     thin beam rising from the apex. Reduced motion: it stands still. */
-  .pyramid{display:block;width:clamp(96px,11vw,136px);height:auto;margin:-34px auto 18px;overflow:visible}
-  .py-halo{transform-origin:0 -92px;transform-box:view-box;animation:beacon 4.5s ease-in-out infinite}
-  @keyframes beacon{0%,100%{opacity:.55;transform:scale(.9)}50%{opacity:1;transform:scale(1.12)}}
-  .py-beam{animation:beam 3.2s ease-in-out infinite}
-  @keyframes beam{0%,100%{opacity:.55}50%{opacity:1}}
-  @media (prefers-reduced-motion:reduce){.py-halo,.py-beam{animation:none}}
-  @media (max-width:600px){.pyramid{margin-top:8px}}
+  .top{padding:0 22px 0;text-align:center}
+  /* THE SEA (v3, 6 Oct 2026) — a full-width scene at the head of the page: the Amenti pyramid standing
+     in the sea, its reflection rippling beneath it, the water deep blue at the horizon and fading to
+     black, a coastline receding on either side, small ships sailing. Each face of the pyramid bears a
+     time signature — 1/4, 2/4, 3/4, 4/4 — in gold. Drag (or swipe) the pyramid to turn it; let go and
+     it coasts, then resumes its slow turn. */
+  .sea{position:relative;left:50%;width:100vw;margin-left:-50vw;height:clamp(330px,42vw,500px);margin-bottom:6px}
+  .sea canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;cursor:grab}
+  .sea canvas.dragging{cursor:grabbing}
+  .skybar{margin:-4px auto 34px;font-size:10px;letter-spacing:.22em;color:#7d8a99;display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap}
+  .skybar button{background:none;border:1px solid #2a3442;color:#8a97a6;font:inherit;letter-spacing:.2em;text-transform:uppercase;padding:5px 10px;border-radius:3px;cursor:pointer}
+  .skybar button.on,.skybar button:hover{border-color:var(--gold);color:var(--gold)}
   .blurb .credit{display:block;margin-top:18px;font-family:'Pinyon Script','Snell Roundhand','Apple Chancery',cursive;
     font-size:clamp(21px,2.3vw,30px);line-height:1.3;color:#e2c375}
   .mark{font-family:'Amenti Display',var(--serif);font-weight:700;font-size:clamp(30px,5.6vw,64px);letter-spacing:.12em;
@@ -103,19 +104,16 @@
   .foot{margin-top:64px;text-align:center;font-size:10px;color:#4c5c54;line-height:2}
   .foot a{color:#6c7c74;border-bottom:1px solid rgba(255,255,255,.1)}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script>
 </head>
 <body>
 
 <div class="top">
-  <svg class="pyramid" id="pyramid" viewBox="-120 -330 240 362" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="pyBeam" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff4c0" stop-opacity=".95"/><stop offset=".25" stop-color="#f8d060" stop-opacity=".55"/><stop offset="1" stop-color="#d4a017" stop-opacity="0"/></linearGradient>
-      <radialGradient id="pyHalo" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff4c0" stop-opacity=".9"/><stop offset=".35" stop-color="#f8d060" stop-opacity=".35"/><stop offset="1" stop-color="#d4a017" stop-opacity="0"/></radialGradient>
-    </defs>
-    <rect class="py-beam" x="-1" y="-330" width="2" height="240" fill="url(#pyBeam)"/>
-    <g id="pyFaces"></g>
-    <circle class="py-halo" cx="0" cy="-92" r="46" fill="url(#pyHalo)"/>
-  </svg>
+  <div class="sea" id="sea" aria-label="The Amenti pyramid standing in the sea; drag to turn it" role="img">
+    <canvas id="seaCanvas"></canvas>
+  </div>
+  <div class="skybar"><span id="seaClock">GIZA</span>
+    <button type="button" data-sky="now" class="on">Tonight</button><button type="button" data-sky="built">2560 BC</button></div>
   <h1 class="mark">AMENTI STUDIOS</h1>
   <div class="tag">Staged readings</div>
   <p class="blurb">
@@ -214,77 +212,377 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
 });
 </script>
 <script>
-/* THE TURNING PYRAMID — a square pyramid (Giza's proportions) rotating about its axis, seen from a
-   little above. Shading done properly (v2):
-     · each face's OUTWARD normal (pointing away from the pyramid's centre), so the faces turned to
-       the light are bright and the others fall into shadow — never the reverse;
-     · only faces turned toward the viewer are drawn (two or three, seen from above), back to front;
-     · light from the upper right, in front: Lambert diffuse plus a little ambient, so the shadow
-       side is dark stone, not black;
-     · each face graded from apex to base (light gathers at the top, the base sits in shade);
-     · the ridges catch a highlight where a lit face meets the edge; the base edge is gold;
-     · the capstone's gold brightens and dims with its face's light.
-   One turn a minute. */
+/* ─── THE SEA ─────────────────────────────────────────────────────────────────────────────
+   The Amenti pyramid standing in a calm sea at night, the whole width of the page.
+     · the pyramid: a square pyramid (Giza's proportions) turning once a minute; outward normals,
+       light from the upper right, faces graded apex to base, stone courses, ridge highlights,
+       the gold capstone; on each face a TIME SIGNATURE in gold — 1/4, 2/4, 3/4, 4/4 — mapped onto
+       the face's plane so it turns with the stone; a thin beam rises from the apex
+     · its reflection: the pyramid mirrored at the waterline, in slices that ripple, fading down
+     · the water: deep blue at the horizon fading to black, a glitter path beneath the beacon
+     · the coast: headlands on either side receding toward the horizon, nearer ones darker and
+       taller, their shorelines coming down toward us at the page's edges, mirrored faintly
+     · ships: small sailing glyphs crossing at different distances — the far ones tiny on the
+       horizon, the near ones larger and slower to cross — each with a wake and a reflection,
+       slipping behind the headlands at the edges
+   THE SKY OVER GIZA (v4). The pyramid is the Great Pyramid, its faces set to the four quarters as
+   the real one is — the time signatures follow the sun: 1/4 EAST (sunrise, the first beat), 2/4
+   SOUTH, 3/4 WEST, 4/4 NORTH. Turning it is walking round it: the sky behind it is the sky in
+   the direction you face, computed LIVE for Giza (29°58′45″N 31°08′03″E) by astronomy-engine —
+   the engine Page Two's Sovereign.Ephemeris already trusts; nothing is stored. The Sun, the
+   Moon, Mercury, Venus, Mars, Jupiter and Saturn rise and set on their true paths, with eight
+   stars: Thuban (the pole star of the pyramid age, at which the descending passage points),
+   Polaris, Sirius, Orion's belt, Vega and Aldebaran. The clock runs at an hour every four
+   seconds. The real Sun lights the stone; the Moon lights it faintly at night. Two skies:
+   TONIGHT, and 2560 BC — the sky the builders saw, Thuban almost at the pole.
+   v5: CLOSE TO THE GROUND — the eye just above the water, the pyramid near, in true perspective.
+   Drag (or swipe) to turn the pyramid; drag up or down to raise or lower your eye; let go and it coasts to its
+   slow turn again. Reduced motion: it stands still and the ships are moored, but it still turns
+   by hand. The loop sleeps when the scene is off screen. */
 (function () {
-  var g = document.getElementById('pyFaces'), svg = document.getElementById('pyramid'); if (!g || !svg) return;
-  var NS = 'http://www.w3.org/2000/svg', A = 78, H = 100, E = 0.2, CAP = 0.17, COURSES = 9;
+  var wrap = document.getElementById('sea'), cv = document.getElementById('seaCanvas');
+  if (!wrap || !cv || !cv.getContext) return;
+  var ctx = cv.getContext('2d'), off = document.createElement('canvas'), octx = off.getContext('2d');
+  var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DPR = 1, W = 0, HS = 0, HZ = 0, A = 60, H = 77, CX = 0, BASE = 0, AXIS = 0;
+  var E0 = 18, E = E0, yaw = 0.6, D = 520, F = 800;  /* E: the eye's height above the water (world units); D: its distance */
+  var vel = 0, AUTO = 2 * Math.PI / 60, dragging = false;
   var STONE_DARK = [24, 19, 12], STONE_LIT = [196, 158, 88], GOLD_DARK = [120, 88, 24], GOLD_LIT = [255, 226, 140];
-  var AMB = 0.16, L = [0.62, 0.55, 0.56], VIEW = [0, Math.sin(E), Math.cos(E)];
-  var n_ = Math.hypot(L[0], L[1], L[2]); L = L.map(function (v) { return v / n_; });
-  var defs = svg.querySelector('defs');
-  function mix(a, b, t) { return a.map(function (v, j) { return Math.round(v + (b[j] - v) * t); }); }
-  function rgb(c) { return 'rgb(' + c.join(',') + ')'; }
-  var faces = [0, 1, 2, 3].map(function (k) {
-    var f = { g: document.createElementNS(NS, 'g') };
-    f.grad = document.createElementNS(NS, 'linearGradient'); f.grad.id = 'pyF' + k; f.grad.setAttribute('gradientUnits', 'userSpaceOnUse');
-    f.s0 = document.createElementNS(NS, 'stop'); f.s0.setAttribute('offset', '0'); f.s1 = document.createElementNS(NS, 'stop'); f.s1.setAttribute('offset', '1');
-    f.grad.appendChild(f.s0); f.grad.appendChild(f.s1); defs.appendChild(f.grad);
-    f.body = document.createElementNS(NS, 'polygon'); f.body.setAttribute('fill', 'url(#pyF' + k + ')');
-    f.lines = document.createElementNS(NS, 'path'); f.lines.setAttribute('fill', 'none'); f.lines.setAttribute('stroke-width', '0.9');
-    f.cap = document.createElementNS(NS, 'polygon');
-    f.ridge = document.createElementNS(NS, 'path'); f.ridge.setAttribute('fill', 'none'); f.ridge.setAttribute('stroke-width', '1'); f.ridge.setAttribute('stroke-linecap', 'round');
-    f.base = document.createElementNS(NS, 'path'); f.base.setAttribute('fill', 'none'); f.base.setAttribute('stroke', '#c9a24a'); f.base.setAttribute('stroke-width', '1.3');
-    [f.body, f.lines, f.cap, f.ridge, f.base].forEach(function (e) { f.g.appendChild(e); }); g.appendChild(f.g); return f;
-  });
-  function proj(p) { return [+(p[0]).toFixed(2), +(-p[1] * Math.cos(E) + p[2] * Math.sin(E)).toFixed(2)]; }
-  function lerp2(P, Q, t) { return [P[0] + (Q[0] - P[0]) * t, P[1] + (Q[1] - P[1]) * t]; }
-  function draw(th) {
-    var c = Math.cos(th), s_ = Math.sin(th), centre = [0, H / 4, 0], apex = [0, H, 0];
-    var base = [[-A, 0, -A], [A, 0, -A], [A, 0, A], [-A, 0, A]].map(function (p) { return [p[0] * c + p[2] * s_, 0, -p[0] * s_ + p[2] * c]; });
-    var vis = [];
-    for (var i = 0; i < 4; i++) {
-      var b1 = base[i], b2 = base[(i + 1) % 4];
-      var u = [b1[0] - apex[0], b1[1] - apex[1], b1[2] - apex[2]], v = [b2[0] - apex[0], b2[1] - apex[1], b2[2] - apex[2]];
-      var n = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]], m = Math.hypot(n[0], n[1], n[2]);
-      n = n.map(function (x) { return x / m; });
-      var fc = [(apex[0] + b1[0] + b2[0]) / 3 - centre[0], (apex[1] + b1[1] + b2[1]) / 3 - centre[1], (apex[2] + b1[2] + b2[2]) / 3 - centre[2]];
-      if (n[0] * fc[0] + n[1] * fc[1] + n[2] * fc[2] < 0) n = n.map(function (x) { return -x; });        // outward
-      var facing = n[0] * VIEW[0] + n[1] * VIEW[1] + n[2] * VIEW[2];
-      if (facing <= 0.002) continue;                                                                     // turned away: not drawn
-      var diff = Math.max(0, n[0] * L[0] + n[1] * L[1] + n[2] * L[2]);
-      vis.push({ b1: b1, b2: b2, depth: (b1[2] + b2[2]) / 2, light: AMB + (1 - AMB) * diff });
-    }
-    vis.sort(function (a, b) { return a.depth - b.depth; });
-    faces.forEach(function (f, k) {
-      var o = vis[k]; if (!o) { f.g.setAttribute('visibility', 'hidden'); return; } f.g.setAttribute('visibility', 'visible');
-      var P = proj(apex), Q = proj(o.b1), R = proj(o.b2), col = mix(STONE_DARK, STONE_LIT, o.light);
-      var top = mix(col, [255, 236, 190], 0.12 * o.light), bottom = col.map(function (x) { return Math.round(x * 0.62); });
-      var by = Math.max(Q[1], R[1]);
-      f.grad.setAttribute('x1', 0); f.grad.setAttribute('y1', P[1]); f.grad.setAttribute('x2', 0); f.grad.setAttribute('y2', by);
-      f.s0.setAttribute('stop-color', rgb(top)); f.s1.setAttribute('stop-color', rgb(bottom));
-      f.body.setAttribute('points', P + ' ' + Q + ' ' + R);
-      var d = '';
-      for (var j = 1; j < COURSES; j++) { var tt = CAP + (1 - CAP) * j / COURSES, q = lerp2(P, Q, tt), r = lerp2(P, R, tt); d += 'M' + q + 'L' + r; }
-      f.lines.setAttribute('d', d); f.lines.setAttribute('stroke', rgb(col.map(function (x) { return Math.round(x * 0.45); })));
-      f.cap.setAttribute('points', P + ' ' + lerp2(P, Q, CAP) + ' ' + lerp2(P, R, CAP)); f.cap.setAttribute('fill', rgb(mix(GOLD_DARK, GOLD_LIT, o.light)));
-      f.ridge.setAttribute('d', 'M' + P + 'L' + Q + 'M' + P + 'L' + R);
-      f.ridge.setAttribute('stroke', rgb(mix(col, [255, 240, 200], 0.35))); f.ridge.setAttribute('stroke-opacity', (0.15 + 0.5 * o.light).toFixed(2));
-      f.base.setAttribute('d', 'M' + Q + 'L' + R); f.base.setAttribute('stroke-opacity', (0.25 + 0.55 * o.light).toFixed(2));
+  var AMB = 0.16, L = norm([0.62, 0.55, 0.56]);
+  var coast = { left: [], right: [] }, ships = [];
+  // ── the sky ──
+  var AE = null, OBS = null, SIM = Date.now(), SPEED = 900, SKY = { bodies: [], sun: null, moon: null }, skyAt = 0;
+  var GIZA = [29.9792, 31.1342, 60];
+  var PLANETS = [['Sun', 9, '#ffd98a'], ['Moon', 7, '#e8e6dc'], ['Venus', 3.4, '#fff3d6'], ['Jupiter', 3.0, '#f4e6c4'],
+                 ['Saturn', 2.4, '#e9d59a'], ['Mars', 2.4, '#e2795a'], ['Mercury', 2.0, '#cfc8bb']];
+  var STARS = [['Thuban', 14.0731, 64.3758, 1.7, '#e8eeff'], ['Polaris', 2.5302, 89.2641, 1.6, '#f4f2e8'], ['Sirius', 6.7525, -16.7161, 2.4, '#dfe9ff'],
+               ['Alnitak', 5.6793, -1.9428, 1.4, '#dfe6ff'], ['Alnilam', 5.6036, -1.2019, 1.4, '#dfe6ff'], ['Mintaka', 5.5334, -0.2991, 1.4, '#dfe6ff'],
+               ['Vega', 18.6156, 38.7837, 1.9, '#e6eeff'], ['Aldebaran', 4.5987, 16.5093, 1.7, '#ffd0a0']];
+  var LABEL = { Alnitak: 0, Alnilam: 0, Mintaka: 0 };                    // the belt is labelled once, as Orion's belt
+  function skyReady() {
+    if (AE) return true; if (!window.Astronomy) return false;
+    AE = window.Astronomy; OBS = new AE.Observer(GIZA[0], GIZA[1], GIZA[2]);
+    STARS.forEach(function (st, i) { AE.DefineStar('Star' + (i + 1), st[1], st[2], 1000); }); return true;
+  }
+  function horizon(body, t) { var eq = AE.Equator(body, t, OBS, true, true); return AE.Horizon(t, OBS, eq.ra, eq.dec, 'normal'); }
+  function computeSky() {
+    var d = new Date(SIM), t = AE.MakeTime(d), out = [];
+    PLANETS.forEach(function (p) { var h = horizon(p[0], t); out.push({ name: p[0], az: h.azimuth, alt: h.altitude, r: p[1], col: p[2], planet: true }); });
+    STARS.forEach(function (st, i) { var h = horizon('Star' + (i + 1), t); out.push({ name: st[0], az: h.azimuth, alt: h.altitude, r: st[3], col: st[4] }); });
+    SKY.bodies = out; SKY.sun = out[0]; SKY.moon = out[1];
+    try { SKY.phase = AE.MoonPhase(t); } catch (e) { SKY.phase = 90; }
+  }
+  function vec(az, alt) { var a = az * Math.PI / 180, e = alt * Math.PI / 180; return [Math.sin(a) * Math.cos(e), Math.sin(e), -Math.cos(a) * Math.cos(e)]; }
+  function lookAz() { return ((yaw * 180 / Math.PI) % 360 + 360) % 360; }
+  function skyXY(az, alt) {
+    var d = ((az - lookAz() + 540) % 360) - 180;                       // degrees right of where we look
+    return [CX + d / 70 * (W / 2), HZ - Math.max(0, alt) / 78 * (HZ - 14), d];
+  }
+  function norm(v) { var m = Math.hypot(v[0], v[1], v[2]); return [v[0] / m, v[1] / m, v[2] / m]; }
+  function mix(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }
+  function rgb(c, a) { return 'rgba(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ',' + (a == null ? 1 : a) + ')'; }
+  function rnd(seed) { return function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; }
+
+  // ── layout ──
+  function size() {
+    DPR = Math.min(2, window.devicePixelRatio || 1); W = wrap.clientWidth; HS = wrap.clientHeight;
+    cv.width = off.width = Math.round(W * DPR); cv.height = off.height = Math.round(HS * DPR);
+    HZ = Math.round(HS * 0.64); CX = W / 2;
+    A = 100; H = 127;                                                             // world units: half-base 100, Giza's height 127
+    var S = Math.max(56, Math.min(175, W * (W < 700 ? 0.17 : 0.112)));   // larger on a phone F = S * D / A;                // the base's half-width on screen, close up
+    BASE = HZ; AXIS = HZ + F * E0 / D;                                            // the waterline at the pyramid's foot
+    buildCoast(); if (!ships.length) seedShips();
+  }
+  function buildCoast() {                       // three layers of headland each side, far to near
+    var r = rnd(1897);
+    ['left', 'right'].forEach(function (side) {
+      coast[side] = [0.44, 0.36, 0.27].map(function (reach, k) {
+        var pts = [], n = 48, peak = HS * [0.05, 0.1, 0.17][k], shore = HS * [0.0, 0.035, 0.085][k];
+        var ph = [r() * 6, r() * 6, r() * 6];
+        for (var i = 0; i <= n; i++) {
+          var f = i / n, x = f * W * reach, edge = 1 - f;            // edge = 1 at the page edge
+          var hill = peak * Math.pow(edge, 0.85) * (0.75 + 0.18 * Math.sin(f * 9 + ph[0]) + 0.1 * Math.sin(f * 23 + ph[1]) + 0.04 * Math.sin(f * 61 + ph[2]));
+          var water = HZ + shore * edge * edge;                       // the shoreline comes toward us
+          pts.push([side === 'left' ? x : W - x, water - Math.max(0, hill), water]);
+        }
+        return { pts: pts, col: [[22, 36, 52], [14, 24, 35], [9, 15, 22]][k], k: k };
+      });
     });
   }
-  var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches, t0 = performance.now();
-  function frame(now) { draw(0.6 + (now - t0) / 1000 * (2 * Math.PI / 60)); requestAnimationFrame(frame); }
-  draw(0.6); if (!still) requestAnimationFrame(frame);
+  function shoreX(side, y) {                    // how far the nearest land reaches at height y
+    var lay = coast[side][2].pts, best = 0;
+    for (var i = 0; i < lay.length; i++) if (lay[i][2] >= y) best = side === 'left' ? lay[i][0] : W - lay[i][0];
+    return best;
+  }
+  function seedShips() {
+    var r = rnd(64);
+    ships = [0.04, 0.1, 0.18, 0.3, 0.45, 0.62, 0.8].map(function (d) {
+      return { d: d, x: r() * W, dir: r() < 0.5 ? -1 : 1, bob: r() * 6, sails: r() < 0.5 ? 2 : 1 };
+    });
+  }
+
+  // ── the pyramid ──
+  function faces3d() {
+    var c = Math.cos(yaw), s = Math.sin(yaw), apex = [0, H, 0], centre = [0, H / 4, 0], CAM = [0, E, D];
+    var base = [[-A, 0, -A], [A, 0, -A], [A, 0, A], [-A, 0, A]].map(function (p) { return [p[0] * c + p[2] * s, 0, -p[0] * s + p[2] * c]; });
+    var out = [];
+    for (var i = 0; i < 4; i++) {
+      var b1 = base[i], b2 = base[(i + 1) % 4], u = [b1[0], b1[1] - H, b1[2]], v = [b2[0], b2[1] - H, b2[2]];
+      var n = norm([u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]]);
+      var fc = [(b1[0] + b2[0]) / 3, (H + b1[1] + b2[1]) / 3 - centre[1], (b1[2] + b2[2]) / 3];
+      if (n[0] * fc[0] + n[1] * fc[1] + n[2] * fc[2] < 0) n = [-n[0], -n[1], -n[2]];
+      var fp = [(b1[0] + b2[0]) / 3, (H + b1[1] + b2[1]) / 3, (b1[2] + b2[2]) / 3], tc = norm([CAM[0] - fp[0], CAM[1] - fp[1], CAM[2] - fp[2]]);
+      var facing = n[0] * tc[0] + n[1] * tc[1] + n[2] * tc[2];                      // turned toward the eye
+      if (facing <= 0.002) continue;
+      var nw = [n[0] * c - n[2] * s, n[1], n[0] * s + n[2] * c], lit = 0;   // the normal in the world: +x east, -z north
+      if (SKY.sun) {
+        var sv = vec(SKY.sun.az, SKY.sun.alt), up = Math.max(0, Math.min(1, (SKY.sun.alt + 2) / 8));
+        lit += up * 0.95 * Math.max(0, nw[0] * sv[0] + nw[1] * sv[1] + nw[2] * sv[2]);
+        var mv = vec(SKY.moon.az, SKY.moon.alt), mup = Math.max(0, Math.min(1, (SKY.moon.alt + 1) / 6)) * (1 - up);
+        lit += mup * 0.35 * Math.max(0, nw[0] * mv[0] + nw[1] * mv[1] + nw[2] * mv[2]);
+      } else lit = 0.85 * Math.max(0, n[0] * L[0] + n[1] * L[1] + n[2] * L[2]);
+      var fill = 0.22 * Math.max(0, n[0] * L[0] + n[1] * L[1] + n[2] * L[2]);
+      out.push({ i: i, apex: apex, b1: b1, b2: b2, depth: (b1[2] + b2[2]) / 2, facing: facing, light: Math.min(1, AMB + lit + fill) });
+    }
+    return out.sort(function (a, b) { return a.depth - b.depth; });
+  }
+  function P(p) { var k = F / (D - p[2]); return [CX + p[0] * k, HZ - (p[1] - E) * k]; }   // true perspective from a low eye
+  function lerp(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; }
+  function drawPyramid(g) {
+    var CAP = 0.17;
+    faces3d().forEach(function (o) {
+      var p = P(o.apex), q = P(o.b1), r = P(o.b2), col = mix(STONE_DARK, STONE_LIT, o.light);
+      var by = Math.max(q[1], r[1]), gr = g.createLinearGradient(0, p[1], 0, by);
+      gr.addColorStop(0, rgb(mix(col, [255, 236, 190], 0.12 * o.light))); gr.addColorStop(1, rgb(col.map(function (x) { return x * 0.62; })));
+      g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.lineTo(r[0], r[1]); g.closePath(); g.fillStyle = gr; g.fill();
+      g.strokeStyle = rgb(col.map(function (x) { return x * 0.5; }), 0.55); g.lineWidth = 0.8; g.beginPath();
+      for (var j = 1; j < 9; j++) { var t = CAP + (1 - CAP) * j / 9, a = lerp(p, q, t), b = lerp(p, r, t); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); }
+      g.stroke();
+      // the time signature, engraved in gold on the face's own plane
+      var m = lerp(q, r, 0.5), ax = [(r[0] - q[0]) / 200, (r[1] - q[1]) / 200], ay = [(m[0] - p[0]) / 100, (m[1] - p[1]) / 100];
+      if (ax[0] * ay[1] - ax[1] * ay[0] < 0) ax = [-ax[0], -ax[1]];
+      var vis = Math.min(1, o.facing * 3.2);
+      if (vis > 0.05) {
+        g.save(); g.setTransform(DPR * ax[0], DPR * ax[1], DPR * ay[0], DPR * ay[1], DPR * p[0], DPR * p[1]);
+        g.font = '700 36px "Cormorant Garamond", Georgia, serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+        var gold = mix(GOLD_DARK, GOLD_LIT, o.light), num = String({ 1: 1, 2: 2, 3: 3, 0: 4 }[o.i]);
+        g.globalAlpha = vis * 0.8; g.fillStyle = 'rgba(10,8,4,.85)';
+        g.fillText(num, 1.4, 50.5); g.fillText('4', 1.4, 79.5);                 // the cut
+        g.globalAlpha = vis; g.fillStyle = rgb(gold);
+        g.fillText(num, 0, 49); g.fillText('4', 0, 78);                     // the gold
+        g.restore();
+      }
+      g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(lerp(p, q, CAP)[0], lerp(p, q, CAP)[1]); g.lineTo(lerp(p, r, CAP)[0], lerp(p, r, CAP)[1]); g.closePath();
+      g.fillStyle = rgb(mix(GOLD_DARK, GOLD_LIT, o.light)); g.fill();
+      g.lineCap = 'round'; g.lineWidth = 1; g.strokeStyle = rgb(mix(col, [255, 240, 200], 0.35), 0.15 + 0.5 * o.light);
+      g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.moveTo(p[0], p[1]); g.lineTo(r[0], r[1]); g.stroke();
+      g.lineWidth = 1.3; g.strokeStyle = 'rgba(201,162,74,' + (0.25 + 0.55 * o.light).toFixed(2) + ')';
+      g.beginPath(); g.moveTo(q[0], q[1]); g.lineTo(r[0], r[1]); g.stroke();
+    });
+  }
+  function drawBeam(g, t, apex) {
+    var pulse = 0.55 + 0.45 * Math.sin(t * 2 * Math.PI / 4.5);
+    var gb = g.createLinearGradient(0, apex[1], 0, 0);
+    gb.addColorStop(0, 'rgba(255,244,192,' + (0.75 + 0.25 * pulse) + ')'); gb.addColorStop(0.3, 'rgba(248,208,96,.4)'); gb.addColorStop(1, 'rgba(212,160,23,0)');
+    g.fillStyle = gb; g.fillRect(apex[0] - 0.9, 0, 1.8, apex[1]);
+    var rh = F * A / D * (0.5 + 0.22 * pulse), halo = g.createRadialGradient(apex[0], apex[1], 0, apex[0], apex[1], rh);
+    halo.addColorStop(0, 'rgba(255,244,192,.9)'); halo.addColorStop(0.35, 'rgba(248,208,96,.32)'); halo.addColorStop(1, 'rgba(212,160,23,0)');
+    g.fillStyle = halo; g.beginPath(); g.arc(apex[0], apex[1], rh, 0, 7); g.fill();
+  }
+
+  // ── the ship glyph ──
+  function ship(g, x, y, w, dir, sails, alpha) {
+    g.save(); g.translate(x, y); g.scale(dir, 1); g.globalAlpha = alpha;
+    g.fillStyle = '#0b1219'; g.beginPath();                                  // hull
+    g.moveTo(-w * 0.5, -w * 0.06); g.lineTo(w * 0.5, -w * 0.06); g.lineTo(w * 0.36, w * 0.12); g.lineTo(-w * 0.4, w * 0.12); g.closePath(); g.fill();
+    g.strokeStyle = 'rgba(190,200,210,.5)'; g.lineWidth = Math.max(0.6, w * 0.03);
+    g.beginPath(); g.moveTo(0, -w * 0.06); g.lineTo(0, -w * 0.95); g.stroke(); // mast
+    g.fillStyle = 'rgba(214,206,186,.82)'; g.beginPath();                     // mainsail
+    g.moveTo(w * 0.03, -w * 0.9); g.lineTo(w * 0.03, -w * 0.12); g.lineTo(-w * 0.38, -w * 0.14); g.closePath(); g.fill();
+    if (sails > 1) { g.beginPath(); g.moveTo(w * 0.07, -w * 0.82); g.lineTo(w * 0.46, -w * 0.12); g.lineTo(w * 0.07, -w * 0.12); g.closePath(); g.fillStyle = 'rgba(200,194,176,.7)'; g.fill(); }
+    g.restore();
+  }
+
+  // ── drawing the sky ──
+  function drawSky(g, day, t) {
+    var belt = null;
+    SKY.bodies.forEach(function (b) {
+      if (b.alt < -1) return;
+      var p = skyXY(b.az, b.alt); if (Math.abs(p[2]) > 80) return;
+      var fade = b.planet ? (b.name === 'Sun' ? 1 : b.name === 'Moon' ? 1 - 0.5 * day : 1 - 0.85 * day) : 1 - day;
+      if (fade <= 0.03) return;
+      g.globalAlpha = fade;
+      if (b.name === 'Sun') {
+        var sg = g.createRadialGradient(p[0], p[1], 0, p[0], p[1], 34); sg.addColorStop(0, 'rgba(255,236,180,.9)'); sg.addColorStop(1, 'rgba(255,190,90,0)');
+        g.fillStyle = sg; g.beginPath(); g.arc(p[0], p[1], 34, 0, 7); g.fill();
+      }
+      if (b.name === 'Moon') {                                               // the moon's real phase
+        g.fillStyle = 'rgba(230,228,215,.95)'; g.beginPath(); g.arc(p[0], p[1], b.r, 0, 7); g.fill();
+        var ph = (SKY.phase || 0) * Math.PI / 180, k = Math.cos(ph);
+        g.fillStyle = 'rgba(10,16,24,.88)'; g.beginPath();
+        if (SKY.phase < 180) { g.arc(p[0], p[1], b.r, Math.PI / 2, -Math.PI / 2); g.ellipse(p[0], p[1], Math.abs(k) * b.r, b.r, 0, -Math.PI / 2, Math.PI / 2, k < 0); }
+        else { g.arc(p[0], p[1], b.r, -Math.PI / 2, Math.PI / 2); g.ellipse(p[0], p[1], Math.abs(k) * b.r, b.r, 0, Math.PI / 2, -Math.PI / 2, k < 0); }
+        g.fill();
+      } else {
+        var halo = g.createRadialGradient(p[0], p[1], 0, p[0], p[1], b.r * 3.2);
+        halo.addColorStop(0, b.col); halo.addColorStop(0.35, b.col); halo.addColorStop(1, 'rgba(0,0,0,0)');
+        g.fillStyle = halo; g.beginPath(); g.arc(p[0], p[1], b.r * 3.2, 0, 7); g.fill();
+      }
+      if (b.planet && b.name !== 'Sun' && b.alt > 0.5 && fade > 0.3) {     // its light on the water
+        for (var j = 0; j < 7; j++) {
+          var ry = 2 * HZ - p[1] + j * 3 + 3; if (ry > HS) break;
+          g.globalAlpha = fade * 0.25 * (1 - j / 7) * (0.6 + 0.4 * Math.sin(t * 3 + j * 1.9));
+          g.fillStyle = b.col; g.fillRect(p[0] - b.r * (1 + j * 0.25), ry, b.r * 2 * (1 + j * 0.25), 1);
+        }
+        g.globalAlpha = fade;
+      }
+      if (b.name in LABEL) { belt = belt || p; return; }
+      g.font = '10px ui-monospace, Menlo, monospace'; g.textAlign = 'center';
+      g.fillStyle = b.planet ? 'rgba(226,195,117,.75)' : 'rgba(170,190,215,.6)';
+      if (b.name !== 'Sun') g.fillText(b.name, p[0], p[1] + b.r + 13);
+    });
+    if (belt) { g.globalAlpha = 1 - day; g.font = '10px ui-monospace, Menlo, monospace'; g.textAlign = 'center'; g.fillStyle = 'rgba(170,190,215,.6)'; g.fillText("Orion's belt", belt[0], belt[1] + 14); }
+    g.globalAlpha = 1;
+  }
+  var readout = document.getElementById('seaClock'), lastRead = 0;
+  var QUARTERS = ['north', 'north-east', 'east', 'south-east', 'south', 'south-west', 'west', 'north-west'];
+  function updateReadout(now) {
+    if (!readout || now - lastRead < 250) return; lastRead = now;
+    var d = new Date(SIM + 2 * 3600 * 1000), y = d.getUTCFullYear();          // Giza: two hours east of Greenwich
+    var M = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'][d.getUTCMonth()];
+    var yr = y > 0 ? String(y) : (1 - y) + ' BC';
+    var hh = ('0' + d.getUTCHours()).slice(-2), mm = ('0' + d.getUTCMinutes()).slice(-2);
+    readout.textContent = 'GIZA · ' + d.getUTCDate() + ' ' + M + ' ' + yr + ' · ' + hh + ':' + mm + ' · LOOKING ' + QUARTERS[Math.round(lookAz() / 45) % 8].toUpperCase();
+  }
+
+  // ── a frame ──
+  var t0 = performance.now(), last = t0, running = true;
+  function frame(now) {
+    var dt = Math.min(0.05, (now - last) / 1000), t = (now - t0) / 1000; last = now;
+    if (!dragging) {
+      vel += ((still ? 0 : AUTO) - vel) * Math.min(1, dt * 0.9);              // coast back to the slow turn
+      E += (E0 - E) * Math.min(1, dt * 1.5);                                  // the eye settles back near the water
+    }
+    yaw += vel * dt;
+    if (!still) SIM += dt * 1000 * SPEED;
+    if (skyReady() && (now - skyAt > 33 || !SKY.sun)) { computeSky(); skyAt = now; }
+    var day = SKY.sun ? Math.max(0, Math.min(1, (SKY.sun.alt + 10) / 22)) : 0;
+    var g = ctx; g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, W, HS);
+    // water
+    var wg = g.createLinearGradient(0, HZ, 0, HS);
+    wg.addColorStop(0, '#123552'); wg.addColorStop(0.18, '#0c2840'); wg.addColorStop(0.5, '#08172a'); wg.addColorStop(0.86, '#07090c'); wg.addColorStop(1, '#07090c');
+    g.fillStyle = wg; g.fillRect(0, HZ, W, HS - HZ);
+    if (day > 0) { g.fillStyle = 'rgba(70,120,170,' + (0.25 * day) + ')'; g.fillRect(0, HZ, W, (HS - HZ) * 0.6); }
+    var sky = g.createLinearGradient(0, 0, 0, HZ);                              // night, twilight and day over Giza
+    sky.addColorStop(0, rgb(mix([7, 9, 12], [20, 44, 74], day), 1)); sky.addColorStop(0.7, rgb(mix([10, 18, 28], [52, 90, 128], day)));
+    sky.addColorStop(1, rgb(mix([24, 48, 74], [112, 140, 166], day)));                 // day, kept a little muted for the lobby
+    g.fillStyle = sky; g.fillRect(0, 0, W, HZ);
+    if (SKY.sun && SKY.sun.alt > -14 && SKY.sun.alt < 10) {                    // dawn and dusk where the sun is
+      var sp = skyXY(SKY.sun.az, 0), tw = 1 - Math.abs(SKY.sun.alt + 2) / 12;
+      var gl = g.createRadialGradient(sp[0], HZ, 0, sp[0], HZ, W * 0.35);
+      gl.addColorStop(0, 'rgba(255,170,90,' + (0.55 * tw) + ')'); gl.addColorStop(0.4, 'rgba(220,110,70,' + (0.2 * tw) + ')'); gl.addColorStop(1, 'rgba(120,60,60,0)');
+      g.fillStyle = gl; g.fillRect(0, 0, W, HZ);
+    }
+    if (SKY.bodies.length) drawSky(g, day, t);
+    g.fillStyle = 'rgba(120,160,200,.18)'; g.fillRect(0, HZ, W, 1);           // the horizon line
+    // the coast's reflection
+    ['left', 'right'].forEach(function (side) {
+      coast[side].forEach(function (lay) {
+        g.beginPath(); lay.pts.forEach(function (p, i) { var ry = p[2] + (p[2] - p[1]) * 0.8; i ? g.lineTo(p[0], ry) : g.moveTo(p[0], ry); });
+        for (var i = lay.pts.length - 1; i >= 0; i--) g.lineTo(lay.pts[i][0], lay.pts[i][2]);
+        g.closePath(); g.fillStyle = rgb(lay.col, 0.35); g.fill();
+      });
+    });
+    // shimmer on the water
+    for (var k = 0; k < 26; k++) {
+      var yy = HZ + 4 + Math.pow(k / 26, 1.7) * (HS - HZ) * 0.8, xx = (k * 397 + t * (6 + k)) % (W + 200) - 100, ww = 30 + k * 6;
+      g.fillStyle = 'rgba(140,180,220,' + (0.05 + 0.04 * Math.sin(t * 1.3 + k)) + ')'; g.fillRect(xx, yy, ww, 1);
+    }
+    // the reflection of the pyramid: render it off-canvas, then lay it on the water in rippling slices
+    var apex = P([0, H, 0]);
+    octx.setTransform(DPR, 0, 0, DPR, 0, 0); octx.clearRect(0, 0, W, HS); drawPyramid(octx);
+    var SA = F * A / D, refLen = (AXIS - apex[1]) * 1.05, x0 = CX - SA * 1.9, sw = SA * 3.8;
+    for (var y = AXIS; y < Math.min(HS, AXIS + refLen); y += 2) {
+      var src = 2 * AXIS - y, f = (y - AXIS) / refLen, dx = Math.sin(y * 0.19 + t * 2.1) * (0.6 + 3.2 * f) + Math.sin(y * 0.07 - t * 1.3) * 1.2 * f;
+      g.globalAlpha = 0.5 * (1 - f) * (1 - f);
+      g.drawImage(off, x0 * DPR, src * DPR, sw * DPR, 2 * DPR, x0 + dx, y, sw, 2);
+    }
+    g.globalAlpha = 1;
+    // the beacon's path on the water
+    for (var j = 0; j < 22; j++) {
+      var gy = AXIS + 6 + j * ((HS - AXIS) * 0.85 / 22), gw = 3 + j * 1.6 + 4 * Math.sin(t * 3 + j * 1.7);
+      g.fillStyle = 'rgba(248,208,96,' + (0.22 * (1 - j / 22) * (0.6 + 0.4 * Math.sin(t * 2.4 + j * 2.3))) + ')';
+      g.fillRect(CX - gw / 2 + Math.sin(t * 1.7 + j) * 2, gy, gw, 1.2);
+    }
+    // ships, far to near (the far ones pass behind the pyramid)
+    ships.sort(function (a, b) { return a.d - b.d; });
+    var behind = [], front = [];
+    ships.forEach(function (s) {
+      var y = HZ + 3 + Math.pow(s.d, 1.5) * (HS - HZ) * 0.72, w = 7 + s.d * 30;
+      if (!still) s.x += s.dir * (5 + s.d * 16) * dt;
+      if (s.x < -60) s.x = W + 50; if (s.x > W + 60) s.x = -50;
+      (y < AXIS + 6 ? behind : front).push([s, y, w]);   // near the foot: behind the pyramid
+    });
+    function drawShip(o) {
+      var s = o[0], y = o[1] + Math.sin(t * 1.6 + s.bob) * 0.6, w = o[2], a = 0.35 + 0.65 * Math.min(1, s.d * 3);
+      g.strokeStyle = 'rgba(170,200,230,' + (0.12 + 0.18 * s.d) + ')'; g.lineWidth = 0.8;   // the wake
+      g.beginPath(); g.moveTo(s.x - s.dir * w * 0.45, y + w * 0.1); g.lineTo(s.x - s.dir * w * (1.6 + s.d * 2), y + w * 0.13); g.stroke();
+      g.save(); g.translate(0, 2 * (y + w * 0.12)); g.scale(1, -1); ship(g, s.x, y, w, s.dir, s.sails, a * 0.25); g.restore();   // reflection
+      ship(g, s.x, y, w, s.dir, s.sails, a);
+    }
+    behind.forEach(drawShip);
+    drawBeam(g, t, apex);
+    drawPyramid(g);
+    front.forEach(drawShip);
+    // the coast, far to near, over everything at the edges (ships slip behind the headlands)
+    [0, 1, 2].forEach(function (k) {
+      ['left', 'right'].forEach(function (side) {
+        var lay = coast[side][k]; g.beginPath();
+        lay.pts.forEach(function (p, i) { i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]); });
+        for (var i = lay.pts.length - 1; i >= 0; i--) g.lineTo(lay.pts[i][0], lay.pts[i][2] + 1);
+        g.closePath(); g.fillStyle = rgb(lay.col); g.fill();
+      });
+    });
+    updateReadout(now);
+    if (running && (!still || dragging || Math.abs(vel) > 0.001)) requestAnimationFrame(frame); else idle = true;
+  }
+  var idle = false;
+  function wake() { if (idle && running) { idle = false; last = performance.now(); requestAnimationFrame(frame); } }
+
+  // ── turning it by hand ──
+  var lx = 0, ly = 0, lt = 0;
+  cv.addEventListener('pointerdown', function (e) {
+    var r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    var SA = F * A / D; if (Math.abs(x - CX) > SA * 2.4 || y > AXIS + SA * 1.6) return;   // only on the pyramid and its water
+    dragging = true; lx = e.clientX; ly = e.clientY; lt = performance.now(); cv.classList.add('dragging');
+    cv.setPointerCapture(e.pointerId); wake();
+  });
+  cv.addEventListener('pointermove', function (e) {
+    if (!dragging) return;
+    var now = performance.now(), dtm = Math.max(1, now - lt), dx = e.clientX - lx, dy = e.clientY - ly;
+    yaw += dx * 0.012; vel = dx * 0.012 / (dtm / 1000) * 0.6;
+    E = Math.max(3, Math.min(150, E + dy * 0.6));                          // drag up or down: raise or lower your eye
+    lx = e.clientX; ly = e.clientY; lt = now;
+  });
+  function release() { if (!dragging) return; dragging = false; cv.classList.remove('dragging'); }
+  cv.addEventListener('pointerup', release); cv.addEventListener('pointercancel', release);
+
+  // ── tonight, or the sky the builders saw ──
+  [].forEach.call(document.querySelectorAll('[data-sky]'), function (b) {
+    b.addEventListener('click', function () {
+      [].forEach.call(document.querySelectorAll('[data-sky]'), function (x) { x.classList.toggle('on', x === b); });
+      if (b.dataset.sky === 'now') SIM = Date.now();
+      else { var d = new Date(); d.setUTCFullYear(-2559); d.setUTCHours(16, 0, 0, 0); SIM = d.getTime(); }   // 2560 BC, dusk at Giza
+      skyAt = 0; wake();
+    });
+  });
+
+  // ── start, resize, sleep when unseen ──
+  size(); window.addEventListener('resize', function () { size(); wake(); });
+  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { running = es[0].isIntersecting; wake(); }).observe(wrap);
+  document.addEventListener('visibilitychange', function () { running = !document.hidden; wake(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(wake);
+  requestAnimationFrame(frame);
 })();
 </script>
 </body>
