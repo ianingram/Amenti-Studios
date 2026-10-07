@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/index.html · 2026-10-07 07:00 UTC -->
+<!-- Amenti-Studios/index.html · 2026-10-07 08:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -484,20 +484,43 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
     if (skyReady() && (now - skyAt > 33 || !SKY.sun)) { computeSky(); skyAt = now; }
     var day = SKY.sun ? Math.max(0, Math.min(1, (SKY.sun.alt + 10) / 22)) : 0;
     var g = ctx; g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, W, HS);
-    // water
-    var wg = g.createLinearGradient(0, HZ, 0, HS);
-    wg.addColorStop(0, '#123552'); wg.addColorStop(0.18, '#0c2840'); wg.addColorStop(0.5, '#08172a'); wg.addColorStop(0.86, '#07090c'); wg.addColorStop(1, '#07090c');
-    g.fillStyle = wg; g.fillRect(0, HZ, W, HS - HZ);
-    if (day > 0) { g.fillStyle = 'rgba(70,120,170,' + (0.25 * day) + ')'; g.fillRect(0, HZ, W, (HS - HZ) * 0.6); }
-    var sky = g.createLinearGradient(0, 0, 0, HZ);                              // night, twilight and day over Giza
-    sky.addColorStop(0, rgb(mix([7, 9, 12], [20, 44, 74], day), 1)); sky.addColorStop(0.7, rgb(mix([10, 18, 28], [52, 90, 128], day)));
-    sky.addColorStop(1, rgb(mix([24, 48, 74], [112, 140, 166], day)));                 // day, kept a little muted for the lobby
+    // ── THE SKY: Moon Racer's palettes (moon-racer/index.html, paintSky) ──
+    // three skies — the sun well up, the sun on the horizon, the sun below it — blended by the sun's
+    // real altitude over Giza. The horizon palette is Moon Racer's two dusks at half "drama": deep
+    // blue overhead, violet, hot pink, orange, and a gold line on the water. Nothing warm until the
+    // sun is genuinely low; then it comes on quickly, and night takes over once it has gone under.
+    var alt = SKY.sun ? SKY.sun.alt : -30, warmth = alt / 18, drama = 0.55;
+    var below = Math.max(0, Math.min(1, -alt / 12));
+    var span = 0.55 + drama * 0.12, near = Math.max(0, Math.min(1, (span - Math.abs(warmth)) / span));
+    var hw = near * near * (3 - 2 * near);                                       // smoothstep, as in Moon Racer
+    var SKYDAY = { zenith: [63, 127, 166], high: [121, 179, 205], mid: [168, 212, 228], low: [203, 230, 236], band: [230, 223, 201], under: [127, 179, 198] };
+    var EDGE_SOFT = { zenith: [22, 34, 86], high: [86, 68, 142], mid: [206, 104, 132], low: [248, 138, 82], band: [255, 196, 64], under: [158, 88, 86] };
+    var EDGE_WIDE = { zenith: [4, 6, 34], high: [58, 22, 112], mid: [196, 32, 96], low: [238, 74, 30], band: [255, 174, 58], under: [96, 26, 44] };
+    var SKYNIGHT = { zenith: [7, 9, 14], high: [12, 20, 40], mid: [22, 34, 60], low: [40, 56, 84], band: [58, 74, 100], under: [26, 38, 56] };
+    function skyc(k) { var e = mix(EDGE_SOFT[k], EDGE_WIDE[k], drama); return mix(mix(SKYDAY[k], e, hw), SKYNIGHT[k], below); }
+    var sky = g.createLinearGradient(0, 0, 0, HZ);
+    sky.addColorStop(0, rgb(skyc('zenith'))); sky.addColorStop(0.3, rgb(skyc('zenith')));
+    sky.addColorStop(0.55, rgb(skyc('high')));                                   // violet
+    sky.addColorStop(0.76, rgb(skyc('mid')));                                    // pink
+    sky.addColorStop(0.9, rgb(skyc('low')));                                     // orange
+    sky.addColorStop(1, rgb(skyc('band')));                                      // gold, right on the water
     g.fillStyle = sky; g.fillRect(0, 0, W, HZ);
-    if (SKY.sun && SKY.sun.alt > -14 && SKY.sun.alt < 10) {                    // dawn and dusk where the sun is
-      var sp = skyXY(SKY.sun.az, 0), tw = 1 - Math.abs(SKY.sun.alt + 2) / 12;
-      var gl = g.createRadialGradient(sp[0], HZ, 0, sp[0], HZ, W * 0.35);
-      gl.addColorStop(0, 'rgba(255,170,90,' + (0.55 * tw) + ')'); gl.addColorStop(0.4, 'rgba(220,110,70,' + (0.2 * tw) + ')'); gl.addColorStop(1, 'rgba(120,60,60,0)');
+    if (SKY.sun && alt > -14 && alt < 12) {                                    // hotter where the sun actually is
+      var sp = skyXY(SKY.sun.az, Math.max(0, alt)), tw = hw * (1 - below * 0.6);
+      var gl = g.createRadialGradient(sp[0], HZ, 0, sp[0], HZ, W * 0.42);
+      gl.addColorStop(0, 'rgba(255,214,140,' + (0.7 * tw) + ')'); gl.addColorStop(0.18, 'rgba(244,110,60,' + (0.45 * tw) + ')');
+      gl.addColorStop(0.45, 'rgba(200,50,110,' + (0.22 * tw) + ')'); gl.addColorStop(1, 'rgba(90,30,110,0)');
       g.fillStyle = gl; g.fillRect(0, 0, W, HZ);
+    }
+    // water: it carries the sky down — the band and the under-colour near the horizon, darkening to black
+    var wtop = mix(mix([18, 53, 82], skyc('under'), 0.75), skyc('band'), 0.25 * hw * (1 - below));
+    var wg = g.createLinearGradient(0, HZ, 0, HS);
+    wg.addColorStop(0, rgb(wtop)); wg.addColorStop(0.18, rgb(mix(wtop, [12, 40, 64], 0.45))); wg.addColorStop(0.5, '#08172a'); wg.addColorStop(0.86, '#07090c'); wg.addColorStop(1, '#07090c');
+    g.fillStyle = wg; g.fillRect(0, HZ, W, HS - HZ);
+    if (SKY.sun && alt > -10 && alt < 12) {                                    // the sun's road on the water
+      var sx = skyXY(SKY.sun.az, 0)[0], rg = g.createRadialGradient(sx, HZ, 0, sx, HZ, W * 0.3);
+      rg.addColorStop(0, 'rgba(255,190,110,' + (0.4 * hw) + ')'); rg.addColorStop(0.4, 'rgba(230,90,110,' + (0.15 * hw) + ')'); rg.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = rg; g.fillRect(0, HZ, W, (HS - HZ) * 0.5);
     }
     if (SKY.bodies.length) drawSky(g, day, t);
     g.fillStyle = 'rgba(120,160,200,.18)'; g.fillRect(0, HZ, W, 1);           // the horizon line
