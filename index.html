@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/index.html · 2026-10-07 03:00 UTC -->
+<!-- Amenti-Studios/index.html · 2026-10-07 04:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -245,7 +245,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
   var ctx = cv.getContext('2d'), off = document.createElement('canvas'), octx = off.getContext('2d');
   var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var DPR = 1, W = 0, HS = 0, HZ = 0, A = 60, H = 77, CX = 0, BASE = 0, AXIS = 0;
-  var E0 = 18, E = E0, yaw = 0.6, D = 520, F = 800;  /* E: the eye's height above the water (world units); D: its distance */
+  var E0 = 14, E = E0, yaw = 0.6, D = 900, F = 800;  /* E: the eye's height above the water (world units); D: its distance */
   var vel = 0, AUTO = 2 * Math.PI / 60, dragging = false;
   var STONE_DARK = [24, 19, 12], STONE_LIT = [196, 158, 88], GOLD_DARK = [120, 88, 24], GOLD_LIT = [255, 226, 140];
   var AMB = 0.16, L = norm([0.62, 0.55, 0.56]);
@@ -289,7 +289,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
     cv.width = off.width = Math.round(W * DPR); cv.height = off.height = Math.round(HS * DPR);
     HZ = Math.round(HS * 0.64); CX = W / 2;
     A = 100; H = 127;                                                             // world units: half-base 100, Giza's height 127
-    var S = Math.max(56, Math.min(175, W * (W < 700 ? 0.17 : 0.112)));   // larger on a phone F = S * D / A;                // the base's half-width on screen, close up
+    var S = Math.max(44, Math.min(118, W * (W < 700 ? 0.12 : 0.075)));   // v6: further off — smaller, flatter perspective F = S * D / A;                // the base's half-width on screen, close up
     BASE = HZ; AXIS = HZ + F * E0 / D;                                            // the waterline at the pyramid's foot
     buildCoast(); if (!ships.length) seedShips();
   }
