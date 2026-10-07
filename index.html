@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/index.html · 2026-10-07 10:00 UTC -->
+<!-- Amenti-Studios/index.html · 2026-10-07 12:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -430,11 +430,12 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
       g.globalAlpha = fade;
       if (b.name === 'Sun') {                                                // v9: one soft glow and a clean disc, no ring
         var low = Math.max(0, Math.min(1, 1 - b.alt / 12));                  // redder as it nears the horizon
+        var grow = Math.pow(Math.max(0, Math.min(1, 1 - b.alt / 35)), 2);     // v12: as Ian has seen it over the sea — about six times its overhead size at the horizon
         var core = mix([255, 244, 214], [255, 196, 120], low), rim = mix([255, 214, 150], [250, 120, 70], low);
-        var R = 14 + 46 * low * low, sg = g.createRadialGradient(p[0], p[1], 0, p[0], p[1], R);   // small and tight overhead, wide only at the horizon
+        var R = 14 + 150 * grow, sg = g.createRadialGradient(p[0], p[1], 0, p[0], p[1], R);   // small and tight overhead, wide only at the horizon
         sg.addColorStop(0, rgb(core, 0.85)); sg.addColorStop(0.16, rgb(rim, 0.55)); sg.addColorStop(0.45, rgb(rim, 0.16)); sg.addColorStop(1, rgb(rim, 0));
         g.fillStyle = sg; g.beginPath(); g.arc(p[0], p[1], R, 0, 7); g.fill();
-        var rr = b.r * (1 + 0.5 * low), dg = g.createRadialGradient(p[0], p[1], 0, p[0], p[1], rr);
+        var rr = b.r * (1 + 5 * grow), dg = g.createRadialGradient(p[0], p[1], 0, p[0], p[1], rr);
         dg.addColorStop(0, rgb(core)); dg.addColorStop(0.8, rgb(core, 0.98)); dg.addColorStop(1, rgb(core, 0));
         g.fillStyle = dg; g.beginPath(); g.arc(p[0], p[1], rr, 0, 7); g.fill();
       } else if (b.name === 'Moon') {                                               // the moon's real phase
