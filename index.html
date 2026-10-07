@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/index.html · 2026-10-07 05:00 UTC -->
+<!-- Amenti-Studios/index.html · 2026-10-07 06:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -301,7 +301,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
     var r = rnd(1897);
     ['left', 'right'].forEach(function (side) {
       coast[side] = [0.44, 0.36, 0.27].map(function (reach, k) {
-        var pts = [], n = 48, peak = HS * [0.035, 0.06, 0.1][k], shore = HS * [0.0, 0.035, 0.085][k];
+        var pts = [], n = 48, peak = HS * [0.03, 0.045, 0.065][k], shore = HS * [0.0, 0.005, 0.012][k];   // v8: the escarpment lies along the horizon
         var ph = [r() * 6, r() * 6, r() * 6];
         for (var i = 0; i <= n; i++) {
           var f = i / n, x = f * W * reach, edge = 1 - f;            // edge = 1 at the page edge
@@ -547,11 +547,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
       g.save(); g.translate(0, 2 * (y + w * 0.12)); g.scale(1, -1); ship(g, s.x, y, w, s.dir, s.sails, a * 0.25); g.restore();   // reflection
       ship(g, s.x, y, w, s.dir, s.sails, a);
     }
-    behind.forEach(drawShip);
-    drawBeam(g, t, apex);
-    drawGiza(g, false);
-    front.forEach(drawShip);
-    // the coast, far to near, over everything at the edges (ships slip behind the headlands)
+    // the far shore — the desert escarpment, far to near, BEHIND the pyramids and the boats
     [0, 1, 2].forEach(function (k) {
       ['left', 'right'].forEach(function (side) {
         var lay = coast[side][k]; g.beginPath();
@@ -560,6 +556,10 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
         g.closePath(); g.fillStyle = rgb(mix(lay.col, lay.day, day * 0.85)); g.fill();
       });
     });
+    behind.forEach(drawShip);
+    drawBeam(g, t, apex);
+    drawGiza(g, false);
+    front.forEach(drawShip);
     updateReadout(now);
     if (running && (!still || dragging || Math.abs(vel) > 0.001)) requestAnimationFrame(frame); else idle = true;
   }
