@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/index.html · 2026-10-07 14:30 UTC -->
+<!-- Amenti-Studios/index.html · 2026-10-07 15:00 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -556,15 +556,33 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
       gl.addColorStop(0.45, 'rgba(200,50,110,' + (0.22 * tw) + ')'); gl.addColorStop(1, 'rgba(90,30,110,0)');
       g.fillStyle = gl; g.fillRect(0, 0, W, HZ);
     }
-    // water: it carries the sky down — the band and the under-colour near the horizon, darkening to black
-    var wtop = mix(mix([18, 53, 82], skyc('under'), 0.75), skyc('band'), 0.25 * hw * (1 - below));
+    // ── THE WATER, as Moon Racer does it: a mirror of the sky ──
+    // Its sea is metallic (0.78) with the sky as its environment, tinted #2e8fb4, 84 % opaque. Here
+    // the same thing in two dimensions: the sky's own colours laid on the water upside down — the
+    // horizon band brightest right at the waterline, then low, mid and high as the eye looks further
+    // down — tinted toward the sea's blue, the reflection fading (Fresnel) as the angle steepens, and
+    // the page's black taking the foreground.
+    var TINT = [46, 143, 180];
+    function wc(k, refl, dark) { return mix(mix(skyc(k), TINT, 0.22), [7, 9, 12], dark).map(function (v, i) { return v * refl + [10, 24, 38][i] * (1 - refl); }); }
     var wg = g.createLinearGradient(0, HZ, 0, HS);
-    wg.addColorStop(0, rgb(wtop)); wg.addColorStop(0.18, rgb(mix(wtop, [12, 40, 64], 0.45))); wg.addColorStop(0.5, '#08172a'); wg.addColorStop(0.86, '#07090c'); wg.addColorStop(1, '#07090c');
+    wg.addColorStop(0, rgb(wc('band', 0.92, 0.05)));
+    wg.addColorStop(0.04, rgb(wc('low', 0.86, 0.1)));
+    wg.addColorStop(0.13, rgb(wc('mid', 0.74, 0.22)));
+    wg.addColorStop(0.3, rgb(wc('high', 0.58, 0.4)));
+    wg.addColorStop(0.55, rgb(wc('zenith', 0.4, 0.62)));
+    wg.addColorStop(0.86, '#07090c'); wg.addColorStop(1, '#07090c');
     g.fillStyle = wg; g.fillRect(0, HZ, W, HS - HZ);
+    // the chop (Moon Racer's normal map, in 2D): short dark and light dashes that break the mirror
+    for (var ck = 0; ck < 220; ck++) {
+      var cf = ((ck * 0.7548777) % 1), cy = HZ + 2 + Math.pow(cf, 1.7) * (HS - HZ) * 0.78;
+      var cw = 3 + cf * 26, cx = ((ck * 523.7 + t * (3 + 5 * cf) * (ck % 2 ? 1 : -1)) % (W + 60) + W + 60) % (W + 60) - 30;
+      g.fillStyle = ck % 3 ? 'rgba(4,10,18,' + (0.18 + 0.12 * cf) + ')' : rgb(mix(skyc('low'), [255, 255, 255], 0.3), 0.08 + 0.06 * (1 - cf));
+      g.fillRect(cx, cy, cw, cf > 0.5 ? 1.4 : 1);
+    }
     if (SKY.sun && alt > -10 && alt < 12) {                                    // the sun's road on the water
       var sx = skyXY(SKY.sun.az, 0)[0], rg = g.createRadialGradient(sx, HZ, 0, sx, HZ, W * 0.3);
       rg.addColorStop(0, 'rgba(255,190,110,' + (0.4 * hw) + ')'); rg.addColorStop(0.4, 'rgba(230,90,110,' + (0.15 * hw) + ')'); rg.addColorStop(1, 'rgba(230,90,110,0)');
-      g.fillStyle = rg; g.fillRect(0, HZ, W, (HS - HZ) * 0.5);
+      g.fillStyle = rg; g.fillRect(0, HZ, W, HS - HZ);                         // the whole water, so it has no edge
     }
     if (SKY.bodies.length) drawSky(g, day, t);
     g.fillStyle = 'rgba(120,160,200,.18)'; g.fillRect(0, HZ, W, 1);           // the horizon line
@@ -596,19 +614,33 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
       g.drawImage(off, 0, y * DPR, W * DPR, 2 * DPR, dx, y, W, 2);
     }
     g.globalAlpha = 1;
-    // the Sun's glitter path — and the Moon's, at night: a broken column of bright flecks beneath it, widening toward us
+    // the GLITTER TRACK — Moon Racer's glitterTexture: 260 flecks of 255,240,200, spread 4→30 widening toward
+    // the viewer, additive. Here fixed flecks (seeded, so they don't jump) that twinkle in place.
     [SKY.sun, SKY.moon].forEach(function (bd, m) {
       if (!bd || bd.alt < -0.5) return;
       var sp2 = skyXY(bd.az, Math.max(0, bd.alt)); if (Math.abs(sp2[2]) > 75) return;
-      var lowb = Math.max(0, Math.min(1, 1 - bd.alt / 25)), str = m ? 0.5 * (1 - day) * (0.3 + 0.7 * (0.5 - 0.5 * Math.cos((SKY.phase || 0) * Math.PI / 180))) : 1;
+      var lowb = Math.max(0, Math.min(1, 1 - bd.alt / 30));
+      var str = m ? 0.55 * (1 - day) * (0.3 + 0.7 * (0.5 - 0.5 * Math.cos((SKY.phase || 0) * Math.PI / 180))) : (0.35 + 0.65 * lowb);
       if (str < 0.05) return;
-      var gc = m ? [225, 230, 240] : mix([255, 246, 220], [255, 170, 90], lowb);
-      for (var j = 0; j < 46; j++) {
-        var f = j / 46, gy = HZ + 2 + Math.pow(f, 1.5) * (HS - HZ) * 0.8;
-        var spread = (4 + f * 70) * (0.5 + 0.8 * lowb), fl = 0.5 + 0.5 * Math.sin(t * (3.1 + (j % 7) * 0.7) + j * 2.3);
-        var gx = sp2[0] + Math.sin(t * 1.4 + j * 1.9) * spread * 0.5, gw = spread * (0.3 + 0.7 * fl);
-        g.fillStyle = rgb(gc, str * (0.75 - 0.55 * f) * fl); g.fillRect(gx - gw / 2, gy, gw, f > 0.4 ? 1.6 : 1);
+      var gc = m ? [215, 225, 240] : mix([255, 240, 200], [255, 160, 80], lowb * lowb);
+      var len = (HS - HZ) * (0.35 + 0.5 * lowb);                        // a low sun lays a longer road
+      g.save(); g.globalCompositeOperation = 'lighter';
+      for (var j = 0; j < 320; j++) {
+        var r1 = (j * 0.6180339) % 1, r2 = (j * 0.4142135) % 1, r3 = (j * 0.7320508) % 1;
+        var y = HZ + 1 + Math.pow(r1, 0.6) * len, f = (y - HZ) / len;
+        var spread = (4 + f * 30) * (1.2 + 1.6 * lowb) * (W / 1200);
+        var w = (2 + r2 * spread) * (0.6 + 0.4 * Math.sin(t * (2.2 + r3 * 3) + j));
+        var x = sp2[0] + (r3 - 0.5) * spread * 1.6;
+        var a = str * (0.05 + r2 * 0.35) * (0.45 + 0.55 * Math.sin(t * (3 + r1 * 4) + j * 1.7)) * (1 - 0.6 * f);
+        if (a <= 0 || w <= 0) continue;
+        g.fillStyle = rgb(gc, a); g.fillRect(x - w / 2, y, w, 1 + r3 * 2 * (0.4 + f));
       }
+      var cw2 = 14 + 40 * lowb, ch2 = len * 0.45;                        // the bright core: a soft ellipse, no edges
+      g.save(); g.translate(sp2[0], HZ); g.scale(1, ch2 / cw2);
+      var cg = g.createRadialGradient(0, 0, 0, 0, 0, cw2);
+      cg.addColorStop(0, rgb(gc, 0.32 * str)); cg.addColorStop(0.4, rgb(gc, 0.12 * str)); cg.addColorStop(1, rgb(gc, 0));
+      g.fillStyle = cg; g.beginPath(); g.arc(0, 0, cw2, 0, Math.PI); g.fill(); g.restore();
+      g.restore();
     });
     // the beacon's path on the water
     for (var j = 0; j < 22; j++) {
