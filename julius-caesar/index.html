@@ -1,0 +1,306 @@
+<!-- Amenti-Studios/julius-caesar/index.html · 2026-10-07 07:20 UTC -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Julius Caesar · Amenti Studios</title>
+<!-- ===========================================================================
+     AMENTI STUDIOS · the production front for Julius Caesar
+     ---------------------------------------------------------------------------
+     A sibling of the Dracula, Carol, Treasure Island, Verona and Quo Vadis pages.
+     The still is jc-hero.jpg — the words and the laurel in gold leaf on dark, made
+     for this page (no figures, no scene). The picture carries the title itself, so
+     it is shown whole (contain, never cropped) on a ground the same near-black as
+     its edges, and the page's own text stays small around it.
+     The sound is THE FORUM (v3): the legion marching in the market, the crowd, the
+     cheer, the great bell struck three times, the horns, and Antony across the
+     open-air theatre — "Friends, Romans, countrymen" — 2 min 40 s, looping.
+     The company: the Romans play themselves, from the ledger, in their own voices.
+     =========================================================================== -->
+<style>
+  :root{
+    --ink:#070604; --mist:#b3a48c; --pale:#ece3d2;
+    --gold:#e3b55a; --rule:rgba(255,236,200,.08);
+    --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+    --serif:Georgia,'Times New Roman',serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--ink);color:var(--pale);
+    font-family:var(--mono);-webkit-font-smoothing:antialiased}
+
+  /* ── the laurel ────────────────────────────────────────────────────── */
+  .hero{position:relative;height:92vh;min-height:520px;overflow:hidden;background:var(--ink)}
+  .stage{position:absolute;inset:6vh 0 9vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  /* the picture whole, its edges feathered into the ground so no frame shows */
+  .shot{display:block;max-width:100%;max-height:100%;width:auto;height:auto;opacity:0;
+    -webkit-mask-image:radial-gradient(closest-side,#000 72%,transparent 100%);
+            mask-image:radial-gradient(closest-side,#000 72%,transparent 100%);
+    -webkit-mask-size:100% 100%;mask-size:100% 100%;
+    animation:reveal 6s 1.2s ease-out forwards, push 60s 1.2s ease-in-out infinite alternate;
+    will-change:transform,opacity}
+  @keyframes reveal{from{opacity:0;filter:brightness(.4)}to{opacity:1;filter:brightness(1)}}
+  @keyframes push{from{transform:scale(1)}to{transform:scale(1.035)}}
+  /* lamplight: a slow warm breath over the gold */
+  .lamp{position:absolute;inset:0;pointer-events:none;opacity:0;mix-blend-mode:soft-light;
+    background:radial-gradient(38% 46% at 50% 47%,rgba(255,200,120,.38),transparent 70%);
+    animation:lampin 6s 4s forwards, breathe 9s 10s ease-in-out infinite alternate}
+  @keyframes lampin{to{opacity:.6}}
+  @keyframes breathe{from{opacity:.45}to{opacity:.8}}
+
+  .top{position:absolute;left:0;right:0;top:clamp(16px,3.5vh,34px);z-index:3;text-align:center}
+  .studio{font-size:13px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;
+    opacity:0;animation:in 2s .4s forwards}
+  .studio a{color:inherit;text-decoration:none}
+  .presents{font-size:11px;letter-spacing:.3em;color:var(--mist);text-transform:uppercase;
+    margin-top:8px;opacity:0;animation:in 2s 1s forwards}
+  .bottom{position:absolute;left:0;right:0;bottom:clamp(18px,4vh,40px);z-index:3;text-align:center;padding:0 16px}
+  .byline{font-size:14px;letter-spacing:.26em;color:var(--pale);text-transform:uppercase;
+    opacity:0;animation:in 2s 6s forwards}
+  .form{font-size:12px;letter-spacing:.2em;color:var(--mist);margin:9px 0 0;
+    text-transform:uppercase;opacity:0;animation:in 2s 7s forwards}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  .snd{position:absolute;right:20px;bottom:20px;z-index:5;display:flex;align-items:center;gap:9px;
+    background:rgba(7,6,4,.5);border:1px solid var(--rule);padding:8px 13px;cursor:pointer;
+    opacity:0;animation:in 2s 8s forwards;backdrop-filter:blur(6px);color:inherit;font:inherit}
+  .snd:hover{border-color:rgba(227,181,90,.5)}
+  .snd:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
+  .snd span{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--mist)}
+  .snd.on span{color:var(--gold)}
+  .snd svg{width:13px;height:13px;overflow:visible}
+  .snd line{stroke:var(--mist);stroke-width:1.2;stroke-linecap:round}
+  .snd.on line{stroke:var(--gold)}
+  .snd .w2,.snd .w3{opacity:0;transition:opacity .4s}
+  .snd.on .w2{opacity:.8}
+  .snd.on .w3{opacity:.45}
+  @keyframes in{to{opacity:1}}
+
+  /* ── the production (as the other pages) ──────────────────────────── */
+  .wrap{max-width:900px;margin:0 auto;padding:0 22px 90px;text-align:left}
+  .band{font-size:13px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;
+    text-align:center;margin:56px 0 5px;display:block;width:100%}
+  .sub{font-size:13px;color:#a3957f;text-align:center;margin-bottom:24px;display:block;width:100%}
+  .company{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+  .member{display:flex;gap:16px;align-items:center;padding:18px 18px;background:#0c0a07}
+  .member:hover{background:#12100b}
+  .face{width:48px;height:64px;flex:0 0 48px;border:1px solid var(--rule);background-size:cover;
+    background-position:50% 16%;display:flex;align-items:center;justify-content:center;font-size:19px;
+    color:var(--gold);background-color:rgba(255,255,255,.03)}
+  .who{flex:1;min-width:0}
+  .role{font-family:var(--serif);font-size:20px;color:#fff}
+  .as{font-size:10px;letter-spacing:.22em;color:#8d806c;text-transform:uppercase;margin:3px 0 2px}
+  .actor{font-size:16px;color:var(--gold)}
+  .actor.open{color:#8d806c;font-style:italic}
+  .dialect{font-size:13px;color:var(--mist);margin-top:3px}
+  .chapters{border:1px solid var(--rule)}
+  .ch{display:flex;gap:14px;align-items:baseline;padding:12px 16px;border-bottom:1px solid var(--rule);
+    font-size:14px;background:#0c0a07}
+  .ch:last-child{border-bottom:none}
+  .ch.on{background:rgba(227,181,90,.07);cursor:pointer}
+  .ch.on:hover,.ch.on:focus-visible{background:rgba(227,181,90,.14);outline:none}
+  .n{color:#7c705e;font-size:12px;width:44px;flex:0 0 44px}
+  .sum{color:#b3a48c;flex:1;min-width:0}
+  .ch.on .sum{color:var(--pale)}
+  .tag{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#7c705e;white-space:nowrap}
+  .ch.on .tag{color:var(--gold)}
+  .note{margin-top:16px;font-size:12px;color:#a3957f;text-align:center;line-height:1.9}
+  .foot{margin-top:38px;text-align:center;font-size:12px;color:#7c705e;line-height:2}
+  @media(max-width:620px){
+    .hero{height:70vh;min-height:420px}
+    .stage{inset:7vh 0 13vh}
+    .shot{max-width:none;width:175%;max-height:none;flex:0 0 auto}   /* only the dark margins are trimmed */
+    .shot{-webkit-mask-image:radial-gradient(34% 60% at 50% 50%,#000 76%,transparent 100%);
+                  mask-image:radial-gradient(34% 60% at 50% 50%,#000 76%,transparent 100%)}
+    .byline{font-size:12px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .shot,.lamp{animation:none}
+    .shot{opacity:1}
+    .lamp{opacity:.6}
+    .studio,.presents,.byline,.form,.snd{animation:none;opacity:1}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="stage"><img class="shot" src="jc-hero.jpg" width="2560" height="1434" alt="Julius Caesar, in gold leaf, within a laurel wreath"></div>
+  <div class="lamp"></div>
+  <h1 class="sr">Julius Caesar</h1>
+  <div class="top">
+    <div class="studio"><a href="../">Amenti Studios</a></div>
+    <div class="presents">presents</div>
+  </div>
+  <div class="bottom">
+    <div class="byline">William Shakespeare &middot; 1599</div>
+    <div class="form">Cast from the Amenti Interface Library of Legends</div>
+  </div>
+  <button class="snd" id="snd" aria-label="Turn sound on">
+    <svg viewBox="0 0 13 13" aria-hidden="true">
+      <line x1="2" y1="4" x2="2" y2="9"/>
+      <line class="w2" x1="6" y1="2" x2="6" y2="11"/>
+      <line class="w3" x1="10" y1="4.5" x2="10" y2="8.5"/>
+    </svg>
+    <span>sound</span>
+  </button>
+</div>
+
+<div class="wrap">
+  <div class="band">The Company</div>
+  <div class="sub" id="company-sub">&hellip;</div>
+  <div class="company" id="company"></div>
+
+  <div class="band">The Acts</div>
+  <div class="sub" id="ch-sub"></div>
+  <div class="chapters" id="chapters"></div>
+
+  <div class="note" id="note"></div>
+  <div class="foot">
+    Ingram Manor LLC &middot; 2026 &middot; All Rights Reserved<br>
+    The text is public domain. The voices are not performances by the people named &mdash;
+    they are the ledger&rsquo;s record of how each figure spoke, used as a casting pool.
+  </div>
+</div>
+
+<script>
+const RAW = 'https://raw.githubusercontent.com/ianingram/Amenti-Readings/main/';
+const ART = 'https://raw.githubusercontent.com/ianingram/Amenti.live/main/img/';
+const WORK = 'julius-caesar';
+/* the same rule as ingest.py's slug_key, so a page asks for exactly the file the plate tool wrote */
+const slug = s => String(s||'').toLowerCase().replace(/[.'’]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const esc  = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pretty = k => String(k).split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' ').replace(/\bOf\b/g,'of');
+
+/* THE COMPANY as it stands: the Romans play themselves, each in their own ledger voice
+   (Ian, 7 Oct 2026: "each features ledger voice — in this way we can use uncertainty to
+   our advantage"). Roles with no figure in the ledger are shown open, not guessed. When
+   cast.json gains a julius-caesar entry the page reads that instead. */
+const COMPANY = [
+  ['Julius Caesar',  'Julius Caesar',          'classical Latin, clipped and commanding'],
+  ['Marcus Brutus',  'Marcus Junius Brutus',   'classical Latin, principled and tormented'],
+  ['Cassius',        'Gaius Cassius Longinus', 'classical Latin, lean and resentful'],
+  ['Mark Antony',    'Mark Antony',            'classical Latin, swaggering and generous'],
+  ['Octavius Caesar','Augustus Caesar',        'classical Latin, measured and shrewd'],
+  ['Lepidus',        'Lepidus',                'classical Latin, cautious and aristocratic'],
+  ['Cicero',         'Marcus Tullius Cicero',  'classical Latin, eloquent and grand'],
+  ['Calpurnia',      '',                       ''],
+  ['Portia',         '',                       ''],
+  ['Casca',          '',                       '']
+];
+const ACTS = [
+  ['I',   'The Feast of Lupercal. A soothsayer: “Beware the ides of March.” Cassius works on Brutus.'],
+  ['II',  'Brutus’s orchard at night; the conspirators meet. Calpurnia dreams, and Caesar goes to the Senate.'],
+  ['III', 'The ides of March. “Et tu, Bruté?” — and in the Forum, Brutus speaks, then Antony.'],
+  ['IV',  'The camp at Sardis. Brutus and Cassius quarrel; Portia is dead; Caesar’s ghost.'],
+  ['V',   'The plains of Philippi. “This was the noblest Roman of them all.”']
+];
+
+function face(el,name){
+  const img = new Image();
+  img.onload = () => { el.textContent=''; el.style.backgroundImage=`url("${ART}${slug(name)}-card.jpg")`; };
+  img.src = `${ART}${slug(name)}-card.jpg`;
+}
+function drawCompany(rows){
+  const co = document.getElementById('company');
+  co.innerHTML = rows.map(r => `
+    <div class="member">
+      <div class="face" data-name="${esc(r[1])}">&#9672;</div>
+      <div class="who">
+        <div class="role">${esc(r[0])}</div>
+        <div class="as">${r[1] ? 'as played by' : 'to be cast'}</div>
+        <div class="actor ${r[1] ? '' : 'open'}">${r[1] ? esc(r[1]) : 'from the ledger'}</div>
+        <div class="dialect">${esc(r[2])}</div>
+      </div>
+    </div>`).join('');
+  co.querySelectorAll('.face').forEach(f => { if (f.dataset.name) face(f, f.dataset.name); });
+  const cast = rows.filter(r => r[1]).length;
+  document.getElementById('company-sub').textContent =
+    cast + ' Romans playing themselves, in their own voices from the Amenti ledger';
+}
+function drawActs(ch){
+  document.getElementById('ch-sub').textContent = 'Five acts · in production';
+  document.getElementById('chapters').innerHTML = ch.map(c => `
+    <div class="ch ${c.ready?'on':''}" ${c.ready?`data-ep="${esc(c.file)}" tabindex="0" role="button"`:''}>
+      <div class="n">${esc(c.n)}</div>
+      <div class="sum">${esc(c.summary)}</div>
+      <div class="tag">${c.ready?'ready':''}</div>
+    </div>`).join('');
+  document.querySelectorAll('.ch.on').forEach(row=>{
+    row.onclick = () => window.Amenti && window.Amenti.playbill && window.Amenti.playbill.open(row.dataset.ep);
+  });
+}
+
+fetch(RAW+'cast.json').then(r=>r.json()).then(cast => {
+  const roles = (cast.roles && cast.roles[WORK]) || null;
+  if (!roles) throw 0;
+  drawCompany(Object.keys(roles).map(k =>
+    [pretty(k), roles[k].ledger_name, (roles[k].ledger||'').split('·')[0].trim()]));
+}).catch(() => drawCompany(COMPANY));
+
+fetch(RAW+WORK+'/index.json').then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(idx => {
+  drawActs((idx.chapters||[]).map(c => ({ n: c.n, summary: c.summary||'', ready: c.status==='scripted', file: c.file })));
+}).catch(() => drawActs(ACTS.map(a => ({ n: a[0], summary: a[1], ready: false }))));
+
+document.getElementById('note').innerHTML =
+  'Shakespeare’s Rome, and the real Romans speak their own lines.' +
+  '<br>Faces appear where a plate exists; a mark stands in where one does not yet.';
+</script>
+<script>
+/* ─── THE BED ───────────────────────────────────────────────────────────
+   The Forum under the laurel, when asked for. Same rules as the other pages:
+   probed before the control appears, every gain ramped, faded when the tab is hidden. */
+(function () {
+  var TRACKS = [
+    { url: 'https://ianingram.github.io/Amenti-Readings/julius-caesar/sound/the-forum.mp3', gain: 0.7 }
+  ];
+  var btn = document.getElementById('snd');
+  if (!btn) return;
+  var ctx = null, nodes = [], on = false, loading = false;
+  Promise.all(TRACKS.map(function (t) {
+    return fetch(t.url, { method: 'HEAD' }).then(function (r) { return r.ok; }).catch(function () { return false; });
+  })).then(function (ok) { if (ok.indexOf(true) < 0) btn.style.display = 'none'; });
+  function getCtx() {
+    var T = window.Amenti && window.Amenti.throttle;
+    if (T && typeof T.audioContext === 'function') return T.audioContext();
+    return new (window.AudioContext || window.webkitAudioContext)();
+  }
+  function fade(g, to, secs) {
+    var t = ctx.currentTime; g.gain.cancelScheduledValues(t);
+    g.gain.setValueAtTime(Math.max(g.gain.value, 0.0001), t);
+    if (to <= 0) { g.gain.exponentialRampToValueAtTime(0.0001, t + secs); g.gain.setValueAtTime(0, t + secs + 0.01); }
+    else g.gain.exponentialRampToValueAtTime(to, t + secs);
+  }
+  function start() {
+    if (loading) return; loading = true;
+    ctx = getCtx(); if (ctx.state === 'suspended') ctx.resume();
+    Promise.all(TRACKS.map(function (t) {
+      return fetch(t.url).then(function (r) { if (!r.ok) throw 0; return r.arrayBuffer(); })
+        .then(function (b) { return ctx.decodeAudioData(b); })
+        .then(function (buf) { return { buf: buf, gain: t.gain }; }).catch(function () { return null; });
+    })).then(function (loaded) {
+      var any = loaded.filter(Boolean);
+      if (!any.length) { btn.style.display = 'none'; return; }
+      any.forEach(function (t) {
+        var src = ctx.createBufferSource(); src.buffer = t.buf; src.loop = true;
+        var g = ctx.createGain(); g.gain.value = 0.0001;
+        src.connect(g); g.connect(ctx.destination); src.start(0); fade(g, t.gain, 3);
+        nodes.push({ g: g, target: t.gain });
+      });
+      on = true; btn.classList.add('on'); btn.setAttribute('aria-label', 'Turn sound off'); loading = false;
+    });
+  }
+  function set(v) {
+    on = v; btn.classList.toggle('on', on); btn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+    nodes.forEach(function (n) { fade(n.g, on ? n.target : 0, on ? 3 : 3); });
+  }
+  btn.onclick = function () { if (!ctx) { start(); return; } if (ctx.state === 'suspended') ctx.resume(); set(!on); };
+  document.addEventListener('visibilitychange', function () {
+    if (!ctx || !on) return;
+    nodes.forEach(function (n) { fade(n.g, document.hidden ? 0.0001 : n.target, 1.5); });
+  });
+})();
+</script>
+
+</body>
+</html>
