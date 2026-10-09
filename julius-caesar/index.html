@@ -1,4 +1,4 @@
-<!-- Amenti-Studios/julius-caesar/index.html · 2026-10-07 08:40 UTC -->
+<!-- Amenti-Studios/julius-caesar/index.html · 2026-10-08 17:30 UTC -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -120,6 +120,43 @@
     .lamp{opacity:.6}
     .studio,.presents,.byline,.form,.snd{animation:none;opacity:1}
   }
+
+  /* ── THE SCRIPT (8 Oct 2026): the scene as a screenplay, following the reading, with a margin ── */
+  .script{display:none;max-width:1040px;margin:0 auto;padding:0 22px 80px}
+  .script.on{display:block}
+  .sbar{position:sticky;top:0;z-index:20;display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+    padding:12px 0;background:linear-gradient(var(--ink) 80%,transparent);margin-bottom:8px}
+  .sbar .t{flex:1;min-width:200px;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+  .sbtn{background:none;border:1px solid rgba(227,181,90,.45);color:var(--gold);font:inherit;font-size:11px;
+    letter-spacing:.18em;text-transform:uppercase;padding:8px 13px;cursor:pointer}
+  .sbtn:hover{background:rgba(227,181,90,.1)}
+  .page{background:#f4ecda;color:#1d1a14;font-family:'Courier Prime','Courier New',Courier,monospace;font-size:15px;
+    line-height:1.45;padding:56px 0 70px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+  .row{display:grid;grid-template-columns:1fr 240px;align-items:start}
+  .main{padding:0 56px 0 72px}
+  .slug{font-weight:700;text-transform:uppercase;margin:0 0 18px}
+  .slug .ref{float:right;font-weight:400}
+  .act{margin:0 0 14px;white-space:pre-wrap}
+  .dir{margin:0 0 14px;font-style:italic;white-space:pre-wrap}
+  .sp{margin:0 0 14px;padding:2px 0;border-left:3px solid transparent;cursor:pointer;transition:background .4s}
+  .sp:hover{background:rgba(0,0,0,.04)}
+  .sp .who{margin-left:38%;text-transform:uppercase}
+  .sp .par{margin-left:30%;margin-right:22%}
+  .sp .lines{margin-left:18%;margin-right:14%;white-space:pre-wrap}
+  .dir.cue{cursor:pointer}
+  .now{background:rgba(227,181,90,.32)!important;border-left-color:#b8862b}
+  .marg{border-left:1px dashed rgba(0,0,0,.18);padding:0 14px;min-height:20px;font-family:Georgia,serif;font-size:13px;
+    color:#7a1d12;font-style:italic}
+  .marg .pen{opacity:.25;cursor:pointer;font-style:normal;border:none;background:none;font-size:14px;color:#7a1d12;padding:0}
+  .row:hover .pen{opacity:.8}
+  .marg textarea{width:100%;min-height:60px;font:inherit;color:#7a1d12;background:#fbf6ea;border:1px solid rgba(122,29,18,.3);padding:6px}
+  .marg .note{white-space:pre-wrap;cursor:pointer}
+  @media(max-width:760px){
+    .row{grid-template-columns:1fr}
+    .main{padding:0 20px}
+    .sp .who{margin-left:30%} .sp .lines{margin-left:8%;margin-right:4%} .sp .par{margin-left:20%;margin-right:10%}
+    .marg{border-left:none;padding:0 20px 8px 20px}
+  }
 </style>
 </head>
 <body>
@@ -144,6 +181,16 @@
     </svg>
     <span>sound</span>
   </button>
+</div>
+
+<div class="script" id="script">
+  <div class="sbar">
+    <div class="t" id="s-title">The script</div>
+    <button class="sbtn" id="s-play">Play</button>
+    <button class="sbtn" id="s-notes">Export notes (0)</button>
+    <button class="sbtn" id="s-close">Close the script</button>
+  </div>
+  <div class="page" id="s-page"></div>
 </div>
 
 <div class="wrap">
@@ -218,8 +265,125 @@ function drawCompany(rows){
   document.getElementById('company-sub').textContent = rows.length + ' roles \u00b7 ' + voices +
     ' voices from the Amenti ledger \u00b7 the Romans play themselves';
 }
+
+/* ── THE SCRIPT ─────────────────────────────────────────────────────────────
+   Opening a scene shows it as a screenplay beside the reading. Shakespeare's dialogue comes from
+   the cue sheet itself, byte for byte; the scene heading, action and parentheticals come from
+   julius-caesar/screenplay.json (read on the page, never spoken). The line being spoken is lit
+   and kept in view; clicking a line reads from there. The margin takes notes for Ian; they live in
+   this browser and leave by "Export notes" as a file for Claude to work through. */
+const SCRIPT = { ep: null, sheet: null, sp: null, path: null };
+const NOTES_KEY = 'amenti.jc.notes';
+function notes(){ try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '{}'); } catch(e){ return {}; } }
+function saveNotes(o){ try { localStorage.setItem(NOTES_KEY, JSON.stringify(o)); } catch(e){} countNotes(); }
+function countNotes(){ const n = Object.values(notes()).filter(v => v && v.text).length; document.getElementById('s-notes').textContent = 'Export notes (' + n + ')'; }
+let SPLAY = null;
+function screenplay(){ return SPLAY || (SPLAY = fetch(RAW + WORK + '/screenplay.json?nc=' + Date.now()).then(r => r.ok ? r.json() : {scenes:{}}).catch(() => ({scenes:{}}))); }
+function showScript(path){
+  const ep = parseInt((path.match(/ep(\d+)/) || [0, 0])[1], 10);
+  Promise.all([fetch(RAW + path + '?nc=' + Date.now()).then(r => r.json()), screenplay()]).then(([sheet, spl]) => {
+    SCRIPT.ep = ep; SCRIPT.sheet = sheet; SCRIPT.path = path; SCRIPT.sp = (spl.scenes || {})[String(ep)] || {};
+    renderScript();
+    const el = document.getElementById('script'); el.classList.add('on');
+    document.querySelector('.wrap').style.display = 'none';
+    el.scrollIntoView({ behavior: 'smooth' });
+  });
+}
+function marg(key){
+  const v = notes()[key];
+  return `<div class="marg" data-k="${key}">${v && v.text ? `<div class="note">${esc(v.text)}</div>` : '<button class="pen" title="note">&#9998;</button>'}</div>`;
+}
+function renderScript(){
+  const s = SCRIPT.sheet, sp = SCRIPT.sp, ep = SCRIPT.ep, pg = document.getElementById('s-page');
+  document.getElementById('s-title').textContent = s.title;
+  const before = sp.before || {}, paren = sp.paren || {};
+  let h = '';
+  const ref = (s.document || '').replace('ACT ', '').replace(' · SCENE ', '.').toLowerCase();
+  h += `<div class="row"><div class="main"><div class="slug">${esc(sp.slug || s.title)}<span class="ref">${esc(ref)}</span></div></div>${marg(ep + ':slug')}</div>`;
+  (sp.open || []).forEach((a, i) => { h += `<div class="row"><div class="main"><div class="act">${esc(a)}</div></div>${marg(ep + ':open' + i)}</div>`; });
+  s.cues.forEach(c => {
+    (before[c.n] || []).forEach((a, i) => { h += `<div class="row"><div class="main"><div class="act">${esc(a)}</div></div>${marg(ep + ':' + c.n + 'a' + i)}</div>`; });
+    const key = ep + ':' + c.n;
+    if (c.role === 'Stage directions') {
+      if (/^(ACT [IVX]+|SCENE [IVX]+\.)/.test(c.text)) { h += `<div class="row" hidden><div class="main"><div class="dir cue" data-n="${c.n}"></div></div></div>`; return; }
+      h += `<div class="row"><div class="main"><div class="dir cue" data-n="${c.n}">${esc(c.text.replace(/^\[\*|\*\]$/g, ''))}</div></div>${marg(key)}</div>`;
+    } else {
+      h += `<div class="row"><div class="main"><div class="sp" data-n="${c.n}"><div class="who">${esc(c.role)}</div>` +
+           (paren[c.n] ? `<div class="par">(${esc(paren[c.n])})</div>` : '') +
+           `<div class="lines">${esc(c.text.replace(/\n\n/g, '\n'))}</div></div></div>${marg(key)}</div>`;
+    }
+  });
+  pg.innerHTML = h;
+  pg.querySelectorAll('[data-n]').forEach(el => el.onclick = () => readFrom(+el.dataset.n));
+  pg.querySelectorAll('.marg').forEach(m => m.onclick = e => { if (e.target.tagName !== 'TEXTAREA') editNote(m); });
+  countNotes();
+}
+function editNote(m){
+  if (m.querySelector('textarea')) return;
+  const k = m.dataset.k, cur = (notes()[k] || {}).text || '';
+  m.innerHTML = '<textarea placeholder="a note for Claude…"></textarea>';
+  const t = m.querySelector('textarea'); t.value = cur; t.focus();
+  t.onblur = () => {
+    const o = notes(), v = t.value.trim();
+    if (v) { const [ep, n] = k.split(':'); const c = (SCRIPT.sheet.cues.find(x => String(x.n) === n) || null);
+      o[k] = { text: v, scene: SCRIPT.sheet.title, ep: +ep, at: n, speaker: c ? c.role : '', line: c ? c.text.slice(0, 160) : '', when: new Date().toISOString() };
+    } else delete o[k];
+    saveNotes(o);
+    m.outerHTML = marg(k);
+    const nm = document.querySelector(`.marg[data-k="${CSS.escape(k)}"]`); if (nm) nm.onclick = e => { if (e.target.tagName !== 'TEXTAREA') editNote(nm); };
+  };
+}
+function readFrom(n){
+  const R = window.Amenti && window.Amenti.reading; if (!R) return;
+  if (R.sheet && R.path === SCRIPT.path && R.state !== 'idle' && R.state !== 'done') {
+    R.seek(n); if (R.state === 'paused') R.resume(); return;
+  }
+  R.play(SCRIPT.path).then(() => R.seek(n)).catch(() => {});
+}
+function light(n){
+  document.querySelectorAll('#s-page .now').forEach(e => e.classList.remove('now'));
+  const el = document.querySelector(`#s-page [data-n="${n}"]`);
+  if (el) { el.classList.add('now'); if (!el.closest('[hidden]')) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+}
+(function wire(){
+  const R = window.Amenti && window.Amenti.reading;
+  if (!R) return setTimeout(wire, 400);
+  const prev = R.onCue;
+  R.onCue = function (cue, i, total) {
+    if (typeof prev === 'function') try { prev(cue, i, total); } catch (e) {}
+    if (SCRIPT.path && R.path !== 'none') light(cue.n);
+    document.getElementById('s-play').textContent = 'Pause';
+  };
+  document.getElementById('s-play').onclick = () => {
+    if (R.state === 'reading') { R.pause(); document.getElementById('s-play').textContent = 'Play'; }
+    else if (R.state === 'paused') { R.resume(); document.getElementById('s-play').textContent = 'Pause'; }
+    else readFrom(1);
+  };
+})();
+document.getElementById('s-close').onclick = () => {
+  const R = window.Amenti && window.Amenti.reading; if (R && R.state !== 'idle') R.stop();
+  document.getElementById('script').classList.remove('on'); document.querySelector('.wrap').style.display = '';
+  document.getElementById('chapters').scrollIntoView({ behavior: 'smooth' });
+};
+document.getElementById('s-notes').onclick = () => {
+  const o = notes(), list = Object.keys(o).map(k => o[k]).filter(v => v && v.text)
+    .sort((a, b) => a.ep - b.ep || (parseFloat(a.at) || 0) - (parseFloat(b.at) || 0));
+  if (!list.length) { alert('No notes yet. Click the margin beside any line to write one.'); return; }
+  const txt = '# Julius Caesar — notes for Claude\n# exported ' + new Date().toISOString() + '\n\n' +
+    list.map(v => `## ${v.scene} · line ${v.at}${v.speaker ? ' · ' + v.speaker : ''}\n> ${String(v.line || '').replace(/\n+/g, ' ')}\n${v.text}\n`).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([txt], { type: 'text/markdown' }));
+  a.download = 'julius-caesar-notes.md'; document.body.appendChild(a); a.click(); a.remove();
+};
 function open(ep){
-  if (window.Amenti && window.Amenti.playbill) { window.Amenti.playbill.open(ep); return; }
+  showScript(ep);
+  if (window.Amenti && window.Amenti.playbill) {
+    window.Amenti.playbill.open(ep);
+    /* the playbill's buttons, moved up under the title on this page (the long cast pushed them off screen) */
+    let tries = 0; (function lift(){ const pb = document.querySelector('.pb-actions'), d = document.querySelector('.pb-doc');
+      if (pb && d) { if (pb.previousElementSibling !== d) d.insertAdjacentElement('afterend', pb); } else if (tries++ < 40) setTimeout(lift, 150); })();
+    return;
+  }
   alert('The speech engine did not load. The console says which part is missing.');
 }
 function drawActs(ch){
@@ -297,7 +461,7 @@ document.getElementById('note').innerHTML =
       any.forEach(function (t) {
         var src = ctx.createBufferSource(); src.buffer = t.buf; src.loop = true;
         var g = ctx.createGain(); g.gain.value = 0.0001;
-        src.connect(g); g.connect(ctx.destination); src.start(0); fade(g, t.gain, 3);
+        src.connect(g); g.connect(ctx.destination); src.start(0); fade(g, t.gain, 8);
         nodes.push({ g: g, target: t.gain });
       });
       on = true; btn.classList.add('on'); btn.setAttribute('aria-label', 'Turn sound off'); loading = false;
