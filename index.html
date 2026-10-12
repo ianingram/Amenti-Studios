@@ -587,11 +587,13 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
   function buildClouds() {
     var seed = 1012; function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
     var layers = [
-      { y: 0.13, h: 0.12, n: 7,  a: 0.5,  speed: 2.0, depth: 0.25 },
-      { y: 0.31, h: 0.14, n: 9,  a: 0.6,  speed: 3.5, depth: 0.45 },
-      { y: 0.52, h: 0.14, n: 11, a: 0.7,  speed: 5.5, depth: 0.7 },
-      { y: 0.72, h: 0.11, n: 12, a: 0.75, speed: 8.0, depth: 1.0 },
-      { y: 0.90, h: 0.08, n: 9,  a: 0.55, speed: 11,  depth: 1.3, low: true }];   // the low wisps, across the foot
+      // the top layers ride the subtropical jet (≈10–12 km over Giza, strongest in the cool months) and run fastest;
+      // the lower ones lag in slower air; the wisps on the water barely move
+      { y: 0.13, h: 0.12, n: 7,  a: 0.5,  speed: 14, depth: 0.25 },
+      { y: 0.31, h: 0.14, n: 9,  a: 0.6,  speed: 10, depth: 0.45 },
+      { y: 0.52, h: 0.14, n: 11, a: 0.7,  speed: 6,  depth: 0.7 },
+      { y: 0.72, h: 0.11, n: 12, a: 0.75, speed: 3.5, depth: 1.0 },
+      { y: 0.90, h: 0.08, n: 9,  a: 0.55, speed: 1.5, depth: 1.3, low: true }];   // the low wisps, across the foot
     CL = { W: W, HZ: HZ, layers: layers.map(function (L) {
       var cw = Math.max(2, Math.round(W * 2)), ch = Math.max(8, Math.round(HZ * L.h)), c = document.createElement('canvas');
       c.width = cw; c.height = ch; var x = c.getContext('2d');
@@ -632,8 +634,13 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
         x.drawImage(o.mask, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = rgb(tint.c); x.fillRect(0, 0, o.tint.width, o.tint.height);
         o.tintKey = key;
       }
+      // THE JET STREAM: Giza lies under the subtropical jet, which blows from west to east. The clouds move with it in
+      // the world, so on screen they cross left-to-right when you look north, right-to-left when you look south, and
+      // when you look east or west they run straight away from you or toward you (slow across the screen).
+      var dt_ = o.lastT == null ? 0 : Math.max(0, Math.min(0.2, t - o.lastT)); o.lastT = t;
+      o.pos = (o.pos || 0) + dt_ * o.L.speed * Math.cos(lookAz() * Math.PI / 180) * (W / 1280);
       var cw = o.tint.width, y = HZ * o.L.y - o.tint.height / 2;
-      var off = ((-(lookAz() / 360) * W * 2 * o.L.depth - t * o.L.speed) % cw + cw) % cw;
+      var off = (((lookAz() / 360) * W * 2 * o.L.depth - o.pos) % cw + cw) % cw;   // turning right sweeps the sky left, as the stars do
       g.save(); g.globalAlpha = tint.a * o.L.a * (low ? 0.8 : 1);
       g.drawImage(o.tint, -off, y); g.drawImage(o.tint, cw - off, y);
       g.restore();
