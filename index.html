@@ -361,8 +361,9 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
   // +x east, -z north, Khufu at the origin). Khafre stands on bedrock some 10 m higher. Turning the
   // scene walks you round Khufu, and the other two swing into view to the south-west.
   var MT = 0.87, BUILT = false;
+  var BIG = 2.0;   // (12 Oct 2026, Ian: the pyramid 200% — twice the size on screen)
   var GIZA3 = [
-    { name: 'Khufu',    x: 0,           z: 0,          a: 115.2 * MT, h: 146.6 * MT, y: 0,       cap: true }];
+    { name: 'Khufu',    x: 0,           z: 0,          a: 115.2 * MT * BIG, h: 146.6 * MT * BIG, y: 0,       cap: true }];
   // (12 Oct 2026, Ian: "just one pyramid instead of 3" — the Great Pyramid alone on the flood.
   //  Khafre:   { x: -328 * MT, z: 344 * MT, a: 107.5 * MT, h: 143.5 * MT, y: 10 * MT }
   //  Menkaure: { x: -588 * MT, z: 743 * MT, a: 51.2 * MT,  h: 65.5 * MT,  y: 0 }  — put back to restore all three)
