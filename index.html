@@ -127,7 +127,7 @@
 <body>
 
 <div class="top">
-  <div class="sea" id="sea" aria-label="The pyramids of Giza standing in the Nile flood under the real sky; drag to walk round them" role="img">
+  <div class="sea" id="sea" aria-label="The Great Pyramid of Giza standing in the Nile flood under the real sky; drag to walk round it" role="img">
     <canvas id="seaCanvas"></canvas>
     <div class="engine" id="engine"><i></i><span>Sky engine loading</span></div>
   </div>
@@ -362,9 +362,10 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
   // scene walks you round Khufu, and the other two swing into view to the south-west.
   var MT = 0.87, BUILT = false;
   var GIZA3 = [
-    { name: 'Khufu',    x: 0,           z: 0,          a: 115.2 * MT, h: 146.6 * MT, y: 0,       cap: true },
-    { name: 'Khafre',   x: -328 * MT,   z: 344 * MT,   a: 107.5 * MT, h: 143.5 * MT, y: 10 * MT },
-    { name: 'Menkaure', x: -588 * MT,   z: 743 * MT,   a: 51.2 * MT,  h: 65.5 * MT,  y: 0 }];
+    { name: 'Khufu',    x: 0,           z: 0,          a: 115.2 * MT, h: 146.6 * MT, y: 0,       cap: true }];
+  // (12 Oct 2026, Ian: "just one pyramid instead of 3" — the Great Pyramid alone on the flood.
+  //  Khafre:   { x: -328 * MT, z: 344 * MT, a: 107.5 * MT, h: 143.5 * MT, y: 10 * MT }
+  //  Menkaure: { x: -588 * MT, z: 743 * MT, a: 51.2 * MT,  h: 65.5 * MT,  y: 0 }  — put back to restore all three)
   // today the stepped core shows (warm sandstone-coloured limestone); in 2560 BC the white Tura casing, smooth
   var CORE = { dark: [16, 14, 12], lit: [206, 178, 128] }, CASING = { dark: [22, 22, 24], lit: [240, 234, 218] };
   function rot(p) { var c = Math.cos(yaw), s = Math.sin(yaw); return [p[0] * c + p[2] * s, p[1], -p[0] * s + p[2] * c]; }
