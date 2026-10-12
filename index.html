@@ -361,7 +361,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
   // +x east, -z north, Khufu at the origin). Khafre stands on bedrock some 10 m higher. Turning the
   // scene walks you round Khufu, and the other two swing into view to the south-west.
   var MT = 0.87, BUILT = false;
-  var BIG = 2.0;   // (12 Oct 2026, Ian: the pyramid 200% — twice the size on screen)
+  var BIG = 2.6;   // (12 Oct 2026, Ian: the pyramid 200%, then 30% more)
   var GIZA3 = [
     { name: 'Khufu',    x: 0,           z: 0,          a: 115.2 * MT * BIG, h: 146.6 * MT * BIG, y: 0,       cap: true }];
   // (12 Oct 2026, Ian: "just one pyramid instead of 3" — the Great Pyramid alone on the flood.
@@ -369,6 +369,8 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
   //  Menkaure: { x: -588 * MT, z: 743 * MT, a: 51.2 * MT,  h: 65.5 * MT,  y: 0 }  — put back to restore all three)
   // today the stepped core shows (warm sandstone-coloured limestone); in 2560 BC the white Tura casing, smooth
   var CORE = { dark: [16, 14, 12], lit: [206, 178, 128] }, CASING = { dark: [22, 22, 24], lit: [240, 234, 218] };
+  // (12 Oct 2026, Ian) the Amenti pyramid: black obsidian with gold circuitry, as on the Amenti.live landing page
+  var OBSIDIAN = { dark: [7, 7, 9], lit: [92, 94, 104] };
   function rot(p) { var c = Math.cos(yaw), s = Math.sin(yaw); return [p[0] * c + p[2] * s, p[1], -p[0] * s + p[2] * c]; }
   function pyrFaces(pyr, mirror) {
     var c = Math.cos(yaw), s = Math.sin(yaw), CAM = [0, E, D], m = mirror ? -1 : 1;
@@ -394,7 +396,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
         lit += mup * (0.12 + 0.3 * full) * Math.max(0, nw[0] * mv[0] + nw[1] * mv[1] + nw[2] * mv[2]);
         lit += (1 - up) * 0.05 + up * 0.12;                                      // sky light
       } else lit = 0.5 * Math.max(0, n[0] * L[0] + n[1] * L[1] + n[2] * L[2]);
-      out.push({ apex: apex, b1: b1, b2: b2, depth: (b1[2] + b2[2]) / 2, facing: facing, light: Math.min(1, 0.04 + lit) });
+      out.push({ idx: i, apex: apex, b1: b1, b2: b2, depth: (b1[2] + b2[2]) / 2, facing: facing, light: Math.min(1, 0.04 + lit) });
     }
     return out.sort(function (a, b) { return a.depth - b.depth; });
   }
@@ -402,12 +404,15 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
   function lerp(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; }
   function drawGiza(g, mirror) {
     var order = GIZA3.slice().sort(function (a, b) { return rot([a.x, 0, a.z])[2] - rot([b.x, 0, b.z])[2]; });   // far first
-    var stone = BUILT ? CASING : CORE;
+    var stone = BUILT ? CASING : OBSIDIAN;
     order.forEach(function (pyr) {
       pyrFaces(pyr, mirror).forEach(function (o) {
         var p = P(o.apex), q = P(o.b1), r = P(o.b2), col = mix(stone.dark, stone.lit, o.light);
         var by = Math.max(q[1], r[1]), gr = g.createLinearGradient(0, p[1], 0, by);
-        gr.addColorStop(0, rgb(col)); gr.addColorStop(1, rgb(col.map(function (x) { return x * 0.72; })));
+        // the top stands in more light than the foot (Ian, 12 Oct 2026): sky light and the capstone's glow on the upper courses,
+        // the lower courses in the shadow of the land and the water
+        gr.addColorStop(0, rgb(mix(col, [236, 214, 168], 0.30))); gr.addColorStop(0.18, rgb(mix(col, stone.lit, 0.16)));
+        gr.addColorStop(0.55, rgb(col)); gr.addColorStop(1, rgb(col.map(function (x) { return x * 0.5; })));
         g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.lineTo(r[0], r[1]); g.closePath(); g.fillStyle = gr; g.fill();
         var tall = Math.abs(by - p[1]);
         if (!BUILT && tall > 30 && !(pyr.name === 'Khafre')) {                 // the stepped courses, where the core is bare
@@ -421,15 +426,224 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
           g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(cq[0], cq[1]); g.lineTo(cr[0], cr[1]); g.closePath();
           g.fillStyle = rgb(mix(CASING.dark, CASING.lit, o.light * 0.9)); g.fill();
         }
+        if (pyr.cap) drawCircuit(g, pyr, o, mirror);                             // gold circuitry on every face
         if (pyr.cap) {                                                           // Khufu's gilded pyramidion
-          var aq = lerp(p, q, 0.08), ar = lerp(p, r, 0.08);
+          var aq = lerp(p, q, CAPF), ar = lerp(p, r, CAPF);
           g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(aq[0], aq[1]); g.lineTo(ar[0], ar[1]); g.closePath();
           g.fillStyle = rgb(mix([150, 110, 30], [255, 226, 140], Math.max(0.45, o.light))); g.fill();
+          var cg = g.createLinearGradient(p[0], p[1], 0, Math.max(aq[1], ar[1]));
+          cg.addColorStop(0, 'rgba(255,246,200,.55)'); cg.addColorStop(1, 'rgba(255,200,80,0)'); g.fillStyle = cg; g.fill();
+          g.strokeStyle = 'rgba(255,214,120,.95)'; g.lineWidth = Math.max(1, Math.hypot(aq[0] - ar[0], aq[1] - ar[1]) * 0.03);
+          g.beginPath(); g.moveTo(aq[0], aq[1]); g.lineTo(ar[0], ar[1]); g.stroke();   // the glowing rim where gold meets obsidian
         }
+        if (pyr.cap && o.idx === 0) drawChevron(g, pyr, mirror, o);             // the north face: the entrance and its chevron, in gold
         g.lineWidth = 0.8; g.strokeStyle = rgb(mix(col, [255, 245, 220], 0.3), 0.12 + 0.45 * o.light);   // the ridges catch the light
         g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.moveTo(p[0], p[1]); g.lineTo(r[0], r[1]); g.stroke();
       });
     });
+  }
+  /* THE CHEVRON (12 Oct 2026, Ian: "the chevron blocks … in gold"). On the north face, some 17 m up and 7 m east of
+     the centre line, the original entrance: a dark doorway, and above it the great gabled limestone beams — two rows,
+     leaning in pairs — that carry the weight off the descending passage. Drawn on the face itself, in gold, a little
+     larger than life so they read from the water. */
+  var CAPF = 0.14;   // the gold capstone: the top 14% (was 8%)
+  /* THE POWER CIRCUIT (12 Oct 2026, Ian: "a circuit board that accepts power from the ground level and steps up the
+     frequency as it approaches the top … more transformers at the bottom").
+     Each face is one board, in face space — x across (true half-bases, the face narrowing above), v up (0 at the
+     water, 1 at the apex):
+       · GROUND FEEDS — heavy rails rise out of the water into
+       · TRANSFORMERS along the foot: an iron core, a primary of few turns, a secondary of many (stepping up);
+       · then TIERS, each bounded by a bus: the traces climb as square waves whose cycles double tier by tier —
+         2, 4, 8, 16, 32 — narrower and finer as they rise, a capacitor where each meets the bus;
+       · and at the last bus everything gathers into the feed of the gold capstone.
+     Light runs up the traces as pulses, faster in every tier: the frequency rising to the top. */
+  var TIERS = [0.17, 0.31, 0.44, 0.56, 0.67, 0.77, 0.845];
+  var CIRC = null;
+  function circuitFaces() {
+    if (CIRC) return CIRC;
+    function lim(v) { return (1 - v) * 0.9; }
+    CIRC = [0, 1, 2, 3].map(function (f) {
+      var lines = [], comps = [], buses = [], keep = function (x, v) { return !(f === 0 && Math.abs(x) < 0.3 && v < 0.33); };
+      // ground feeds and transformers
+      var TX = f === 0 ? [-0.66, -0.4, 0.4, 0.66] : [-0.66, -0.33, 0, 0.33, 0.66];
+      TX.forEach(function (x) {
+        lines.push({ tier: -1, pts: [[x, 0.0], [x, 0.045]] });                        // the rail out of the water
+        comps.push({ kind: 'tx', x: x, v: 0.045, h: 0.085 });                         // the transformer
+        lines.push({ tier: 0, pts: [[x, 0.13], [x, TIERS[0]]] });                     // its secondary to the first bus
+      });
+      // the buses
+      TIERS.forEach(function (v, k) { var L = lim(v) * (k === TIERS.length - 1 ? 0.35 : 0.92); buses.push({ tier: k, pts: [[-L, v], [L, v]] }); });
+      // the tiers: square waves, cycles doubling
+      for (var k = 0; k < TIERS.length - 2; k++) {
+        var v0 = TIERS[k], v1 = TIERS[k + 1], n = 3 + k * 2, cyc = Math.pow(2, k + 1), Lw = lim(v1) * 0.84;
+        for (var j = 0; j < n; j++) {
+          var x = -Lw + (2 * Lw) * (j + 0.5) / n, amp = Math.min(0.045, Lw / n * 0.45) * (1 - k * 0.08);
+          if (!keep(x, v0) || !keep(x, v1)) continue;
+          var pts = [[x, v0]], steps = cyc * 2, dv = (v1 - v0) / steps;
+          for (var q = 0; q < steps; q++) {                                           // a square wave up the tier
+            var side = (q % 2 ? -1 : 1) * amp, vv = v0 + q * dv;
+            pts.push([x + side, vv]); pts.push([x + side, vv + dv]);
+          }
+          pts.push([x, v1]);
+          lines.push({ tier: k + 1, pts: pts, phase: (j * 0.137 + f * 0.31) % 1 });
+          comps.push({ kind: 'cap', x: x, v: v1 - 0.012, tier: k + 1 });
+        }
+      }
+      // the last tiers gather into the capstone feed
+      var vA = TIERS[TIERS.length - 2], vB = TIERS[TIERS.length - 1];
+      [-0.6, -0.3, 0, 0.3, 0.6].forEach(function (u, j) {
+        var x0 = u * lim(vA) * 0.85;
+        lines.push({ tier: TIERS.length - 1, pts: [[x0, vA], [x0 * 0.5, (vA + vB) / 2], [x0 * 0.18, vB], [0, 1 - CAPF]], phase: j * 0.2 });
+      });
+      return { lines: lines, comps: comps, buses: buses };
+    });
+    return CIRC;
+  }
+  function drawCircuit(g, pyr, o, mirror) {
+    var B = circuitFaces()[o.idx];
+    var M = [(o.b1[0] + o.b2[0]) / 2, (o.b1[1] + o.b2[1]) / 2, (o.b1[2] + o.b2[2]) / 2], Hv = [(o.b2[0] - o.b1[0]) / 2, (o.b2[1] - o.b1[1]) / 2, (o.b2[2] - o.b1[2]) / 2];
+    function Q(x, v) { var s = x / Math.max(0.02, 1 - v), b = [M[0] + s * Hv[0], M[1] + s * Hv[1], M[2] + s * Hv[2]]; return P([b[0] * (1 - v) + o.apex[0] * v, b[1] * (1 - v) + o.apex[1] * v, b[2] * (1 - v) + o.apex[2] * v]); }
+    var e1 = P(o.b1), e2 = P(o.b2), edge = Math.hypot(e2[0] - e1[0], e2[1] - e1[1]);
+    if (edge < 40) return;
+    var w = Math.max(0.5, edge * 0.003), glow = 0.35 + 0.65 * Math.min(1, o.facing * 1.6), day = BUILT ? 0.55 : 1, A = glow * day;
+    var now = performance.now() / 1000;
+    function path(pts) { pts.forEach(function (pt, k) { var a = Q(pt[0], pt[1]); if (k) g.lineTo(a[0], a[1]); else g.moveTo(a[0], a[1]); }); }
+    function widthOf(t) { return t < 0 ? w * 3.2 : w * Math.max(0.45, 1.9 - t * 0.24); }
+    g.lineCap = 'round'; g.lineJoin = 'miter';
+    // the glow, then the copper-gold itself, tier by tier
+    for (var pass = 0; pass < 2; pass++) {
+      for (var t = -1; t < TIERS.length; t++) {
+        var ww = widthOf(t);
+        g.lineWidth = pass ? ww : ww * 3; g.strokeStyle = pass ? 'rgba(255,214,120,' + (0.9 * A) + ')' : 'rgba(255,176,50,' + (0.13 * A) + ')';
+        g.beginPath();
+        B.lines.forEach(function (l) { if (l.tier === t) path(l.pts); });
+        B.buses.forEach(function (l) { if (l.tier === t) path(l.pts); });
+        g.stroke();
+      }
+    }
+    // components
+    B.comps.forEach(function (c) {
+      if (c.kind === 'tx') {                                                     // core, primary (3 turns), secondary (7 turns)
+        var hx = 0.038, top = c.v + c.h;
+        g.fillStyle = 'rgba(10,9,8,.92)'; g.beginPath(); path([[c.x - hx * 2.2, c.v], [c.x + hx * 2.2, c.v], [c.x + hx * 2.2, top], [c.x - hx * 2.2, top]]); g.closePath(); g.fill();
+        g.strokeStyle = 'rgba(255,214,120,' + (0.95 * A) + ')'; g.lineWidth = w * 1.1; g.stroke();
+        g.lineWidth = w * 1.6; g.beginPath(); path([[c.x - hx * 0.35, c.v + 0.006], [c.x - hx * 0.35, top - 0.006]]); path([[c.x + hx * 0.35, c.v + 0.006], [c.x + hx * 0.35, top - 0.006]]); g.stroke();
+        g.lineWidth = w * 1.0; g.beginPath();
+        [[-1, 3], [1, 7]].forEach(function (sd) {
+          var turns = sd[1], x0 = c.x + sd[0] * hx * 1.25, r = hx * 0.55, step = (c.h - 0.012) / turns;
+          var pts = [];
+          for (var q = 0; q <= turns * 8; q++) { var a = q / 8 * Math.PI, vv = c.v + 0.006 + (q / 8) * step; pts.push([x0 + sd[0] * Math.abs(Math.sin(a)) * r, vv]); }
+          path(pts);
+        });
+        g.stroke();
+      } else {                                                                   // a capacitor: two plates across the trace
+        var d = 0.012 * Math.max(0.5, 1 - c.tier * 0.12), gap = 0.004;
+        g.lineWidth = widthOf(c.tier) * 1.3; g.strokeStyle = 'rgba(255,224,150,' + (0.95 * A) + ')';
+        g.beginPath(); path([[c.x - d, c.v - gap], [c.x + d, c.v - gap]]); path([[c.x - d, c.v + gap], [c.x + d, c.v + gap]]); g.stroke();
+      }
+    });
+    // the current rising: pulses run up every trace, quicker in every tier
+    if (!mirror || true) {
+      B.lines.forEach(function (l) {
+        if (l.tier < 0) return;
+        var speed = 0.18 * Math.pow(1.45, l.tier), u = ((now * speed + (l.phase || 0)) % 1 + 1) % 1;
+        var pts = l.pts, segs = [], tot = 0;
+        for (var k = 1; k < pts.length; k++) { var dd = Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]); segs.push(dd); tot += dd; }
+        var target = u * tot, acc = 0;
+        for (var k = 0; k < segs.length; k++) {
+          if (acc + segs[k] >= target) { var f = (target - acc) / (segs[k] || 1), x = pts[k][0] + (pts[k + 1][0] - pts[k][0]) * f, v = pts[k][1] + (pts[k + 1][1] - pts[k][1]) * f, a = Q(x, v);
+            var rr = widthOf(l.tier) * 2.6, gg = g.createRadialGradient(a[0], a[1], 0, a[0], a[1], rr * 2.2);
+            gg.addColorStop(0, 'rgba(255,250,220,' + (0.95 * A) + ')'); gg.addColorStop(1, 'rgba(255,200,80,0)');
+            g.fillStyle = gg; g.beginPath(); g.arc(a[0], a[1], rr * 2.2, 0, 7); g.fill(); break; }
+          acc += segs[k];
+        }
+      });
+    }
+  }
+  function drawChevron(g, pyr, mirror, o) {
+    var m = mirror ? -1 : 1, S = MT * BIG * 2.8, h = pyr.h, a = pyr.a;
+    function W(x, y) { var r = rot([x, y, -a * (1 - y / h)]); return P([r[0], r[1] * m, r[2]]); }   // a point on the north face
+    var cx = 7 * MT * BIG, y0 = 17 * MT * BIG;
+    var gold = mix([120, 86, 20], [255, 222, 130], Math.max(0.35, Math.min(1, o.light * 2.2 + 0.25)));
+    function poly(pts, fill, alpha) { g.beginPath(); pts.forEach(function (q, k) { var p = W(q[0], q[1]); if (k) g.lineTo(p[0], p[1]); else g.moveTo(p[0], p[1]); }); g.closePath(); g.fillStyle = rgb(fill, alpha); g.fill(); }
+    // the doorway, dark
+    poly([[cx - 1.3 * S, y0 - 1.6 * S], [cx + 1.3 * S, y0 - 1.6 * S], [cx + 1.3 * S, y0 + 1.1 * S], [cx - 1.3 * S, y0 + 1.1 * S]], [6, 5, 4], 0.95);
+    // the gables: two rows of paired beams, each a band of gold
+    [[1.4, 2.6, 3.2], [3.0, 4.4, 4.9]].forEach(function (row, k) {
+      var base = y0 + row[0] * S, half = row[2] * S, rise = row[1] * S * 0.62, t = (1.0 - 0.15 * k) * S;
+      var L1 = [cx - half, base], A1 = [cx, base + rise], R1 = [cx + half, base];
+      poly([L1, A1, R1, [cx + half - t * 0.8, base + 0.0], [cx, base + rise - t * 1.25], [cx - half + t * 0.8, base]], gold, 0.95 - 0.12 * k);
+      poly([[cx - 0.06 * S, base + rise], [cx + 0.06 * S, base + rise], [cx + 0.06 * S, base + rise - t * 1.25], [cx - 0.06 * S, base + rise - t * 1.25]], gold.map(function (x) { return x * 0.55; }), 0.9);   // the joint where the pair meets
+    });
+  }
+  /* ATMOSPHERE (12 Oct 2026, Ian: "atmospheric haze and varying cloud striations").
+     Strata: long thin streaks of high cloud in four layers at different heights, each drifting at its own
+     pace and turning with the view at its own depth (parallax). Built once as soft white masks, tinted from
+     the live sky — gold and rose underneath at dusk and dawn, silver by moonlight, faint white by day — and
+     thin enough that the stars show through. Haze: warm mist lying on the water at the horizon, thickest at
+     the waterline, pushing the far shore back; and a few low wisps drawn over the pyramid's lower courses,
+     so it stands in the air, not in front of it. The capstone and upper courses stay clear. */
+  var CL = null;
+  function buildClouds() {
+    var seed = 1012; function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+    var layers = [
+      { y: 0.13, h: 0.12, n: 7,  a: 0.5,  speed: 2.0, depth: 0.25 },
+      { y: 0.31, h: 0.14, n: 9,  a: 0.6,  speed: 3.5, depth: 0.45 },
+      { y: 0.52, h: 0.14, n: 11, a: 0.7,  speed: 5.5, depth: 0.7 },
+      { y: 0.72, h: 0.11, n: 12, a: 0.75, speed: 8.0, depth: 1.0 },
+      { y: 0.90, h: 0.08, n: 9,  a: 0.55, speed: 11,  depth: 1.3, low: true }];   // the low wisps, across the foot
+    CL = { W: W, HZ: HZ, layers: layers.map(function (L) {
+      var cw = Math.max(2, Math.round(W * 2)), ch = Math.max(8, Math.round(HZ * L.h)), c = document.createElement('canvas');
+      c.width = cw; c.height = ch; var x = c.getContext('2d');
+      for (var i = 0; i < L.n; i++) {
+        // a band of cloud: a ragged run of soft puffs along a slightly tilted line, thick in the middle, frayed at the ends
+        var len = W * (0.06 + Math.pow(rnd(), 1.6) * 0.42), cx = rnd() * cw, cy = ch * (0.2 + rnd() * 0.6), tilt = (rnd() - 0.5) * 0.04;
+        var th0 = ch * (0.05 + rnd() * 0.2), al0 = 0.18 + rnd() * 0.42, puffs = 4 + Math.floor(len / (W * 0.03));
+        for (var j = 0; j < puffs; j++) {
+          var u = j / (puffs - 1), mid = Math.sin(Math.PI * u), px0 = cx + (u - 0.5) * len + (rnd() - 0.5) * len * 0.08;
+          var py = cy + (u - 0.5) * len * tilt + (rnd() - 0.5) * th0 * 0.8, th = th0 * (0.35 + 0.8 * mid) * (0.7 + rnd() * 0.6);
+          var pl = len / puffs * (1.4 + rnd() * 1.6), al = al0 * (0.3 + 0.7 * mid) * (0.6 + rnd() * 0.6);
+          if (rnd() < 0.12) continue;                                              // a gap: the band breaks
+          [px0, px0 - cw, px0 + cw].forEach(function (px) {                        // seamless round the wrap
+            x.save(); x.translate(px, py); x.scale(pl / th, 1);
+            var gr = x.createRadialGradient(0, 0, 0, 0, 0, th); gr.addColorStop(0, 'rgba(255,255,255,' + al + ')'); gr.addColorStop(0.5, 'rgba(255,255,255,' + (al * 0.4) + ')'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+            x.fillStyle = gr; x.beginPath(); x.arc(0, 0, th, 0, 7); x.fill(); x.restore();
+          });
+        }
+      }
+      return { L: L, mask: c, tint: null, tintKey: '' };
+    }) };
+  }
+  function cloudTint(day, hw, below) {
+    var moon = SKY.moon ? Math.max(0, Math.min(1, (SKY.moon.alt + 1) / 8)) * (0.5 - 0.5 * Math.cos((SKY.phase || 0) * Math.PI / 180)) : 0;
+    var night = mix([70, 78, 104], [170, 180, 205], moon), dusk = [255, 168, 132], noon = [246, 246, 250];
+    var c = mix(mix(noon, dusk, hw), night, below);
+    var a = 0.16 + 0.22 * day + 0.25 * hw * (1 - below) + 0.1 * moon * below;
+    return { c: c, a: Math.min(0.55, a) };
+  }
+  function drawClouds(g, t, tint, low) {
+    if (!CL || CL.W !== W || CL.HZ !== HZ) buildClouds();
+    var key = Math.round(tint.c[0] / 6) + ',' + Math.round(tint.c[1] / 6) + ',' + Math.round(tint.c[2] / 6);
+    CL.layers.forEach(function (o) {
+      if (!!o.L.low !== low) return;
+      if (o.tintKey !== key) {                                                   // re-tint only when the light has changed
+        if (!o.tint) { o.tint = document.createElement('canvas'); o.tint.width = o.mask.width; o.tint.height = o.mask.height; }
+        var x = o.tint.getContext('2d'); x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, o.tint.width, o.tint.height);
+        x.drawImage(o.mask, 0, 0); x.globalCompositeOperation = 'source-in'; x.fillStyle = rgb(tint.c); x.fillRect(0, 0, o.tint.width, o.tint.height);
+        o.tintKey = key;
+      }
+      var cw = o.tint.width, y = HZ * o.L.y - o.tint.height / 2;
+      var off = ((-(lookAz() / 360) * W * 2 * o.L.depth - t * o.L.speed) % cw + cw) % cw;
+      g.save(); g.globalAlpha = tint.a * o.L.a * (low ? 0.8 : 1);
+      g.drawImage(o.tint, -off, y); g.drawImage(o.tint, cw - off, y);
+      g.restore();
+    });
+  }
+  function drawHaze(g, col, day, below) {
+    var top = HZ - HZ * 0.22, hz = g.createLinearGradient(0, top, 0, HZ + 18);
+    var a = 0.18 + 0.14 * day + 0.06 * (1 - below);
+    hz.addColorStop(0, rgb(col, 0)); hz.addColorStop(0.7, rgb(col, a * 0.55)); hz.addColorStop(0.93, rgb(col, a)); hz.addColorStop(1, rgb(col, 0));
+    g.fillStyle = hz; g.fillRect(0, top, W, HZ + 18 - top);
   }
   function drawBeam(g, t, apex) {
     var pulse = 0.55 + 0.45 * Math.sin(t * 2 * Math.PI / 4.5);
@@ -591,6 +805,7 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
       g.fillStyle = rg; g.fillRect(0, HZ, W, HS - HZ);                         // the whole water, so it has no edge
     }
     if (SKY.bodies.length) drawSky(g, day, t);
+    drawClouds(g, t, cloudTint(day, hw, below), false);                        // the high strata, the stars showing through
     g.fillStyle = 'rgba(120,160,200,.18)'; g.fillRect(0, HZ, W, 1);           // the horizon line
     // the coast's reflection
     ['left', 'right'].forEach(function (side) {
@@ -682,6 +897,8 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
     behind.forEach(drawShip);
     drawBeam(g, t, apex);
     drawGiza(g, false);
+    drawHaze(g, mix(skyc('low'), skyc('band'), 0.5), day, below);              // the mist on the water, and wisps across the foot
+    drawClouds(g, t, cloudTint(day, hw, below), true);
     front.forEach(drawShip);
     updateReadout(now);
     if (running && (!still || dragging || Math.abs(vel) > 0.001)) requestAnimationFrame(frame); else idle = true;
