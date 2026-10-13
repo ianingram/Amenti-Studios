@@ -351,7 +351,8 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
   }
   function seedShips() {
     var r = rnd(64);
-    ships = [0.04, 0.1, 0.18, 0.3, 0.45, 0.62, 0.8].map(function (d) {
+    ships = [];   // (12 Oct 2026, Ian: "remove the sailboats") — the old fleet, kept for putting back:
+    if (0) ships = [0.04, 0.1, 0.18, 0.3, 0.45, 0.62, 0.8].map(function (d) {
       return { d: d, x: r() * W, dir: r() < 0.5 ? -1 : 1, bob: r() * 6, sails: r() < 0.5 ? 2 : 1 };
     });
   }
@@ -413,12 +414,13 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
         // the lower courses in the shadow of the land and the water
         gr.addColorStop(0, rgb(mix(col, [236, 214, 168], 0.30))); gr.addColorStop(0.18, rgb(mix(col, stone.lit, 0.16)));
         gr.addColorStop(0.55, rgb(col)); gr.addColorStop(1, rgb(col.map(function (x) { return x * 0.5; })));
-        g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.lineTo(r[0], r[1]); g.closePath(); g.fillStyle = gr; g.fill();
+        var aq = lerp(p, q, CAPF), ar = lerp(p, r, CAPF);                      // the base stops where the capstone used to sit
+        g.beginPath(); g.moveTo(aq[0], aq[1]); g.lineTo(q[0], q[1]); g.lineTo(r[0], r[1]); g.lineTo(ar[0], ar[1]); g.closePath(); g.fillStyle = gr; g.fill();
         var tall = Math.abs(by - p[1]);
         if (!BUILT && tall > 30 && !(pyr.name === 'Khafre')) {                 // the stepped courses, where the core is bare
           var nC = Math.min(22, Math.round(tall / 6));
           g.strokeStyle = rgb(col.map(function (x) { return x * 0.55; }), 0.5); g.lineWidth = 0.6; g.beginPath();
-          for (var j = 1; j < nC; j++) { var t = j / nC, a = lerp(p, q, t), b = lerp(p, r, t); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); }
+          for (var j = 1; j < nC; j++) { var t = j / nC; if (t <= CAPF) continue; var a = lerp(p, q, t), b = lerp(p, r, t); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); }
           g.stroke();
         }
         if (!BUILT && pyr.name === 'Khafre') {                                  // Khafre keeps a cap of its casing near the top
@@ -427,19 +429,43 @@ Promise.all([fetch(WORKSHOP+'cast.json').then(r=>r.json()).catch(()=>null)].conc
           g.fillStyle = rgb(mix(CASING.dark, CASING.lit, o.light * 0.9)); g.fill();
         }
         if (pyr.cap) drawCircuit(g, pyr, o, mirror);                             // gold circuitry on every face
-        if (pyr.cap) {                                                           // Khufu's gilded pyramidion
-          var aq = lerp(p, q, CAPF), ar = lerp(p, r, CAPF);
-          g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(aq[0], aq[1]); g.lineTo(ar[0], ar[1]); g.closePath();
-          g.fillStyle = rgb(mix([150, 110, 30], [255, 226, 140], Math.max(0.45, o.light))); g.fill();
-          var cg = g.createLinearGradient(p[0], p[1], 0, Math.max(aq[1], ar[1]));
-          cg.addColorStop(0, 'rgba(255,246,200,.55)'); cg.addColorStop(1, 'rgba(255,200,80,0)'); g.fillStyle = cg; g.fill();
+        if (pyr.cap) {                                                           // the flat top of the base, rimmed in gold
           g.strokeStyle = 'rgba(255,214,120,.95)'; g.lineWidth = Math.max(1, Math.hypot(aq[0] - ar[0], aq[1] - ar[1]) * 0.03);
-          g.beginPath(); g.moveTo(aq[0], aq[1]); g.lineTo(ar[0], ar[1]); g.stroke();   // the glowing rim where gold meets obsidian
+          g.beginPath(); g.moveTo(aq[0], aq[1]); g.lineTo(ar[0], ar[1]); g.stroke();
         }
         if (pyr.cap && o.idx === 0) drawChevron(g, pyr, mirror, o);             // the north face: the entrance and its chevron, in gold
         g.lineWidth = 0.8; g.strokeStyle = rgb(mix(col, [255, 245, 220], 0.3), 0.12 + 0.45 * o.light);   // the ridges catch the light
-        g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.moveTo(p[0], p[1]); g.lineTo(r[0], r[1]); g.stroke();
+        g.beginPath(); g.moveTo(aq[0], aq[1]); g.lineTo(q[0], q[1]); g.moveTo(ar[0], ar[1]); g.lineTo(r[0], r[1]); g.stroke();
       });
+      if (pyr.cap) drawCapstone(g, pyr, mirror);
+    });
+  }
+  /* THE CAPSTONE (12 Oct 2026, Ian: "make the capstone rotate in the opposite direction, with a gap between the capstone
+     and the base"). The gold pyramidion floats above the truncated base, a band of light in the gap, and turns
+     against the turn of the pyramid — the same speed, the other way. */
+  var CAPGAP = 0.05;   // the gap, as a share of the pyramid's height
+  function drawCapstone(g, pyr, mirror) {
+    var cap = { x: pyr.x, z: pyr.z, y: pyr.y + pyr.h * (1 - CAPF + CAPGAP), a: pyr.a * CAPF, h: pyr.h * CAPF };
+    var keep = yaw;
+    var top = P(rot([pyr.x, (pyr.y + pyr.h * (1 - CAPF)) * (mirror ? -1 : 1), pyr.z])),
+        bot = P(rot([pyr.x, cap.y * (mirror ? -1 : 1), pyr.z]));
+    var R0 = Math.max(6, Math.abs(top[1] - bot[1]) * 2.2);                   // the light that fills the gap
+    var hg = g.createRadialGradient((top[0] + bot[0]) / 2, (top[1] + bot[1]) / 2, 0, (top[0] + bot[0]) / 2, (top[1] + bot[1]) / 2, R0);
+    hg.addColorStop(0, 'rgba(255,236,170,.55)'); hg.addColorStop(0.4, 'rgba(255,200,90,.18)'); hg.addColorStop(1, 'rgba(255,190,80,0)');
+    g.fillStyle = hg; g.fillRect((top[0] + bot[0]) / 2 - R0, (top[1] + bot[1]) / 2 - R0, R0 * 2, R0 * 2);
+    yaw = -keep;                                                               // the counter-turn
+    var faces = pyrFaces(cap, mirror);
+    yaw = keep;
+    faces.forEach(function (o) {
+      var p = P(o.apex), q = P(o.b1), r = P(o.b2);
+      g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.lineTo(r[0], r[1]); g.closePath();
+      g.fillStyle = rgb(mix([110, 76, 18], [255, 230, 150], 0.2 + 0.8 * o.light * o.facing)); g.fill();   // each face its own shade, so the turn shows
+      var cg = g.createLinearGradient(p[0], p[1], 0, Math.max(q[1], r[1]));
+      cg.addColorStop(0, 'rgba(255,246,200,.55)'); cg.addColorStop(1, 'rgba(255,200,80,0)'); g.fillStyle = cg; g.fill();
+      g.lineWidth = 0.8; g.strokeStyle = 'rgba(255,240,200,' + (0.25 + 0.5 * o.light) + ')';
+      g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.moveTo(p[0], p[1]); g.lineTo(r[0], r[1]); g.stroke();
+      g.strokeStyle = 'rgba(255,214,120,.95)'; g.lineWidth = Math.max(1, Math.hypot(q[0] - r[0], q[1] - r[1]) * 0.03);
+      g.beginPath(); g.moveTo(q[0], q[1]); g.lineTo(r[0], r[1]); g.stroke();
     });
   }
   /* THE CHEVRON (12 Oct 2026, Ian: "the chevron blocks … in gold"). On the north face, some 17 m up and 7 m east of
