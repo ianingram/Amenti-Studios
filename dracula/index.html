@@ -580,8 +580,33 @@ Promise.all([
     [220, V + 'fog-2.jpg', 'Night · the mate'], [232, V + 'fog-3.jpg'], [244, V + 'fog-1.jpg', 'The fog · the captain alone'], [252, V + 'fog-4.jpg'],
     [260, V + 'storm-1.jpg', 'Off Whitby · the storm'], [280, V + 'storm-2.jpg'], [300, V + 'storm-3.jpg'], [320, V + 'storm-4.jpg'],
     [340, V + 'wreck-1.jpg', 'Whitby · the wreck'], [347, V + 'wreck-2.jpg'], [354, V + 'wreck-3.jpg'], [361, V + 'wreck-4.jpg']];
-  var layers = SCENES.map(function (sc) { var d = document.createElement('div'); d.className = 'voy'; d.dataset.bg = sc[1]; box.appendChild(d); return d; });
-  function prime(i) { var l = layers[i]; if (l && !l.style.backgroundImage) l.style.backgroundImage = "url('" + l.dataset.bg + "')"; }
+  /* MOVING PICTURES (18 Oct 2026): each still has a 10-second looping clip made from it
+     (mist, flame and lamplight, rain, spray, rippling water, a slow drift), voyage/<name>.mp4.
+     The still stays as the layer's background, so a clip that will not load shows the painting.
+     Only the scene on screen and the one fading out are playing; the rest are paused. */
+  /* the clips live behind the media door (Cloudflare R2), not in the repo — GitHub's upload would not take them */
+  var CLIPS = 'https://amenti-media.ingram-ian.workers.dev/m/dracula/voyage-';
+  function clipOf(bg) { return CLIPS + bg.split('/').pop().replace(/\.jpg$/, '.mp4'); }
+  var layers = SCENES.map(function (sc) { var d = document.createElement('div'); d.className = 'voy'; d.dataset.bg = sc[1]; d.dataset.vid = clipOf(sc[1]); box.appendChild(d); return d; });
+  function prime(i) {
+    var l = layers[i]; if (!l) return;
+    if (!l.style.backgroundImage) l.style.backgroundImage = "url('" + l.dataset.bg + "')";
+    if (!l._v && l.dataset.vid) {
+      var v = document.createElement('video');
+      v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true; v.preload = 'auto';
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+      v.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';
+      v.onerror = function () { if (v.parentNode) v.parentNode.removeChild(v); };   /* no clip: the painting stays */
+      v.src = l.dataset.vid; l.appendChild(v); l._v = v;
+    }
+  }
+  function playOnly(k) {
+    layers.forEach(function (l, j) {
+      if (!l._v) return;
+      if (j === k) { try { var p = l._v.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
+      else if (!l._v.paused) { var v = l._v; setTimeout(function () { if (!l.classList.contains('on')) v.pause(); }, 4500); }
+    });
+  }
   var lastCap = '';
   var BOLTS = [280, 296, 304, 312, 324, 332, 340];
   var shown = -1, fired = {};
@@ -617,7 +642,7 @@ Promise.all([
   function frame() {
     var D = window.DEMETER, on = btn.classList.contains('on');
     if (!D || !on) {
-      if (shown !== -1) { layers.forEach(function (l) { l.classList.remove('on'); }); cap.classList.remove('on'); hero.classList.remove('voyage'); shown = -1; lastCap = ''; }
+      if (shown !== -1) { layers.forEach(function (l) { l.classList.remove('on'); }); playOnly(-1); cap.classList.remove('on'); hero.classList.remove('voyage'); shown = -1; lastCap = ''; }
       return requestAnimationFrame(frame);
     }
     var t = D.ctx.currentTime - D.t0, lap = Math.floor(t / D.dur), pos = t - lap * D.dur, k = 0;
@@ -625,6 +650,7 @@ Promise.all([
     prime(k); prime(k + 1); if (k === SCENES.length - 1) prime(0);
     if (k !== shown) {
       layers.forEach(function (l, j) { l.classList.toggle('on', j === k); });
+      playOnly(k);
       var txt = SCENES[k][2];
       if (txt && txt !== lastCap) { lastCap = txt; cap.classList.remove('on'); setTimeout(function () { cap.textContent = txt; cap.classList.add('on'); }, 1200); }
       hero.classList.add('voyage'); shown = k;
