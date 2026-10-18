@@ -101,6 +101,28 @@
     text-shadow:0 1px 14px rgba(0,0,0,.9)}
   .voycap.on{opacity:.85}
   .hero.voyage .titles{opacity:.35;transition:opacity 4s} .titles{transition:opacity 4s}
+  /* THE TITLES, LIKE A FILM (18 Oct 2026, Ian: "present the cast, and then the title towards the end").
+     Before Sound the title block stands as it always has. When the voyage plays, the block gives way
+     to the credits — "Amenti Studios presents", then each of the company, name over role, one at a
+     time in the same place and the same type — and DRACULA lands on the last strike of the storm
+     (5:40), the reverb rolling under it, with the byline after. When the suite loops, the credits roll again. */
+  .credit{position:absolute;left:clamp(24px,7vw,110px);right:20px;top:50%;transform:translateY(-50%);z-index:4;
+    opacity:0;transition:opacity 1.6s ease;pointer-events:none}
+  .credit.on{opacity:1}
+  .credit .cr-a{font-size:13px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase}
+  .credit .cr-b{font-family:var(--serif);font-size:clamp(26px,4.2vw,54px);color:#fff;letter-spacing:.05em;line-height:1.12;margin:12px 0 0;
+    text-shadow:0 2px 40px rgba(0,0,0,.9),0 0 90px rgba(0,0,0,.6);max-width:20ch}
+  .credit .cr-c{font-size:12px;letter-spacing:.3em;color:var(--pale);text-transform:uppercase;margin:14px 0 0;text-shadow:0 1px 18px rgba(0,0,0,.9)}
+  .hero.rolling .titles{opacity:1!important}
+  .hero.rolling .titles > *{opacity:0!important;transition:opacity 2s ease!important;animation:none!important}
+  .hero.titled .titles{opacity:1!important}
+  .hero.titled .titles .studio,.hero.titled .titles .presents{opacity:0!important;animation:none!important}
+  .hero.titled .titles h1{animation:landed 2.4s cubic-bezier(.2,.7,.2,1) forwards!important}
+  .hero.titled .titles .byline{opacity:0;animation:in 2.5s 3s forwards!important}
+  .hero.titled .titles .form{opacity:0;animation:in 2.5s 5s forwards!important}
+  @keyframes landed{0%{opacity:0;letter-spacing:.3em;filter:brightness(3) blur(6px)}6%{opacity:1;filter:brightness(2.4) blur(1px)}
+    40%{filter:brightness(1.1) blur(0)}100%{opacity:1;letter-spacing:.09em;filter:none}}
+
 
   /* type needs somewhere to sit at both ends of the frame */
   /* two veils now: one along the LEFT so the block has ground to sit on,
@@ -250,6 +272,7 @@
     </svg>
     <span>sound</span>
   </button>
+  <div class="credit" id="credit" aria-live="polite"><div class="cr-a"></div><div class="cr-b"></div><div class="cr-c"></div></div>
   <div class="titles">
     <div class="studio"><a href="../" style="color:inherit;text-decoration:none">Amenti Studios</a></div>
     <div class="presents">presents</div>
@@ -609,6 +632,49 @@ Promise.all([
   }
   var lastCap = '';
   var BOLTS = [280, 296, 304, 312, 324, 332, 340];
+  /* THE ROLL: [start s in the suite, top line, name, role]. The company from cast.json, principals
+     first; the captain comes up in the fog, the correspondent in the storm he reported. The title
+     lands at 340 s, the last strike. */
+  var ROLL = [
+    [1, 'Amenti Studios', '', 'presents'],
+    [14, '', 'Vlad the Impaler', 'as Count Dracula'],
+    [32, '', 'Charles Darwin', 'as Jonathan Harker'],
+    [50, '', 'Agatha Christie', 'as Mina Murray'],
+    [68, '', 'Mary Shelley', 'as Lucy Westenra'],
+    [86, '', 'Antony van Leeuwenhoek', 'as Van Helsing'],
+    [104, '', 'William Harvey', 'as Dr Seward'],
+    [122, '', 'J.R.R. Tolkien', 'as Arthur Holmwood'],
+    [140, '', 'Lyndon B. Johnson', 'as Quincey Morris'],
+    [158, '', 'Jack the Ripper', 'as Renfield'],
+    [176, '', 'Empress Elisabeth · Elizabeth B\u00e1thory · Catherine de\u2019 Medici', 'as the three women'],
+    [196, '', 'Hildegard of Bingen', 'as the landlady at Bistritz and Sister Agatha'],
+    [214, '', 'James Cook', 'as Mr Swales'],
+    [234, '', 'Vitus Bering', 'as the captain of the Demeter'],
+    [262, '', 'Charles Dickens', 'as the correspondent'],
+    [290, '', 'and Bram Stoker', 'as the narrator'],
+    [316, 'Cast from the Amenti Interface', 'Library of Legends', '']];
+  var TITLE_AT = 340, credit = document.getElementById('credit'), rollAt = -1;
+  function roll(pos, on) {
+    if (!credit) return;
+    if (!on) { hero.classList.remove('rolling', 'titled'); credit.classList.remove('on'); rollAt = -1; return; }
+    if (pos >= TITLE_AT) {
+      if (!hero.classList.contains('titled')) { credit.classList.remove('on'); hero.classList.remove('rolling'); hero.classList.add('titled'); }
+      return;
+    }
+    hero.classList.remove('titled'); hero.classList.add('rolling');
+    var k = -1; for (var i = 0; i < ROLL.length; i++) if (pos >= ROLL[i][0]) k = i;
+    var end = k >= 0 ? (k + 1 < ROLL.length ? ROLL[k + 1][0] : TITLE_AT) - 2.2 : 0;
+    var vis = k >= 0 && pos < end;
+    if (k !== rollAt) {
+      rollAt = k; credit.classList.remove('on');
+      if (k >= 0) setTimeout(function () {
+        var r = ROLL[rollAt]; if (!r) return;
+        credit.querySelector('.cr-a').textContent = r[1]; credit.querySelector('.cr-b').textContent = r[2]; credit.querySelector('.cr-c').textContent = r[3];
+        credit.classList.add('on');
+      }, 900);
+    } else credit.classList.toggle('on', vis);
+  }
+
   var shown = -1, fired = {};
   /* a strike: the page strobes, the picture blows out, a forked bolt tears down the sky, the frame shudders */
   var cv = document.getElementById('bolt'), cx = cv && cv.getContext ? cv.getContext('2d') : null;
@@ -643,9 +709,11 @@ Promise.all([
     var D = window.DEMETER, on = btn.classList.contains('on');
     if (!D || !on) {
       if (shown !== -1) { layers.forEach(function (l) { l.classList.remove('on'); }); playOnly(-1); cap.classList.remove('on'); hero.classList.remove('voyage'); shown = -1; lastCap = ''; }
+      roll(0, false);
       return requestAnimationFrame(frame);
     }
     var t = D.ctx.currentTime - D.t0, lap = Math.floor(t / D.dur), pos = t - lap * D.dur, k = 0;
+    roll(pos, true);
     for (var i = 0; i < SCENES.length; i++) if (pos >= SCENES[i][0]) k = i;
     prime(k); prime(k + 1); if (k === SCENES.length - 1) prime(0);
     if (k !== shown) {
