@@ -194,6 +194,7 @@
   .ch{display:flex;gap:14px;align-items:baseline;padding:12px 16px;
     border-bottom:1px solid var(--rule);font-size:14px;background:#090c10}
   .ch:last-child{border-bottom:none}
+  a.ch{text-decoration:none;color:inherit}
   .ch.on{background:rgba(224,165,60,.07);cursor:pointer}
   .ch.on:hover{background:rgba(224,165,60,.14)}
   .n{color:#6c7c74;font-size:12px;width:30px;flex:0 0 30px}
@@ -268,6 +269,17 @@
   <div class="sub" id="ch-sub"></div>
   <div class="chapters" id="chapters"></div>
 
+  <div class="band">The Dossier</div>
+  <div class="sub">maps and papers from the case &middot; more to come</div>
+  <div class="chapters dossier">
+    <a class="ch on" href="https://ianingram.github.io/Amenti-Readings/dracula/dossier/borgo-pass.html">
+      <div class="n">I</div>
+      <div class="doc">Map</div>
+      <div class="sum">The Road to the Borgo Pass</div>
+      <div class="tag">open</div>
+    </a>
+  </div>
+
   <div class="note" id="note"></div>
   <div class="foot">
     Ingram Manor LLC &middot; 2026 &middot; All Rights Reserved<br>
@@ -337,7 +349,7 @@ Promise.all([
 
   /* The bill is the door into a reading, and it lives on Page1 with the
      speech engine. This page is the front, not the stage. */
-  document.querySelectorAll('.ch.on').forEach(row=>{
+  document.querySelectorAll('#chapters .ch.on').forEach(row=>{
     row.onclick = () => {
       const ep = row.dataset.ep;
       /* The bill opens HERE now. It used to send the visitor to Amenti.live
