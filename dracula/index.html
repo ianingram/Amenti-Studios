@@ -79,8 +79,17 @@
      the audio clock so the picture and the music cannot drift apart; a flash of
      lightning across the storm at every thunder strike. Sound off: back to the pass. */
   .voy{position:absolute;inset:-3%;background:center 50%/cover no-repeat;opacity:0;
-    transition:opacity 4s ease-in-out;animation:push 48s ease-in-out infinite alternate;will-change:opacity,transform}
-  .voy.on{opacity:1}
+    transition:none;animation:push 48s ease-in-out infinite alternate;will-change:opacity,transform}
+  /* 18 Oct, late: a true dissolve — the incoming picture fades in ON TOP while the outgoing one stays solid
+     beneath it, so the castle painting behind the voyage never shows through mid-dissolve. */
+  .voy.on{opacity:1;z-index:2;transition:opacity 4s ease-in-out}
+  .voy.out{opacity:1;z-index:1}
+  /* the painted forks, traced: a glow laid exactly over the painting's own lightning (clips are drawn at 1.08 zoom) */
+  .boltg{position:absolute;inset:0;z-index:3;background:center 50%/cover no-repeat;transform:scale(1.08);opacity:0;mix-blend-mode:screen;pointer-events:none}
+  .boltg.fire{animation:forks 1.3s linear}
+  @keyframes forks{0%{opacity:0}3%{opacity:1}7%{opacity:.15}11%{opacity:1}16%{opacity:.35}20%{opacity:.9}26%{opacity:.2}36%{opacity:.55}42%{opacity:0}100%{opacity:0}}
+  @media (prefers-reduced-motion:reduce){.boltg{display:none}}
+  #voyage.stopping .voy{transition:opacity 4s ease-in-out}
   /* LIGHTNING (v6, Ian: "more visceral — the lightning should flash on the page"). Four things at once
      on every strike: the WHOLE PAGE strobes white (fixed, over everything) in real lightning's
      stutter — flash, dark, flash, flicker; the picture is blown bright; a forked bolt is drawn
@@ -642,7 +651,7 @@ Promise.all([
   /* v4 (18 Oct, late): under way — the light catches the gold domes, crosses and spires of the towns passed */
   var V4 = { 'underway-1': 1, 'underway-2': 1, 'underway-3': 1, 'underway-4': 1 };
   function clipOf(bg) { var n = bg.split('/').pop().replace(/\.jpg$/, ''); return CLIPS + n + (V4[n] ? '-v4' : V3[n] ? '-v3' : '-v2') + '.mp4'; }
-  var layers = SCENES.map(function (sc) { var d = document.createElement('div'); d.className = 'voy'; d.dataset.bg = sc[1]; d.dataset.vid = sc[3] ? 'https://amenti-media.ingram-ian.workers.dev/m/dracula/' + sc[3] : clipOf(sc[1]); if (sc[4] === 'once') d.dataset.once = '1'; box.appendChild(d); return d; });
+  var layers = SCENES.map(function (sc) { var d = document.createElement('div'); d.className = 'voy'; d.dataset.bg = sc[1]; d.dataset.vid = sc[3] ? 'https://amenti-media.ingram-ian.workers.dev/m/dracula/' + sc[3] : clipOf(sc[1]); if (sc[4] === 'once') d.dataset.once = '1'; var bm = /storm-[23]\.jpg$/.exec(sc[1]); if (bm) { var bg = document.createElement('div'); bg.className = 'boltg'; bg.style.backgroundImage = "url('voyage/bolt-" + bm[0].replace('.jpg', '.png') + "')"; d.appendChild(bg); } box.appendChild(d); return d; });
   function prime(i) {
     var l = layers[i]; if (!l) return;
     if (!l.style.backgroundImage) l.style.backgroundImage = "url('" + l.dataset.bg + "')";
@@ -663,7 +672,9 @@ Promise.all([
     });
   }
   var lastCap = '', capT = 0;
-  var BOLTS = [280, 296, 304, 312, 324, 332, 340];
+  /* 18 Oct, late: strikes moved onto the thunder cracks measured in the track itself (285.4, 297.3, 303.6,
+     311.6, 323.6, 331.6, 339.7 s), each flash a tenth of a second ahead of its crack, as lightning comes before thunder */
+  var BOLTS = [285.3, 297.2, 303.5, 311.45, 323.45, 331.45, 339.55];
   /* THE ROLL: [start s in the suite, top line, name, role]. The company from cast.json, principals
      first; the captain comes up in the fog, the correspondent in the storm he reported. The title
      lands at 340 s, the last strike. */
@@ -735,16 +746,14 @@ Promise.all([
     flash.classList.remove('go'); hero.classList.remove('struck'); void flash.offsetWidth;
     flash.classList.add('go'); hero.classList.add('struck');
     setTimeout(function () { hero.classList.remove('struck'); }, 1200);
-    if (!cx) return;
-    drawBolt(1);                                                       // one bolt, flickering as real lightning does
-    [[0, 1], [90, 0], [140, 0.85], [230, 0], [420, 0.4], [480, 0]].forEach(function (f) {
-      setTimeout(function () { cv.style.opacity = f[1]; if (!f[1] && f[0] === 480) drawBolt(0); }, f[0]);
-    });
+    /* 18 Oct, late (Ian): no drawn bolt — the forks painted into the storm pictures blaze up instead, in the strobe's stutter */
+    var g = layers[shown] && layers[shown].querySelector('.boltg');
+    if (g) { g.classList.remove('fire'); void g.offsetWidth; g.classList.add('fire'); }
   }
   function frame() {
     var D = window.DEMETER, on = btn.classList.contains('on');
     if (!D || !on) {
-      if (shown !== -1) { layers.forEach(function (l) { l.classList.remove('on'); }); playOnly(-1); cap.classList.remove('on'); hero.classList.remove('voyage'); shown = -1; lastCap = ''; }
+      if (shown !== -1) { box.classList.add('stopping'); layers.forEach(function (l) { l.classList.remove('on', 'out'); }); playOnly(-1); cap.classList.remove('on'); hero.classList.remove('voyage'); shown = -1; lastCap = ''; }
       roll(0, false);
       return requestAnimationFrame(frame);
     }
@@ -753,7 +762,11 @@ Promise.all([
     for (var i = 0; i < SCENES.length; i++) if (pos >= SCENES[i][0]) k = i;
     prime(k); prime(k + 1); if (k === SCENES.length - 1) prime(0);
     if (k !== shown) {
-      layers.forEach(function (l, j) { l.classList.toggle('on', j === k); });
+      box.classList.remove('stopping');
+      var prev = layers[shown];
+      layers.forEach(function (l, j) { if (j !== k && l !== prev) l.classList.remove('out'); });
+      if (prev && shown !== k) { prev.classList.remove('on'); prev.classList.add('out'); clearTimeout(prev._outT); prev._outT = setTimeout(function () { if (!prev.classList.contains('on')) prev.classList.remove('out'); }, 4300); }
+      layers[k].classList.remove('out'); layers[k].classList.add('on');
       playOnly(k);
       var txt = SCENES[k][2];
       if (txt && txt !== lastCap) { lastCap = txt; var capWas = cap.classList.contains('on'); cap.classList.remove('on'); clearTimeout(capT); capT = setTimeout(function () { var pr = txt.split('|'); cap.textContent = ''; var w = document.createElement('span'); w.className = 'w'; w.textContent = pr[0]; cap.appendChild(w); if (pr[1]) { var q = document.createElement('span'); q.className = 'q'; q.textContent = pr[1]; cap.appendChild(q); } cap.classList.add('on'); }, capWas ? 1750 : 300); }
