@@ -100,6 +100,23 @@
     letter-spacing:.3em;text-transform:uppercase;color:var(--pale);opacity:0;transition:opacity 2.5s;
     text-shadow:0 1px 14px rgba(0,0,0,.9)}
   .voycap.on{opacity:.85}
+  .veil{position:absolute;inset:-6%;z-index:3;pointer-events:none;opacity:0}
+  .veil::before,.veil::after{content:'';position:absolute;inset:0;background:url('voyage/veil-sea.png') 0 0/1100px auto repeat}
+  .veil::after{background-size:1700px auto;opacity:.7}
+  .veil.haze::before,.veil.haze::after{background-image:url('voyage/veil-warm.png')}
+  .veil.go.sea{animation:veil-sea 4.4s ease-in-out}.veil.go.spray{animation:veil-spray 4.4s ease-in-out}
+  .veil.go.deck{animation:veil-deck 4.4s ease-in-out}.veil.go.haze{animation:veil-haze 4.4s ease-in-out}
+  .veil.go::before{animation:drift1 4.4s linear}.veil.go::after{animation:drift2 4.4s linear}
+  @keyframes veil-sea{0%{opacity:0}42%,58%{opacity:.6}100%{opacity:0}}
+  @keyframes veil-spray{0%{opacity:0}42%,58%{opacity:.68}100%{opacity:0}}
+  @keyframes veil-deck{0%{opacity:0}42%,58%{opacity:.42}100%{opacity:0}}
+  @keyframes veil-haze{0%{opacity:0}42%,58%{opacity:.3}100%{opacity:0}}
+  @keyframes drift1{from{background-position:0 0}to{background-position:-260px -40px}}
+  @keyframes drift2{from{background-position:0 0}to{background-position:180px -70px}}
+  @media (prefers-reduced-motion:reduce){.veil{display:none}}
+  .voycap{text-align:right;max-width:min(40ch,46vw)} .voycap .w{display:block}
+  .voycap .q{display:block;margin-top:8px;font-family:var(--serif);font-style:italic;font-size:clamp(15px,1.5vw,19px);letter-spacing:.01em;text-transform:none;line-height:1.35;color:#fff}
+  @media (max-width:620px){.voycap{max-width:70vw}}
   .hero.voyage .titles{opacity:.35;transition:opacity 4s} .titles{transition:opacity 4s}
   /* THE TITLES, LIKE A FILM (18 Oct 2026, Ian: "present the cast, and then the title towards the end").
      Before Sound the title block stands as it always has. When the voyage plays, the block gives way
@@ -596,15 +613,35 @@ Promise.all([
   if (!hero || !btn || !box) return;
   /* ALL 24 Demeter stills (four of each scene, 6 Oct 2026), in story order: [start s, image, caption — shown when it changes] */
   var V = 'voyage/', SCENES = [
-    [0, 'dracula-hero.jpg', 'The road to Varna · the boxes go down to the sea'],
-    [40, V + 'varna-1.jpg', 'Varna · 6 July'], [54.5, V + 'varna-2.jpg'], [69, V + 'varna-3.jpg'], [83.5, V + 'varna-4.jpg'],
-    [98, V + 'underway-1.jpg', 'Under way'], [108.5, V + 'underway-2.jpg'], [119, V + 'underway-3.jpg'], [129.5, V + 'underway-4.jpg'],
-    [140, V + 'deck-1.jpg', 'At sea · the crew uneasy'], [160, V + 'deck-2.jpg'], [180, V + 'deck-3.jpg'], [200, V + 'deck-4.jpg'],
-    [220, V + 'fog-2.jpg', 'Night · the mate'], [232, V + 'fog-3.jpg'], [242, V + 'fog-1.jpg', 'The fog · the captain alone'], [248, V + 'fog-4.jpg'],
-    [252, V + 'becalmed.jpg', 'Off Whitby · 7 August · the calm before the storm'],
-    [260, V + 'storm-1.jpg', 'After midnight · the storm · the searchlight'], [278, V + 'storm-2.jpg'], [294, V + 'storm-3.jpg'], [310, V + 'storm-4.jpg'],
-    [319, V + 'piers-mj2.jpg', 'Between the piers', 'voyage-piers-mj2.mp4', 'once'], [328, V + 'piers-mj1.jpg', '', 'voyage-piers-mj1.mp4', 'once'],
-    [340, V + 'wreck-1.jpg', 'Whitby · the wreck'], [347, V + 'wreck-2.jpg'], [354, V + 'wreck-3.jpg'], [361, V + 'wreck-4.jpg']];
+    /* captions: 'WHERE · WHEN|the book’s own words' — the Demeter’s log and the Dailygraph cutting, ch VII (18 Oct 2026) */
+    [0, 'dracula-hero.jpg', 'The road to Varna|the boxes go down to the sea'],
+    [40, V + 'varna-1.jpg', 'Varna · 6 July|“we finished taking in cargo, silver sand and boxes of earth”'],
+    [54.5, V + 'varna-2.jpg', 'Varna · 6 July|“At noon set sail. East wind, fresh.”'],
+    [69, V + 'varna-3.jpg', 'Varna · 6 July|“Crew, five hands … two mates, cook, and myself (captain).”'],
+    [83.5, V + 'varna-4.jpg', 'The Bosphorus · 11 July|“Boarded by Turkish Customs officers. Backsheesh. All correct.”'],
+    [98, V + 'underway-1.jpg', 'The Dardanelles · 12 July|“Want us off soon. At dark passed into Archipelago.”'],
+    [108.5, V + 'underway-2.jpg', 'Cape Matapan · 13 July|“Crew dissatisfied about something.”'],
+    [119, V + 'underway-3.jpg', 'Cape Matapan · 13 July|“Seemed scared, but would not speak out.”'],
+    [129.5, V + 'underway-4.jpg', 'At sea · 14 July|“Men all steady fellows, who sailed with me before.”'],
+    [140, V + 'deck-1.jpg', 'At sea · 14 July|“they only told him there was something, and crossed themselves”'],
+    [160, V + 'deck-2.jpg', 'At sea · 16 July|“one of crew, Petrofsky, was missing”'],
+    [180, V + 'deck-3.jpg', 'At sea · 17 July|“a tall, thin man, who was not like any of the crew”'],
+    [200, V + 'deck-4.jpg', 'The Bay of Biscay · 24 July|“There seems some doom over this ship.”'],
+    [220, V + 'fog-2.jpg', 'The English Channel · 1 August|“Two days of fog, and not a sail sighted.”'],
+    [232, V + 'fog-3.jpg', 'The North Sea · 2 August|“the fog, which seems to move with us”'],
+    [242, V + 'fog-1.jpg', 'The North Sea · 4 August|“I dared not go below, I dared not leave the helm”'],
+    [248, V + 'fog-4.jpg', 'The North Sea · 4 August|“I shall tie my hands to the wheel”'],
+    [252, V + 'becalmed.jpg', 'Off Whitby · 7 August|“As idle as a painted ship upon a painted ocean.”'],
+    [260, V + 'storm-1.jpg', 'Whitby · after midnight|“Then without warning the tempest broke.”'],
+    [278, V + 'storm-2.jpg', 'Whitby · the East Cliff|“the new searchlight … swept with it the surface of the sea”'],
+    [294, V + 'storm-3.jpg', 'Whitby · the East Cliff|“the searchlight discovered some distance away a schooner with all sails set”'],
+    [310, V + 'storm-4.jpg', 'Whitby · the East Cliff|“she must fetch up somewhere, if it was only in hell”'],
+    [319, V + 'piers-mj2.jpg', 'Whitby · the harbour mouth|“between the piers, leaping from wave to wave”', 'voyage-piers-mj2.mp4', 'once'],
+    [328, V + 'piers-mj1.jpg', 'Whitby · the harbour mouth|“lashed to the helm was a corpse”', 'voyage-piers-mj1.mp4', 'once'],
+    [340, V + 'wreck-1.jpg', 'Tate Hill sands|“an immense dog sprang up on deck from below”'],
+    [347, V + 'wreck-2.jpg', 'Tate Hill sands|“it disappeared in the darkness”'],
+    [354, V + 'wreck-3.jpg', 'Tate Hill sands|“the light on the derelict”'],
+    [361, V + 'wreck-4.jpg', 'Whitby · the inquest|“one more ‘mystery of the sea’”']];
   /* MOVING PICTURES (18 Oct 2026): each still has a 10-second looping clip made from it
      (mist, flame and lamplight, rain, spray, rippling water, a slow drift), voyage/<name>.mp4.
      The still stays as the layer's background, so a clip that will not load shows the painting.
@@ -613,8 +650,27 @@ Promise.all([
   var CLIPS = 'https://amenti-media.ingram-ian.workers.dev/m/dracula/voyage-';
   /* 18 Oct, evening: v2 clips (light on the water and windows; the landing at night under the searchlight).
      A scene may name its own clip (sc[3], e.g. a Midjourney Animate clip) and play it once and hold (sc[4] 'once'). */
-  function clipOf(bg) { return CLIPS + bg.split('/').pop().replace(/\.jpg$/, '-v2.mp4'); }
+  /* v3 (18 Oct, late): glints only from high, distant places; the searchlight only where the book has it */
+  var V3 = { 'varna-1': 1, 'varna-2': 1, 'varna-3': 1, 'varna-4': 1, 'underway-1': 1, 'underway-2': 1, 'underway-3': 1, 'underway-4': 1,
+             'storm-1': 1, 'storm-4': 1, 'wreck-2': 1, 'wreck-3': 1, 'wreck-4': 1 };
+  function clipOf(bg) { var n = bg.split('/').pop().replace(/\.jpg$/, ''); return CLIPS + n + (V3[n] ? '-v3' : '-v2') + '.mp4'; }
   var layers = SCENES.map(function (sc) { var d = document.createElement('div'); d.className = 'voy'; d.dataset.bg = sc[1]; d.dataset.vid = sc[3] ? 'https://amenti-media.ingram-ian.workers.dev/m/dracula/' + sc[3] : clipOf(sc[1]); if (sc[4] === 'once') d.dataset.once = '1'; box.appendChild(d); return d; });
+  /* THE VEIL (18 Oct, Ian: "fog covering the beginning and the end of the mp4 … to mask the cut — not too much").
+     At every scene change a light bank of fog or spray drifts across, thickest in the middle of the 4-second
+     dissolve, then clears. Kind by scene: sea-fog (storm, fog, wreck, deck), spray (the harbour mouth),
+     warm haze (Varna, under way, the calm). */
+  var veil = document.createElement('div'); veil.className = 'veil'; box.appendChild(veil);
+  function veilKind(bg) {
+    if (/piers/.test(bg)) return 'spray';
+    if (/storm|fog-|wreck/.test(bg)) return 'sea';
+    if (/deck/.test(bg)) return 'deck';
+    if (/varna|underway|becalmed/.test(bg)) return 'haze';
+    return '';
+  }
+  function veilGo(k) {
+    var kind = veilKind(SCENES[k][1]); veil.className = 'veil'; if (!kind) return;
+    void veil.offsetWidth; veil.className = 'veil ' + kind + ' go';
+  }
   function prime(i) {
     var l = layers[i]; if (!l) return;
     if (!l.style.backgroundImage) l.style.backgroundImage = "url('" + l.dataset.bg + "')";
@@ -721,10 +777,11 @@ Promise.all([
     for (var i = 0; i < SCENES.length; i++) if (pos >= SCENES[i][0]) k = i;
     prime(k); prime(k + 1); if (k === SCENES.length - 1) prime(0);
     if (k !== shown) {
+      if (shown !== -1) veilGo(k);
       layers.forEach(function (l, j) { l.classList.toggle('on', j === k); });
       playOnly(k);
       var txt = SCENES[k][2];
-      if (txt && txt !== lastCap) { lastCap = txt; cap.classList.remove('on'); setTimeout(function () { cap.textContent = txt; cap.classList.add('on'); }, 1200); }
+      if (txt && txt !== lastCap) { lastCap = txt; cap.classList.remove('on'); setTimeout(function () { var pr = txt.split('|'); cap.textContent = ''; var w = document.createElement('span'); w.className = 'w'; w.textContent = pr[0]; cap.appendChild(w); if (pr[1]) { var q = document.createElement('span'); q.className = 'q'; q.textContent = pr[1]; cap.appendChild(q); } cap.classList.add('on'); }, 1200); }
       hero.classList.add('voyage'); shown = k;
     }
     BOLTS.forEach(function (b, j) {
