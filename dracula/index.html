@@ -84,6 +84,7 @@
      beneath it, so the castle painting behind the voyage never shows through mid-dissolve. */
   .voy.on{opacity:1;z-index:2;transition:opacity 4s ease-in-out}
   .voy.out{opacity:1;z-index:1}
+  .voy.on.quick{transition:opacity 1.2s ease-out}
   /* the painted forks, traced: a glow laid exactly over the painting's own lightning (clips are drawn at 1.08 zoom) */
   .boltg{position:absolute;inset:0;z-index:3;background:center 50%/cover no-repeat;transform:scale(1.08);opacity:0;mix-blend-mode:screen;pointer-events:none}
   .boltg.fire{animation:forks 1.3s linear}
@@ -105,11 +106,12 @@
   @keyframes shudder{0%,100%{transform:translate(0,0)}10%{transform:translate(-5px,3px)}20%{transform:translate(4px,-3px)}
     30%{transform:translate(-3px,2px)}45%{transform:translate(2px,-1px)}60%{transform:translate(-1px,1px)}}
   canvas.bolt{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
-  .voycap{position:absolute;right:clamp(20px,4vw,48px);top:clamp(18px,4vh,40px);z-index:4;font-size:11px;
+  /* 19 Oct (Ian): bottom left, beneath the credits, so the eye does not travel */
+  .voycap{position:absolute;left:clamp(24px,7vw,110px);bottom:clamp(40px,9vh,96px);z-index:4;font-size:11px;
     letter-spacing:.3em;text-transform:uppercase;color:var(--pale);opacity:0;transition:opacity 1.6s ease;
     text-shadow:0 1px 14px rgba(0,0,0,.9)}
   .voycap.on{opacity:.85}
-  .voycap{text-align:right;max-width:min(40ch,46vw)} .voycap .w{display:block}
+  .voycap{text-align:left;max-width:min(44ch,60vw)} .voycap .w{display:block}
   .voycap .q{display:block;margin-top:8px;font-family:var(--serif);font-style:italic;font-size:clamp(15px,1.5vw,19px);letter-spacing:.01em;text-transform:none;line-height:1.35;color:#fff}
   @media (max-width:620px){.voycap{max-width:70vw}}
   .hero.voyage .titles{opacity:.35;transition:opacity 4s} .titles{transition:opacity 4s}
@@ -506,7 +508,8 @@ Promise.all([
      Treasure Island theme, and loops. (Before this the title bed was wind.mp3 + piano.mp3.) */
   var BASE = '';
   var TRACKS = [
-    { file: 'https://ianingram.github.io/Amenti-Readings/dracula/sound/voyage-of-the-demeter.mp3', gain: 0.6 }
+    /* 19 Oct: v2 — the mate's cry rings out, the plunge, the sea closing over him (served from the Media Door) */
+    { file: 'https://amenti-media.ingram-ian.workers.dev/m/dracula/voyage-of-the-demeter-v2.mp3', gain: 0.6 }
   ];
   var btn = document.getElementById('snd');
   if (!btn) return;
@@ -626,18 +629,18 @@ Promise.all([
     [160, V + 'deck-2.jpg', 'At sea · 16 July|“one of crew, Petrofsky, was missing”'],
     [180, V + 'deck-3.jpg', 'At sea · 17 July|“a tall, thin man, who was not like any of the crew”'],
     [200, V + 'deck-4.jpg', 'The Bay of Biscay · 24 July|“There seems some doom over this ship.”'],
-    [220, V + 'fog-2.jpg', 'The English Channel · 1 August|“Two days of fog, and not a sail sighted.”'],
-    [232, V + 'fog-3.jpg', 'The North Sea · 2 August|“the fog, which seems to move with us”'],
-    [242, V + 'fog-1.jpg', 'The North Sea · 4 August|“I dared not go below, I dared not leave the helm”'],
-    [248, V + 'fog-4.jpg', 'The North Sea · 4 August|“I shall tie my hands to the wheel”'],
-    [252, V + 'becalmed.jpg', 'Off Whitby · 7 August|“As idle as a painted ship upon a painted ocean.”'],
-    [260, V + 'storm-1.jpg', 'Whitby · after midnight|“Then without warning the tempest broke.”'],
-    [278, V + 'storm-2.jpg', 'Whitby · the East Cliff|“the new searchlight … swept with it the surface of the sea”'],
+    [220, V + 'fog-3.jpg', 'The English Channel · 1 August|“Two days of fog, and not a sail sighted.”'],
+    [230, V + 'fog-2.jpg', 'The North Sea · 3 August|“It is here; I know it, now.”'],
+    [249, V + 'fog-1.jpg', 'The North Sea · 4 August|“I dared not go below, I dared not leave the helm”'],
+    [255, V + 'becalmed.jpg', 'Off Whitby · 7 August|“As idle as a painted ship upon a painted ocean.”'],
+    [263, V + 'becalmed-2.jpg', 'Off Whitby · midnight|“a dead calm, a sultry heat”', 'voyage-becalmed-2-v2.mp4', 'once'],
+    [277, V + 'storm-4.jpg', 'Whitby · after midnight|“Then without warning the tempest broke.”'],
+    [282, V + 'storm-2.jpg', 'Whitby · the East Cliff|“the new searchlight … swept with it the surface of the sea”'],
     [294, V + 'storm-3.jpg', 'Whitby · the East Cliff|“the searchlight discovered some distance away a schooner with all sails set”'],
-    [310, V + 'storm-4.jpg', 'Whitby · the East Cliff|“she must fetch up somewhere, if it was only in hell”'],
-    [319, V + 'piers-mj2.jpg', 'Whitby · the harbour mouth|“between the piers, leaping from wave to wave”', 'voyage-piers-mj2.mp4', 'once'],
-    [328, V + 'piers-mj1.jpg', 'Whitby · the harbour mouth|“The searchlight followed her”', 'voyage-piers-mj1.mp4', 'once'],
-    [334, V + 'piers-still.jpg', 'Whitby · the harbour mouth|“lashed to the helm was a corpse”', 'voyage-piers-2-v2.mp4'],
+    [308, V + 'storm-1.jpg', 'Whitby · the East Cliff|“she must fetch up somewhere, if it was only in hell”'],
+    [324.5, V + 'piers-mj2.jpg', 'Whitby · the harbour mouth|“between the piers, leaping from wave to wave”', 'voyage-piers-mj2.mp4', 'once'],
+    [329.35, V + 'piers-mj1.jpg', 'Whitby · the harbour mouth|“The searchlight followed her”', 'voyage-piers-mj1.mp4', 'once'],
+    [334.5, V + 'piers-still.jpg', 'Whitby · the harbour mouth|“lashed to the helm was a corpse”', 'voyage-piers-2-v2.mp4'],
     [341, V + 'wreck-1.jpg', 'Tate Hill sands|“an immense dog sprang up on deck from below”'],
     [347, V + 'wreck-2.jpg', 'Tate Hill sands|“it disappeared in the darkness”'],
     [353, V + 'wreck-3.jpg', 'Tate Hill sands|“the light on the derelict”'],
@@ -656,7 +659,7 @@ Promise.all([
   /* v4 (18 Oct, late): under way — the light catches the gold domes, crosses and spires of the towns passed */
   var V4 = { 'underway-1': 1, 'underway-2': 1, 'underway-3': 1, 'underway-4': 1 };
   function clipOf(bg) { var n = bg.split('/').pop().replace(/\.jpg$/, ''); return CLIPS + n + (V4[n] ? '-v4' : V3[n] ? '-v3' : '-v2') + '.mp4'; }
-  var layers = SCENES.map(function (sc) { var d = document.createElement('div'); d.className = 'voy'; d.dataset.bg = sc[1]; d.dataset.vid = sc[3] ? 'https://amenti-media.ingram-ian.workers.dev/m/dracula/' + sc[3] : clipOf(sc[1]); if (sc[4] === 'once') d.dataset.once = '1'; var bm = /storm-[23]\.jpg$/.exec(sc[1]); if (bm) { var bg = document.createElement('div'); bg.className = 'boltg'; bg.style.backgroundImage = "url('voyage/bolt-" + bm[0].replace('.jpg', '.png') + "')"; d.appendChild(bg); } box.appendChild(d); return d; });
+  var layers = SCENES.map(function (sc) { var d = document.createElement('div'); d.className = 'voy'; d.dataset.bg = sc[1]; d.dataset.vid = sc[3] ? 'https://amenti-media.ingram-ian.workers.dev/m/dracula/' + sc[3] : clipOf(sc[1]); if (sc[4] === 'once' && /mj/.test(sc[3])) { d.dataset.once = '1'; d.classList.add('quick'); } else if (sc[4] === 'once') d.dataset.once = '1'; var bm = /storm-[123]\.jpg$/.exec(sc[1]); if (bm) { var bg = document.createElement('div'); bg.className = 'boltg'; bg.style.backgroundImage = "url('voyage/bolt-" + bm[0].replace('.jpg', '.png') + "')"; d.appendChild(bg); } box.appendChild(d); return d; });
   function prime(i) {
     var l = layers[i]; if (!l) return;
     if (!l.style.backgroundImage) l.style.backgroundImage = "url('" + l.dataset.bg + "')";
@@ -677,6 +680,14 @@ Promise.all([
     });
   }
   var lastCap = '', capT = 0;
+  /* 19 Oct: lines that land inside a scene, on the voices in the track */
+  var CUES = [[243.8, 'The North Sea · 3 August|“Save me! save me!”'],
+              [248.2, 'The North Sea · 3 August|“he sprang on the bulwark and deliberately threw himself into the sea”']];
+  function setCap(txt) {
+    if (!txt || txt === lastCap) return;
+    lastCap = txt; var capWas = cap.classList.contains('on'); cap.classList.remove('on'); clearTimeout(capT);
+    capT = setTimeout(function () { var pr = txt.split('|'); cap.textContent = ''; var w = document.createElement('span'); w.className = 'w'; w.textContent = pr[0]; cap.appendChild(w); if (pr[1]) { var q = document.createElement('span'); q.className = 'q'; q.textContent = pr[1]; cap.appendChild(q); } cap.classList.add('on'); }, capWas ? 1750 : 300);
+  }
   /* 18 Oct, late: strikes moved onto the thunder cracks measured in the track itself (285.4, 297.3, 303.6,
      311.6, 323.6, 331.6, 339.7 s), each flash a tenth of a second ahead of its crack, as lightning comes before thunder */
   var BOLTS = [285.3, 297.2, 303.5, 311.45, 323.45, 331.45, 339.55];
@@ -774,10 +785,11 @@ Promise.all([
       if (prev && shown !== k) { prev.classList.remove('on'); prev.classList.add('out'); clearTimeout(prev._outT); prev._outT = setTimeout(function () { if (!prev.classList.contains('on')) prev.classList.remove('out'); }, 4300); }
       layers[k].classList.remove('out'); layers[k].classList.add('on');
       playOnly(k);
-      var txt = SCENES[k][2];
-      if (txt && txt !== lastCap) { lastCap = txt; var capWas = cap.classList.contains('on'); cap.classList.remove('on'); clearTimeout(capT); capT = setTimeout(function () { var pr = txt.split('|'); cap.textContent = ''; var w = document.createElement('span'); w.className = 'w'; w.textContent = pr[0]; cap.appendChild(w); if (pr[1]) { var q = document.createElement('span'); q.className = 'q'; q.textContent = pr[1]; cap.appendChild(q); } cap.classList.add('on'); }, capWas ? 1750 : 300); }
       hero.classList.add('voyage'); shown = k;
     }
+    var txt = SCENES[k][2];
+    CUES.forEach(function (c) { if (pos >= c[0] && c[0] >= SCENES[k][0]) txt = c[1]; });
+    setCap(txt);
     BOLTS.forEach(function (b, j) {
       var key = lap + ':' + j;
       if (pos >= b && pos < b + 0.5 && !fired[key]) { fired[key] = 1; strike(j); }
