@@ -600,8 +600,10 @@ Promise.all([
     [40, V + 'varna-1.jpg', 'Varna · 6 July'], [54.5, V + 'varna-2.jpg'], [69, V + 'varna-3.jpg'], [83.5, V + 'varna-4.jpg'],
     [98, V + 'underway-1.jpg', 'Under way'], [108.5, V + 'underway-2.jpg'], [119, V + 'underway-3.jpg'], [129.5, V + 'underway-4.jpg'],
     [140, V + 'deck-1.jpg', 'At sea · the crew uneasy'], [160, V + 'deck-2.jpg'], [180, V + 'deck-3.jpg'], [200, V + 'deck-4.jpg'],
-    [220, V + 'fog-2.jpg', 'Night · the mate'], [232, V + 'fog-3.jpg'], [244, V + 'fog-1.jpg', 'The fog · the captain alone'], [252, V + 'fog-4.jpg'],
-    [260, V + 'storm-1.jpg', 'Off Whitby · the storm'], [280, V + 'storm-2.jpg'], [300, V + 'storm-3.jpg'], [320, V + 'storm-4.jpg'],
+    [220, V + 'fog-2.jpg', 'Night · the mate'], [232, V + 'fog-3.jpg'], [242, V + 'fog-1.jpg', 'The fog · the captain alone'], [248, V + 'fog-4.jpg'],
+    [252, V + 'becalmed.jpg', 'Off Whitby · 7 August · the calm before the storm'],
+    [260, V + 'storm-1.jpg', 'After midnight · the storm · the searchlight'], [278, V + 'storm-2.jpg'], [294, V + 'storm-3.jpg'], [310, V + 'storm-4.jpg'],
+    [319, V + 'piers-mj2.jpg', 'Between the piers', 'voyage-piers-mj2.mp4', 'once'], [328, V + 'piers-mj1.jpg', '', 'voyage-piers-mj1.mp4', 'once'],
     [340, V + 'wreck-1.jpg', 'Whitby · the wreck'], [347, V + 'wreck-2.jpg'], [354, V + 'wreck-3.jpg'], [361, V + 'wreck-4.jpg']];
   /* MOVING PICTURES (18 Oct 2026): each still has a 10-second looping clip made from it
      (mist, flame and lamplight, rain, spray, rippling water, a slow drift), voyage/<name>.mp4.
@@ -609,14 +611,16 @@ Promise.all([
      Only the scene on screen and the one fading out are playing; the rest are paused. */
   /* the clips live behind the media door (Cloudflare R2), not in the repo — GitHub's upload would not take them */
   var CLIPS = 'https://amenti-media.ingram-ian.workers.dev/m/dracula/voyage-';
-  function clipOf(bg) { return CLIPS + bg.split('/').pop().replace(/\.jpg$/, '.mp4'); }
-  var layers = SCENES.map(function (sc) { var d = document.createElement('div'); d.className = 'voy'; d.dataset.bg = sc[1]; d.dataset.vid = clipOf(sc[1]); box.appendChild(d); return d; });
+  /* 18 Oct, evening: v2 clips (light on the water and windows; the landing at night under the searchlight).
+     A scene may name its own clip (sc[3], e.g. a Midjourney Animate clip) and play it once and hold (sc[4] 'once'). */
+  function clipOf(bg) { return CLIPS + bg.split('/').pop().replace(/\.jpg$/, '-v2.mp4'); }
+  var layers = SCENES.map(function (sc) { var d = document.createElement('div'); d.className = 'voy'; d.dataset.bg = sc[1]; d.dataset.vid = sc[3] ? 'https://amenti-media.ingram-ian.workers.dev/m/dracula/' + sc[3] : clipOf(sc[1]); if (sc[4] === 'once') d.dataset.once = '1'; box.appendChild(d); return d; });
   function prime(i) {
     var l = layers[i]; if (!l) return;
     if (!l.style.backgroundImage) l.style.backgroundImage = "url('" + l.dataset.bg + "')";
     if (!l._v && l.dataset.vid) {
       var v = document.createElement('video');
-      v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true; v.preload = 'auto';
+      v.muted = true; v.defaultMuted = true; v.loop = !l.dataset.once; v.playsInline = true; v.preload = 'auto';
       v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
       v.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';
       v.onerror = function () { if (v.parentNode) v.parentNode.removeChild(v); };   /* no clip: the painting stays */
@@ -626,7 +630,7 @@ Promise.all([
   function playOnly(k) {
     layers.forEach(function (l, j) {
       if (!l._v) return;
-      if (j === k) { try { var p = l._v.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
+      if (j === k) { try { if (l.dataset.once && shown !== k) l._v.currentTime = 0; var p = l._v.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
       else if (!l._v.paused) { var v = l._v; setTimeout(function () { if (!l.classList.contains('on')) v.pause(); }, 4500); }
     });
   }
