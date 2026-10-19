@@ -97,7 +97,7 @@
     30%{transform:translate(-3px,2px)}45%{transform:translate(2px,-1px)}60%{transform:translate(-1px,1px)}}
   canvas.bolt{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
   .voycap{position:absolute;right:clamp(20px,4vw,48px);top:clamp(18px,4vh,40px);z-index:4;font-size:11px;
-    letter-spacing:.3em;text-transform:uppercase;color:var(--pale);opacity:0;transition:opacity 2.5s;
+    letter-spacing:.3em;text-transform:uppercase;color:var(--pale);opacity:0;transition:opacity 1.6s ease;
     text-shadow:0 1px 14px rgba(0,0,0,.9)}
   .voycap.on{opacity:.85}
   .veil{position:absolute;inset:-6%;z-index:3;pointer-events:none;opacity:0}
@@ -690,7 +690,7 @@ Promise.all([
       else if (!l._v.paused) { var v = l._v; setTimeout(function () { if (!l.classList.contains('on')) v.pause(); }, 4500); }
     });
   }
-  var lastCap = '';
+  var lastCap = '', capT = 0;
   var BOLTS = [280, 296, 304, 312, 324, 332, 340];
   /* THE ROLL: [start s in the suite, top line, name, role]. The company from cast.json, principals
      first; the captain comes up in the fog, the correspondent in the storm he reported. The title
@@ -725,15 +725,19 @@ Promise.all([
     var k = -1; for (var i = 0; i < ROLL.length; i++) if (pos >= ROLL[i][0]) k = i;
     var end = k >= 0 ? (k + 1 < ROLL.length ? ROLL[k + 1][0] : TITLE_AT) - 2.2 : 0;
     var vis = k >= 0 && pos < end;
+    /* 18 Oct, late (Ian: "they should fade in and out smoothly"): the name changes only once the old one has
+       fully faded out (the fade is 1.6 s); until then nothing may switch it back on. */
     if (k !== rollAt) {
-      rollAt = k; credit.classList.remove('on');
-      if (k >= 0) setTimeout(function () {
-        var r = ROLL[rollAt]; if (!r) return;
-        credit.querySelector('.cr-a').textContent = r[1]; credit.querySelector('.cr-b').textContent = r[2]; credit.querySelector('.cr-c').textContent = r[3];
-        credit.classList.add('on');
-      }, 900);
-    } else credit.classList.toggle('on', vis);
+      rollAt = k; var wasOn = credit.classList.contains('on'); credit.classList.remove('on'); creditSwap = true;
+      clearTimeout(creditT);
+      creditT = setTimeout(function () {
+        var r = ROLL[rollAt];
+        if (r) { credit.querySelector('.cr-a').textContent = r[1]; credit.querySelector('.cr-b').textContent = r[2]; credit.querySelector('.cr-c').textContent = r[3]; }
+        creditSwap = false;
+      }, wasOn ? 1750 : 150);
+    } else if (!creditSwap) credit.classList.toggle('on', vis);
   }
+  var creditSwap = false, creditT = 0;
 
   var shown = -1, fired = {};
   /* a strike: the page strobes, the picture blows out, a forked bolt tears down the sky, the frame shudders */
@@ -781,7 +785,7 @@ Promise.all([
       layers.forEach(function (l, j) { l.classList.toggle('on', j === k); });
       playOnly(k);
       var txt = SCENES[k][2];
-      if (txt && txt !== lastCap) { lastCap = txt; cap.classList.remove('on'); setTimeout(function () { var pr = txt.split('|'); cap.textContent = ''; var w = document.createElement('span'); w.className = 'w'; w.textContent = pr[0]; cap.appendChild(w); if (pr[1]) { var q = document.createElement('span'); q.className = 'q'; q.textContent = pr[1]; cap.appendChild(q); } cap.classList.add('on'); }, 1200); }
+      if (txt && txt !== lastCap) { lastCap = txt; var capWas = cap.classList.contains('on'); cap.classList.remove('on'); clearTimeout(capT); capT = setTimeout(function () { var pr = txt.split('|'); cap.textContent = ''; var w = document.createElement('span'); w.className = 'w'; w.textContent = pr[0]; cap.appendChild(w); if (pr[1]) { var q = document.createElement('span'); q.className = 'q'; q.textContent = pr[1]; cap.appendChild(q); } cap.classList.add('on'); }, capWas ? 1750 : 300); }
       hero.classList.add('voyage'); shown = k;
     }
     BOLTS.forEach(function (b, j) {
