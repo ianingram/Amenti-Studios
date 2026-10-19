@@ -100,20 +100,6 @@
     letter-spacing:.3em;text-transform:uppercase;color:var(--pale);opacity:0;transition:opacity 1.6s ease;
     text-shadow:0 1px 14px rgba(0,0,0,.9)}
   .voycap.on{opacity:.85}
-  .veil{position:absolute;inset:-6%;z-index:3;pointer-events:none;opacity:0}
-  .veil::before,.veil::after{content:'';position:absolute;inset:0;background:url('voyage/veil-sea.png') 0 0/1100px auto repeat}
-  .veil::after{background-size:1700px auto;opacity:.7}
-  .veil.haze::before,.veil.haze::after{background-image:url('voyage/veil-warm.png')}
-  .veil.go.sea{animation:veil-sea 4.4s ease-in-out}.veil.go.spray{animation:veil-spray 4.4s ease-in-out}
-  .veil.go.deck{animation:veil-deck 4.4s ease-in-out}.veil.go.haze{animation:veil-haze 4.4s ease-in-out}
-  .veil.go::before{animation:drift1 4.4s linear}.veil.go::after{animation:drift2 4.4s linear}
-  @keyframes veil-sea{0%{opacity:0}42%,58%{opacity:.6}100%{opacity:0}}
-  @keyframes veil-spray{0%{opacity:0}42%,58%{opacity:.68}100%{opacity:0}}
-  @keyframes veil-deck{0%{opacity:0}42%,58%{opacity:.42}100%{opacity:0}}
-  @keyframes veil-haze{0%{opacity:0}42%,58%{opacity:.3}100%{opacity:0}}
-  @keyframes drift1{from{background-position:0 0}to{background-position:-260px -40px}}
-  @keyframes drift2{from{background-position:0 0}to{background-position:180px -70px}}
-  @media (prefers-reduced-motion:reduce){.veil{display:none}}
   .voycap{text-align:right;max-width:min(40ch,46vw)} .voycap .w{display:block}
   .voycap .q{display:block;margin-top:8px;font-family:var(--serif);font-style:italic;font-size:clamp(15px,1.5vw,19px);letter-spacing:.01em;text-transform:none;line-height:1.35;color:#fff}
   @media (max-width:620px){.voycap{max-width:70vw}}
@@ -655,22 +641,6 @@ Promise.all([
              'storm-1': 1, 'storm-4': 1, 'wreck-2': 1, 'wreck-3': 1, 'wreck-4': 1 };
   function clipOf(bg) { var n = bg.split('/').pop().replace(/\.jpg$/, ''); return CLIPS + n + (V3[n] ? '-v3' : '-v2') + '.mp4'; }
   var layers = SCENES.map(function (sc) { var d = document.createElement('div'); d.className = 'voy'; d.dataset.bg = sc[1]; d.dataset.vid = sc[3] ? 'https://amenti-media.ingram-ian.workers.dev/m/dracula/' + sc[3] : clipOf(sc[1]); if (sc[4] === 'once') d.dataset.once = '1'; box.appendChild(d); return d; });
-  /* THE VEIL (18 Oct, Ian: "fog covering the beginning and the end of the mp4 … to mask the cut — not too much").
-     At every scene change a light bank of fog or spray drifts across, thickest in the middle of the 4-second
-     dissolve, then clears. Kind by scene: sea-fog (storm, fog, wreck, deck), spray (the harbour mouth),
-     warm haze (Varna, under way, the calm). */
-  var veil = document.createElement('div'); veil.className = 'veil'; box.appendChild(veil);
-  function veilKind(bg) {
-    if (/piers/.test(bg)) return 'spray';
-    if (/storm|fog-|wreck/.test(bg)) return 'sea';
-    if (/deck/.test(bg)) return 'deck';
-    if (/varna|underway|becalmed/.test(bg)) return 'haze';
-    return '';
-  }
-  function veilGo(k) {
-    var kind = veilKind(SCENES[k][1]); veil.className = 'veil'; if (!kind) return;
-    void veil.offsetWidth; veil.className = 'veil ' + kind + ' go';
-  }
   function prime(i) {
     var l = layers[i]; if (!l) return;
     if (!l.style.backgroundImage) l.style.backgroundImage = "url('" + l.dataset.bg + "')";
@@ -781,7 +751,6 @@ Promise.all([
     for (var i = 0; i < SCENES.length; i++) if (pos >= SCENES[i][0]) k = i;
     prime(k); prime(k + 1); if (k === SCENES.length - 1) prime(0);
     if (k !== shown) {
-      if (shown !== -1) veilGo(k);
       layers.forEach(function (l, j) { l.classList.toggle('on', j === k); });
       playOnly(k);
       var txt = SCENES[k][2];
