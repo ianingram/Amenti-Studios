@@ -639,7 +639,9 @@ Promise.all([
   /* v3 (18 Oct, late): glints only from high, distant places; the searchlight only where the book has it */
   var V3 = { 'varna-1': 1, 'varna-2': 1, 'varna-3': 1, 'varna-4': 1, 'underway-1': 1, 'underway-2': 1, 'underway-3': 1, 'underway-4': 1,
              'storm-1': 1, 'storm-4': 1, 'wreck-2': 1, 'wreck-3': 1, 'wreck-4': 1 };
-  function clipOf(bg) { var n = bg.split('/').pop().replace(/\.jpg$/, ''); return CLIPS + n + (V3[n] ? '-v3' : '-v2') + '.mp4'; }
+  /* v4 (18 Oct, late): under way — the light catches the gold domes, crosses and spires of the towns passed */
+  var V4 = { 'underway-1': 1, 'underway-2': 1, 'underway-3': 1, 'underway-4': 1 };
+  function clipOf(bg) { var n = bg.split('/').pop().replace(/\.jpg$/, ''); return CLIPS + n + (V4[n] ? '-v4' : V3[n] ? '-v3' : '-v2') + '.mp4'; }
   var layers = SCENES.map(function (sc) { var d = document.createElement('div'); d.className = 'voy'; d.dataset.bg = sc[1]; d.dataset.vid = sc[3] ? 'https://amenti-media.ingram-ian.workers.dev/m/dracula/' + sc[3] : clipOf(sc[1]); if (sc[4] === 'once') d.dataset.once = '1'; box.appendChild(d); return d; });
   function prime(i) {
     var l = layers[i]; if (!l) return;
