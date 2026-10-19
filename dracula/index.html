@@ -565,6 +565,10 @@ Promise.all([
       }
       any.forEach(function (t) {
         var src = ctx.createBufferSource();
+        /* 19 Oct (Ian): the last frame holds for 20 s before the voyage begins again — the loop carries 20 s of silence */
+        var HOLD = 20, sr = t.buf.sampleRate, pad = ctx.createBuffer(t.buf.numberOfChannels, t.buf.length + Math.round(HOLD * sr), sr);
+        for (var ch = 0; ch < t.buf.numberOfChannels; ch++) pad.getChannelData(ch).set(t.buf.getChannelData(ch));
+        t.buf = pad;
         src.buffer = t.buf; src.loop = true;
         var g = ctx.createGain();
         g.gain.value = 0.0001;     /* never start at a value, always ramp up */
@@ -632,11 +636,12 @@ Promise.all([
     [294, V + 'storm-3.jpg', 'Whitby · the East Cliff|“the searchlight discovered some distance away a schooner with all sails set”'],
     [310, V + 'storm-4.jpg', 'Whitby · the East Cliff|“she must fetch up somewhere, if it was only in hell”'],
     [319, V + 'piers-mj2.jpg', 'Whitby · the harbour mouth|“between the piers, leaping from wave to wave”', 'voyage-piers-mj2.mp4', 'once'],
-    [328, V + 'piers-mj1.jpg', 'Whitby · the harbour mouth|“lashed to the helm was a corpse”', 'voyage-piers-mj1.mp4', 'once'],
-    [340, V + 'wreck-1.jpg', 'Tate Hill sands|“an immense dog sprang up on deck from below”'],
+    [328, V + 'piers-mj1.jpg', 'Whitby · the harbour mouth|“The searchlight followed her”', 'voyage-piers-mj1.mp4', 'once'],
+    [334, V + 'piers-still.jpg', 'Whitby · the harbour mouth|“lashed to the helm was a corpse”', 'voyage-piers-2-v2.mp4'],
+    [341, V + 'wreck-1.jpg', 'Tate Hill sands|“an immense dog sprang up on deck from below”'],
     [347, V + 'wreck-2.jpg', 'Tate Hill sands|“it disappeared in the darkness”'],
-    [354, V + 'wreck-3.jpg', 'Tate Hill sands|“the light on the derelict”'],
-    [361, V + 'wreck-4.jpg', 'Whitby · the inquest|“one more ‘mystery of the sea’”']];
+    [353, V + 'wreck-3.jpg', 'Tate Hill sands|“the light on the derelict”'],
+    [359, V + 'wreck-4.jpg', 'Whitby · the inquest|“one more ‘mystery of the sea’”']];
   /* MOVING PICTURES (18 Oct 2026): each still has a 10-second looping clip made from it
      (mist, flame and lamplight, rain, spray, rippling water, a slow drift), voyage/<name>.mp4.
      The still stays as the layer's background, so a clip that will not load shows the painting.
@@ -696,7 +701,8 @@ Promise.all([
     [262, '', 'Charles Dickens', 'as the correspondent'],
     [290, '', 'and Bram Stoker', 'as the narrator'],
     [316, 'Cast from the Amenti Interface', 'Library of Legends', '']];
-  var TITLE_AT = 340, credit = document.getElementById('credit'), rollAt = -1;
+  /* 19 Oct (Ian: the title came too soon): DRACULA lands at 6:00 over the last picture as the music dies; the cast roll clears by 5:36 */
+  var TITLE_AT = 360, ROLL_END = 336, credit = document.getElementById('credit'), rollAt = -1;
   function roll(pos, on) {
     if (!credit) return;
     if (!on) { hero.classList.remove('rolling', 'titled'); credit.classList.remove('on'); rollAt = -1; return; }
@@ -706,7 +712,7 @@ Promise.all([
     }
     hero.classList.remove('titled'); hero.classList.add('rolling');
     var k = -1; for (var i = 0; i < ROLL.length; i++) if (pos >= ROLL[i][0]) k = i;
-    var end = k >= 0 ? (k + 1 < ROLL.length ? ROLL[k + 1][0] : TITLE_AT) - 2.2 : 0;
+    var end = k >= 0 ? (k + 1 < ROLL.length ? ROLL[k + 1][0] : ROLL_END) - 2.2 : 0;
     var vis = k >= 0 && pos < end;
     /* 18 Oct, late (Ian: "they should fade in and out smoothly"): the name changes only once the old one has
        fully faded out (the fade is 1.6 s); until then nothing may switch it back on. */
