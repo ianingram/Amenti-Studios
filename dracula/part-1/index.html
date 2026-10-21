@@ -230,7 +230,7 @@
     [17,  '', 'Hildegard of Bingen', 'as the Landlady at Bistritz'],
     [25,  '', 'Vlad the Impaler', 'as Count Dracula'],
     [33,  '', 'Elizabeth Báthory<br>Catherine de’ Medici<br>Empress Elisabeth', 'as the Three Women']];
-  var CREDIT_LEN = 6.2, TITLE_AT = 45, READY_AT = 51, WOLVES_AT = 24;
+  var CREDIT_LEN = 6.2, TITLE_AT = 45, READY_AT = 51, WOLVES_AT = 26, NIGHT_AT = 21;
 
   var CAST = [['Charles Darwin', 'Jonathan Harker'], ['Vlad the Impaler', 'Count Dracula'],
               ['Hildegard of Bingen', 'The Landlady at Bistritz'], ['Elizabeth Báthory', 'The First Dark Woman'],
@@ -265,8 +265,15 @@
       var s = ctx.createBufferSource(), g = ctx.createGain(); s.buffer = b; s.loop = true;
       var t = ctx.currentTime + (delay || 0);
       g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(level, t + (fadeIn || 3));
-      s.connect(g); g.connect(master); s.start(t); srcs.push({ s: s, g: g });
+      s.connect(g); g.connect(master); s.start(t); srcs.push({ s: s, g: g, name: name });
     })['catch'](function (e) { console.warn('Part I: ' + name + ' did not load — ' + (e && e.message)); });
+  }
+  function fadeOne(name, sec, delay) {
+    if (!ctx) return;
+    var t = ctx.currentTime + (delay || 0);
+    srcs.filter(function (x) { return x.name === name; }).forEach(function (x) { try {
+      x.g.gain.setValueAtTime(Math.max(x.g.gain.value, 0.0001), t); x.g.gain.exponentialRampToValueAtTime(0.0001, t + sec); x.s.stop(t + sec + 0.1); } catch (e) {} });
+    srcs = srcs.filter(function (x) { return x.name !== name; });
   }
   function fadeAll(sec) {
     if (!ctx) return;
@@ -313,7 +320,10 @@
     clearFilm(); filmOn = true;
     $('hero').classList.add('playing'); $('start').classList.add('gone');
     $('title').classList.remove('on', 'ready'); $('credit').classList.remove('on');
-    fadeAll(1); playLoop('score-dread.mp3', 0.7, 4); playLoop('wolves.mp3', 0.16, 6, WOLVES_AT);
+    /* the journey by day in the major (pastoral warm, F major); dread comes in with the night */
+    fadeAll(1); playLoop('score-pastoral-warm.mp3', 0.7, 3);
+    playLoop('score-dread.mp3', 0.7, 6, NIGHT_AT); later(NIGHT_AT, function () { fadeOne('score-pastoral-warm.mp3', 6); });
+    playLoop('wolves.mp3', 0.16, 6, WOLVES_AT);
     SCENES.forEach(function (sc, i) { later(sc[0], function () { show(i); }); });
     ROLL.forEach(function (r) { later(r[0], function () { credit(r[1], r[2], r[3]); }); later(r[0] + CREDIT_LEN, function () { $('credit').classList.remove('on'); }); });
     later(TITLE_AT, function () { $('credit').classList.remove('on'); $('title').classList.add('on'); });
@@ -323,6 +333,7 @@
     clearFilm(); filmOn = false;
     show(SCENES.length - 1); $('credit').classList.remove('on');
     $('title').classList.add('on', 'ready'); $('hero').classList.remove('playing'); $('start').classList.add('gone');
+    later(25, function () { fadeAll(10); });            /* the theme does not loop under a waiting title */
   }
   $('play').onclick = function () { audioCtx(); if (R && R.unlock) R.unlock(); film(); };
   $('skip').onclick = function () { holdTitle(); };
@@ -405,6 +416,7 @@
     $('roll').classList.remove('on'); $('end').classList.remove('rolling');
     bg($('end-b'), STORM, null); $('end-b').classList.add('on'); $('end-a').classList.remove('on');
     setTimeout(function () { $('end-2').classList.add('on'); }, 1800);
+    endT.push(setTimeout(function () { fadeAll(12); }, 30000));   /* and not under the last card */
   }
   $('end-again').onclick = function () {
     fadeAll(2); $('end').classList.remove('on'); window.scrollTo(0, 0); audioCtx(); film();
