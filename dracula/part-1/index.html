@@ -100,6 +100,12 @@
   .card .k{font-size:11px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase}
   .card .t{font-family:var(--serif);font-size:clamp(30px,5vw,56px);color:#fff;letter-spacing:.08em;margin-top:14px}
   .card .d{font-size:11px;letter-spacing:.3em;color:var(--mist);text-transform:uppercase;margin-top:16px}
+  /* 22 Oct: painted chapter cards (cards/book1-chN.jpg, 1920×1080, the words are in the picture) */
+  .card .pic{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform:scale(1);transition:opacity 1.2s ease,transform 9s linear}
+  .card.has-pic .k,.card.has-pic .t,.card.has-pic .d{display:none}
+  .card.has-pic .pic{opacity:1}
+  .card.on.has-pic .pic{transform:scale(1.03)}
+  @media (prefers-reduced-motion:reduce){.card .pic{transition:opacity .4s;transform:none!important}}
 
   /* ── the ending ── */
   .end{position:fixed;inset:0;z-index:2100;background:#05070a;opacity:0;pointer-events:none;transition:opacity 2.5s ease;overflow:hidden}
@@ -177,7 +183,7 @@
   </div>
 </div>
 
-<div class="card" id="card"><div class="k"></div><div class="t"></div><div class="d"></div></div>
+<div class="card" id="card"><img class="pic" alt=""><div class="k"></div><div class="t"></div><div class="d"></div></div>
 
 <div class="end" id="end">
   <div class="bg" id="end-a"></div>
@@ -341,10 +347,15 @@
 
   /* ── the reading: chapters I to IV, straight through ── */
   var R = window.Amenti && window.Amenti.reading, at = -1, running = false;
+  /* the painted chapter cards, loaded ahead so each is ready when its chapter starts */
+  var CARDPICS = CHAPTERS.map(function (c, i) { var im = new Image(); im.src = 'cards/book1-ch' + (i + 1) + '.jpg'; return im; });
   function card(k, sub, then) {
     var c = $('card'); c.querySelector('.k').textContent = 'Part I · The Castle';
     c.querySelector('.t').textContent = 'Chapter ' + CHAPTERS[k][0]; c.querySelector('.d').textContent = sub;
-    c.classList.add('on'); setTimeout(then, 3200);
+    var im = c.querySelector('.pic'), pic = CARDPICS[k];
+    c.classList.toggle('has-pic', !!(pic && pic.complete && pic.naturalWidth));
+    if (pic) { im.src = pic.src; im.alt = 'Book I, Chapter ' + CHAPTERS[k][0]; }
+    c.classList.add('on'); setTimeout(then, c.classList.contains('has-pic') ? 6500 : 3200);
   }
   function startAt(k) {
     if (!R) { alert('The speech engine did not load. Check the console — the reader says so plainly.'); return; }
