@@ -212,6 +212,7 @@
 <script src="https://ianingram.github.io/Amenti-Readings/player/playbill.js"></script>
 <script src="https://ianingram.github.io/Amenti-Readings/player/sound.js"></script>
 <script src="https://ianingram.github.io/Amenti-Readings/player/art.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/chronometer.js"></script>
 <script>
 (function () {
   'use strict';
@@ -357,15 +358,24 @@
     if (pic) { im.src = pic.src; im.alt = 'Book I, Chapter ' + CHAPTERS[k][0]; }
     c.classList.add('on'); setTimeout(then, c.classList.contains('has-pic') ? 6500 : 3200);
   }
-  function startAt(k) {
+  function startAt(k, seekN) {
     if (!R) { alert('The speech engine did not load. Check the console — the reader says so plainly.'); return; }
     audioCtx(); if (R.unlock) R.unlock();
     fadeAll(3); running = true; at = k;
     card(k, 'Jonathan Harker’s Journal', function () {
-      R.play(CHAPTERS[k][1]).then(function () { setTimeout(function () { $('card').classList.remove('on'); }, 600); },
+      R.play(CHAPTERS[k][1]).then(function () { if (seekN > 1) R.seek(seekN); setTimeout(function () { $('card').classList.remove('on'); }, 600); },
         function (e) { $('card').classList.remove('on'); running = false; console.warn('Part I: ' + (e && e.message)); });
     });
   }
+
+  /* the Chronometer can steer the book: a date or chapter tapped on the dial (25 Oct 2026) */
+  window.amentiChronoJump = function (ep, n) {
+    var p = 'dracula/ep' + (ep < 10 ? '0' : '') + ep + '.json', k = -1;
+    CHAPTERS.forEach(function (c, i) { if (c[1] === p) k = i; });
+    if (k < 0) { running = false; return false; }                 /* another book: the reader loads it */
+    if (running && k === at && R.sheet && R.sheet.episode === ep) { R.seek(n); return true; }
+    startAt(k, n); return true;
+  };
   if (R) {
     var prevEnd = R.onEnd;
     R.onEnd = function (sheet) {
