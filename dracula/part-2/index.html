@@ -14,8 +14,11 @@
      A painted section card (cards/book2-secN.jpg) comes before chapters V, IX and
      XIII, then the chapter's own card (cards/book2-chN.jpg).
 
-     THE FILM is ~58 s: Whitby by day, the sunset Demeter, the storm (moving),
-     Lucy at the gate, the Count in Piccadilly, Lucy un-dead. Music: pastoral warm
+     THE FILM is ~80 s (26 Oct: lengthened): Whitby by day in the major for
+     half a minute — gulls, sea — then the weather gathers, the storm with
+     thunder (moving), and the Bloofer theme with its chimes comes in ON the
+     gate, as Lucy walks out; the red eyes on the seat, the Count in
+     Piccadilly, Lucy un-dead. Music: pastoral warm
      by day, the Bloofer Lady theme from the sunset on; sea, then wind in the storm.
 
      ?end opens straight on the ending.
@@ -229,22 +232,26 @@
   /* THE FILM: [start s, still, moving picture or null] */
   var SCENES = [
     [0,  ART + 'ch06-view-a1.jpg', null],
-    [8,  ART + 'ch07-g-pier-1.jpg', null],
-    [16, ART + 'ch07-sunset-demeter.jpg', null],
-    [24, ART + 'ch07-tempest-a1.jpg', ART + 'ch07-storm-1.mp4'],
-    [32, ART + 'ch08-sleep-gate-0.jpg', null],
-    [40, ART + 'ch13-picc-count-1.jpg', null],
-    [48, ART + 'ch16-undead-backlit-0.jpg', null]];
-  var DAY_UNTIL = 16;
+    [7,  ART + 'ch06-steps-a1.jpg', null],
+    [14, ART + 'ch07-g-pier-1.jpg', null],
+    [21, ART + 'ch06-harbour-a2.jpg', null],
+    [28, ART + 'ch07-g-mares-tails-1.jpg', null],
+    [35, ART + 'ch07-tempest-a1.jpg', ART + 'ch07-storm-1.mp4'],
+    [44, ART + 'ch08-sleep-gate-0.jpg', null],
+    [52, ART + 'ch08-redeyes-a1.jpg', null],
+    [60, ART + 'ch13-picc-count-1.jpg', null],
+    [68, ART + 'ch16-undead-backlit-0.jpg', null]];
+  var DAY_UNTIL = 28;
   /* [start s, top line, name, role] — the Book II company */
   var ROLL = [
     [1.5, 'Amenti Studios', '', 'presents'],
-    [9,   '', 'Agatha Christie', 'as Mina Murray'],
-    [17,  '', 'Mary Shelley', 'as Lucy Westenra'],
-    [25,  '', 'William Harvey', 'as Dr Seward'],
-    [33,  '', 'Antony van Leeuwenhoek', 'as Professor Van Helsing'],
-    [41,  '', 'J.R.R. Tolkien<br>Lyndon B. Johnson', 'as Arthur Holmwood &amp; Quincey Morris']];
-  var CREDIT_LEN = 6.2, TITLE_AT = 51, READY_AT = 57, NIGHT_AT = 15, STORM_AT = 23;
+    [10,  '', 'Agatha Christie', 'as Mina Murray'],
+    [19,  '', 'Mary Shelley', 'as Lucy Westenra'],
+    [28,  '', 'William Harvey', 'as Dr Seward'],
+    [53,  '', 'Antony van Leeuwenhoek', 'as Professor Van Helsing'],
+    [61,  '', 'J.R.R. Tolkien<br>Lyndon B. Johnson', 'as Arthur Holmwood & Quincey Morris']];
+  /* the storm (35–44) carries no credit: the thunder has the screen */
+  var CREDIT_LEN = 6.2, TITLE_AT = 75, READY_AT = 81, GATHER_AT = 28, STORM_AT = 35, NIGHT_AT = 44;
 
   var CAST = [['Agatha Christie', 'Mina Murray'], ['Mary Shelley', 'Lucy Westenra'], ['William Harvey', 'Dr John Seward'],
               ['Antony van Leeuwenhoek', 'Professor Van Helsing'], ['J.R.R. Tolkien', 'Arthur Holmwood'], ['Lyndon B. Johnson', 'Quincey Morris'],
@@ -296,6 +303,16 @@
       var t = ctx.currentTime + (delay || 0);
       g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(level, t + (fadeIn || 3));
       s.connect(g); g.connect(master); s.start(t); srcs.push({ s: s, g: g, name: name });
+    })['catch'](function (e) { console.warn('Book II: ' + name + ' did not load — ' + (e && e.message)); });
+  }
+  /* one sound, once — a gull, a peal of thunder. rate varies it, so one recording is several */
+  function playOnce(name, level, delay, rate) {
+    if (!audioCtx()) return;
+    buf(name).then(function (b) {
+      var s = ctx.createBufferSource(), g = ctx.createGain(); s.buffer = b; s.playbackRate.value = rate || 1;
+      var t = ctx.currentTime + (delay || 0);
+      g.gain.setValueAtTime(level, t); s.connect(g); g.connect(master); s.start(t);
+      srcs.push({ s: s, g: g, name: name });
     })['catch'](function (e) { console.warn('Book II: ' + name + ' did not load — ' + (e && e.message)); });
   }
   function fadeOne(name, sec, delay) {
@@ -350,10 +367,18 @@
     clearFilm(); filmOn = true;
     $('hero').classList.add('playing'); $('start').classList.add('gone');
     $('title').classList.remove('on', 'ready'); $('credit').classList.remove('on');
-    /* Whitby by day in the major; the Bloofer Lady theme comes in with the sunset; sea, then wind in the storm */
+    /* Whitby by day in the MAJOR for half a minute, with gulls and the sea; the weather gathers with a far
+       roll of thunder; the storm cracks and the major goes; the Bloofer theme and its chimes come in ON the gate */
     fadeAll(1); playLoop('score-pastoral-warm.mp3', 0.7, 3); playLoop('sea.mp3', 0.14, 4);
-    playLoop('score-bloofer.mp3', 0.7, 6, NIGHT_AT); later(NIGHT_AT, function () { fadeOne('score-pastoral-warm.mp3', 6); });
-    playLoop('wind.mp3', 0.16, 4, STORM_AT); later(STORM_AT + 9, function () { fadeOne('wind.mp3', 6); fadeOne('sea.mp3', 8); });
+    playOnce('gulls.mp3', 0.22, 0.6, 1); playOnce('gulls.mp3', 0.16, 9.5, 0.94); playOnce('gulls.mp3', 0.18, 18.5, 1.06);
+    playOnce('thunder.mp3', 0.18, GATHER_AT + 2, 0.78);                       /* far off, as the mares' tails gather */
+    later(STORM_AT - 2, function () { fadeOne('score-pastoral-warm.mp3', 5); });
+    playLoop('wind.mp3', 0.2, 3, STORM_AT);
+    playOnce('thunder.mp3', 0.75, STORM_AT, 1);                               /* "the tempest broke" */
+    playOnce('thunder.mp3', 0.5, STORM_AT + 3.6, 0.9);
+    playOnce('thunder.mp3', 0.35, STORM_AT + 6.8, 0.82);
+    later(NIGHT_AT - 1, function () { fadeOne('wind.mp3', 6); fadeOne('sea.mp3', 8); });
+    playLoop('score-bloofer.mp3', 0.7, 2, NIGHT_AT);                          /* the minor and the chimes, on the gate */
     SCENES.forEach(function (sc, i) { later(sc[0], function () { show(i); }); });
     ROLL.forEach(function (r) { later(r[0], function () { credit(r[1], r[2], r[3]); }); later(r[0] + CREDIT_LEN, function () { $('credit').classList.remove('on'); }); });
     later(TITLE_AT, function () { $('credit').classList.remove('on'); $('title').classList.add('on'); });
