@@ -39,7 +39,8 @@
   .sc{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 2.4s ease-in-out}
   .sc.on{opacity:1}
   .sc.day{filter:brightness(.8) saturate(.92)}
-  .sc video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .sc video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.4s ease-in-out}
+  .sc video.live{opacity:1}
   .sc.kb{animation:kb 16s linear forwards}
   @keyframes kb{from{transform:scale(1)}to{transform:scale(1.06) translate(-1%,-.6%)}}
   .shade{position:absolute;inset:0;pointer-events:none;
@@ -342,6 +343,10 @@
     v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true; v.preload = 'auto';
     v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.src = src;
     v.onerror = function () { if (v.parentNode) v.parentNode.removeChild(v); };     /* no clip: the painting stays */
+    /* 26 Oct: the clip stays hidden over its painting until it is actually PLAYING, then dissolves in.
+       It used to sit on top from the start, so a clip that was a moment late to decode snapped in over
+       the painting mid-fade — and two clips are not frame-for-frame the painting under them. */
+    v.addEventListener('playing', function () { v.classList.add('live'); });
     layer.appendChild(v); layer._v = v;
   }
   SCENES.forEach(function (sc, i) { vid(layers[i], sc[2]); });
@@ -360,7 +365,7 @@
     layers.forEach(function (l, j) {
       var on = j === i; l.classList.toggle('on', on);
       if (on) { l.classList.remove('kb'); void l.offsetWidth; if (!SCENES[j][2]) l.classList.add('kb'); }
-      if (l._v) { try { if (on) { var p = l._v.play(); if (p && p['catch']) p['catch'](function () {}); } else setTimeout(function () { if (!l.classList.contains('on')) l._v.pause(); }, 3000); } catch (e) {} }
+      if (l._v) { try { if (on) { var p = l._v.play(); if (p && p['catch']) p['catch'](function () {}); } else setTimeout(function () { if (!l.classList.contains('on')) { l._v.pause(); l._v.classList.remove('live'); try { l._v.currentTime = 0; } catch (e) {} } }, 3000); } catch (e) {} }
     });
   }
   function film() {
