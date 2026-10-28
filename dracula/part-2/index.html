@@ -377,13 +377,15 @@
     fadeAll(1); playLoop('score-pastoral-warm.mp3', 0.7, 3); playLoop('sea.mp3', 0.14, 4);
     playOnce('gulls.mp3', 0.22, 0.6, 1); playOnce('gulls.mp3', 0.16, 9.5, 0.94); playOnce('gulls.mp3', 0.18, 18.5, 1.06);
     playOnce('thunder.mp3', 0.18, GATHER_AT + 2, 0.78);                       /* far off, as the mares' tails gather */
-    later(STORM_AT - 2, function () { fadeOne('score-pastoral-warm.mp3', 5); });
+    /* 27 Oct: the strings no longer drop out at the storm — they sink under it and are still there, low,
+       when the Bloofer theme rises on the gate, so the two cross over (Ian: the change was too abrupt) */
+    later(STORM_AT + 3, function () { fadeOne('score-pastoral-warm.mp3', 9); });
     playLoop('wind.mp3', 0.2, 3, STORM_AT);
     playOnce('thunder.mp3', 0.75, STORM_AT, 1);                               /* "the tempest broke" */
     playOnce('thunder.mp3', 0.5, STORM_AT + 3.6, 0.9);
     playOnce('thunder.mp3', 0.35, STORM_AT + 6.8, 0.82);
     later(NIGHT_AT - 1, function () { fadeOne('wind.mp3', 6); fadeOne('sea.mp3', 8); });
-    playLoop('score-bloofer.mp3', 0.7, 2, NIGHT_AT);                          /* the minor and the chimes, on the gate */
+    playLoop('score-bloofer.mp3', 0.7, 6, NIGHT_AT - 1);                      /* the minor and the chimes rise in over 6 s, on the gate */
     SCENES.forEach(function (sc, i) { later(sc[0], function () { show(i); }); });
     ROLL.forEach(function (r) { later(r[0], function () { credit(r[1], r[2], r[3]); }); later(r[0] + CREDIT_LEN, function () { $('credit').classList.remove('on'); }); });
     later(TITLE_AT, function () { $('credit').classList.remove('on'); $('title').classList.add('on'); });
