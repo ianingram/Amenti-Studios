@@ -38,7 +38,7 @@
   .sc{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 2.4s ease-in-out}
   .sc.on{opacity:1}
   .sc.day{filter:brightness(.8) saturate(.92)}
-  .sc video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.4s ease-in-out}
+  .sc video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 3.2s ease-in-out}   /* 28 Oct: a slow dissolve from the painting into its motion */
   .sc video.live{opacity:1}
   .sc.kb{animation:kb 16s linear forwards}
   @keyframes kb{from{transform:scale(1)}to{transform:scale(1.06) translate(-1%,-.6%)}}
@@ -238,6 +238,7 @@
     [17,  '', 'Hildegard of Bingen', 'as the Landlady at Bistritz'],
     [25,  '', 'Vlad the Impaler', 'as Count Dracula'],
     [33,  '', 'Elizabeth Báthory<br>Catherine de’ Medici<br>Empress Elisabeth', 'as the Three Women']];
+  var STILL_HOLD = 3.5;   /* 28 Oct, Ian: the painting holds as a still for a moment before it comes alive */
   var CREDIT_LEN = 6.2, TITLE_AT = 45, READY_AT = 51, WOLVES_AT = 26, NIGHT_AT = 21;
 
   var CAST = [['Charles Darwin', 'Jonathan Harker'], ['Vlad the Impaler', 'Count Dracula'],
@@ -325,7 +326,7 @@
     layers.forEach(function (l, j) {
       var on = j === i; l.classList.toggle('on', on);
       if (on) { l.classList.remove('kb'); void l.offsetWidth; if (!SCENES[j][2]) l.classList.add('kb'); }
-      if (l._v) { try { if (on) { var p = l._v.play(); if (p && p['catch']) p['catch'](function () {}); } else setTimeout(function () { if (!l.classList.contains('on')) { l._v.pause(); l._v.classList.remove('live'); try { l._v.currentTime = 0; } catch (e) {} } }, 3000); } catch (e) {} }
+      if (l._v) { try { if (on) { var v = l._v; setTimeout(function () { if (!l.classList.contains('on')) return; var p = v.play(); if (p && p['catch']) p['catch'](function () {}); }, STILL_HOLD * 1000); } else setTimeout(function () { if (!l.classList.contains('on')) { l._v.pause(); l._v.classList.remove('live'); try { l._v.currentTime = 0; } catch (e) {} } }, 3000); } catch (e) {} }
     });
   }
   function film() {
