@@ -215,7 +215,6 @@
 <script src="https://ianingram.github.io/Amenti-Readings/player/sound.js"></script>
 <script src="https://ianingram.github.io/Amenti-Readings/player/art.js"></script>
 <script src="https://ianingram.github.io/Amenti-Readings/player/chronometer.js"></script>
-<script src="https://ianingram.github.io/Amenti-Readings/player/notes.js" data-book="book1"></script>
 <script>
 (function () {
   'use strict';
@@ -449,6 +448,12 @@
   $('end-again').onclick = function () {
     fadeAll(2); $('end').classList.remove('on'); window.scrollTo(0, 0); audioCtx(); film();
   };
+  /* 30 Oct, Ian: watch Book I in stages — ?ch=2&cue=6 plays from that cue (no title film) */
+  var qs = new URLSearchParams(location.search), qch = Number(qs.get('ch')), qcue = Number(qs.get('cue')) || 1;
+  if (qch >= 1 && qch <= CHAPTERS.length) {
+    $('start').querySelector('.btn').textContent = 'Play Chapter ' + CHAPTERS[qch - 1][0] + ' from cue ' + qcue + ' · with sound';
+    $('play').onclick = function () { audioCtx(); if (R && R.unlock) R.unlock(); $('start').classList.add('gone'); startAt(qch - 1, qcue); };
+  }
   if (/[?&]end\b/.test(location.search)) {
     $('start').querySelector('.btn').textContent = 'Play the ending · with sound';
     $('play').onclick = function () { audioCtx(); ending(); };
