@@ -225,21 +225,25 @@
   var $ = function (id) { return document.getElementById(id); };
 
   /* THE FILM: [start s, still, moving picture or null] */
-  var SCENES = [
-    [0,  ART + 'ch01-d01-2.jpg', null],
-    [8,  ART + 'ch01-d12-2.jpg', null],
-    [16, ART + 'ch01-d15-3.jpg', ART + 'ch01-d15-3.mp4'],
-    [24, ART + 'ch01-n01-1.jpg', null],   /* 27 Oct: the drifting-mist loop taken off (Ian: repetitive) — the painting drifts instead */
-    [32, ART + 'ch01-n08-2.jpg', ART + 'ch01-n08-2.mp4']];   /* 29 Oct, Ian: the wolf scene dropped; the castle comes at 32 and holds under the title */
+  var SCENES = [   /* 31 Oct, Ian: a minute long — the journey by day in the major, turning minor at 40 s for the night */
+    [0,  ART + 'ch01-d01-2.jpg', null],                         /* Buda-Pesth, the Danube bridge */
+    [7,  ART + 'ch01-d02-3.jpg', null],                         /* Harker at the carriage window */
+    [14, ART + 'ch01-d04-3.jpg', null],                         /* a town on its hill above the river */
+    [21, ART + 'ch01-d07-3.jpg', null],                         /* the villages, toward Bistritz */
+    [28, ART + 'ch01-d12-2.jpg', null],                         /* the Carpathians */
+    [35, ART + 'ch01-d15-3.jpg', ART + 'ch01-d15-3.mp4'],       /* sunset on the pass */
+    [42, ART + 'ch01-n01-1.jpg', null],                         /* night: the coach */
+    [49, ART + 'ch01-n08-2.jpg', ART + 'ch01-n08-2.mp4']];      /* the castle, held under the title */
   /* [start s, top line, name, role] — the Part I company in order of appearance */
   var ROLL = [
     [1.5, 'Amenti Studios', '', 'presents'],
-    [9,   '', 'Charles Darwin', 'as Jonathan Harker'],
-    [17,  '', 'Hildegard of Bingen', 'as the Landlady at Bistritz'],
-    [25,  '', 'Vlad the Impaler', 'as Count Dracula'],
-    [33,  '', 'Elizabeth Báthory<br>Catherine de’ Medici<br>Empress Elisabeth', 'as the Three Women']];
+    [8,   '', 'Charles Darwin', 'as Jonathan Harker'],
+    [22,  '', 'Hildegard of Bingen', 'as the Landlady at Bistritz'],
+    [29,  'after the novel by', 'Bram Stoker', ''],
+    [43,  '', 'Vlad the Impaler', 'as Count Dracula'],
+    [50,  '', 'Elizabeth Báthory<br>Catherine de’ Medici<br>Empress Elisabeth', 'as the Three Women']];
   var STILL_HOLD = 3.5;   /* 28 Oct, Ian: the painting holds as a still for a moment before it comes alive */
-  var CREDIT_LEN = 6.2, TITLE_AT = 45, READY_AT = 51, WOLVES_AT = 26, NIGHT_AT = 21;
+  var CREDIT_LEN = 6.2, TITLE_AT = 56, READY_AT = 62, WOLVES_AT = 45, NIGHT_AT = 38;   /* the minor arrives by 40 s */
 
   var CAST = [['Charles Darwin', 'Jonathan Harker'], ['Vlad the Impaler', 'Count Dracula'],
               ['Hildegard of Bingen', 'The Landlady at Bistritz'], ['Elizabeth Báthory', 'The First Dark Woman'],
@@ -294,7 +298,7 @@
 
   /* ── the film ── */
   var layers = SCENES.map(function (sc) {
-    var d = document.createElement('div'); d.className = 'sc' + (sc[0] < 24 ? ' day' : ''); d.style.backgroundImage = 'url("' + sc[1] + '")';
+    var d = document.createElement('div'); d.className = 'sc' + (sc[0] < 42 ? ' day' : ''); d.style.backgroundImage = 'url("' + sc[1] + '")';
     $('scenes').appendChild(d); return d;
   });
   layers[0].classList.add('on');
@@ -335,7 +339,7 @@
     $('title').classList.remove('on', 'ready'); $('credit').classList.remove('on');
     /* the journey by day in the major (pastoral warm, F major); dread comes in with the night */
     fadeAll(1); playLoop('score-pastoral-warm.mp3', 0.7, 3);
-    playLoop('score-dread.mp3', 0.7, 6, NIGHT_AT); later(NIGHT_AT, function () { fadeOne('score-pastoral-warm.mp3', 6); });
+    playLoop('score-dread.mp3', 0.7, 4, NIGHT_AT); later(NIGHT_AT + 1, function () { fadeOne('score-pastoral-warm.mp3', 5); });
     playLoop('wolves.mp3', 0.16, 6, WOLVES_AT);
     SCENES.forEach(function (sc, i) { later(sc[0], function () { show(i); }); });
     ROLL.forEach(function (r) { later(r[0], function () { credit(r[1], r[2], r[3]); }); later(r[0] + CREDIT_LEN, function () { $('credit').classList.remove('on'); }); });
