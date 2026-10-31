@@ -325,7 +325,7 @@
   function show(i) {
     layers.forEach(function (l, j) {
       var on = j === i; l.classList.toggle('on', on);
-      if (on) { l.classList.remove('kb'); void l.offsetWidth; if (!SCENES[j][2]) l.classList.add('kb'); }
+      if (on) { l.classList.remove('kb'); void l.offsetWidth; if (!SCENES[j][2] && j > 1) l.classList.add('kb'); }   /* 31 Oct, Ian: the first two paintings hold perfectly still */
       if (l._v) { try { if (on) { var v = l._v; setTimeout(function () { if (!l.classList.contains('on')) return; var p = v.play(); if (p && p['catch']) p['catch'](function () {}); }, STILL_HOLD * 1000); } else setTimeout(function () { if (!l.classList.contains('on')) { l._v.pause(); l._v.classList.remove('live'); try { l._v.currentTime = 0; } catch (e) {} } }, 3000); } catch (e) {} }
     });
   }
