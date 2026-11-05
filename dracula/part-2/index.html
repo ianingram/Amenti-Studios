@@ -502,6 +502,12 @@
   $('end-again').onclick = function () {
     fadeAll(2); $('end').classList.remove('on'); window.scrollTo(0, 0); audioCtx(); film();
   };
+  /* 4 Nov, Ian: watch Book II in stages, as Book I — ?ch=9&cue=12 plays chapter IX from cue 12 (no title film) */
+  var qs = new URLSearchParams(location.search), qch = Number(qs.get('ch')), qcue = Number(qs.get('cue')) || 1, qk = qch - 5;
+  if (qk >= 0 && qk < CHAPTERS.length) {
+    $('start').querySelector('.btn').textContent = 'Play Chapter ' + CHAPTERS[qk][0] + ' from cue ' + qcue + ' · with sound';
+    $('play').onclick = function () { audioCtx(); if (R && R.unlock) R.unlock(); $('start').classList.add('gone'); startAt(qk, qcue); };
+  }
   if (/[?&]end\b/.test(location.search)) {
     $('start').querySelector('.btn').textContent = 'Play the ending · with sound';
     $('play').onclick = function () { audioCtx(); ending(); };
