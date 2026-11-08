@@ -94,7 +94,8 @@ const tp=flow(T,()=>{
     const fl=document.createElement('div');fl.className='flow';fl.style.top='3.4in';p.appendChild(fl);foot(p);return {p,fl}}
   const p=page();const fl=document.createElement('div');fl.className='flow';p.appendChild(fl);foot(p,'Dracula · Book I');
   const r=page('night');foot(r);pairs.push({p,r});return {p,fl}});
-for(const t of tp){const pr=pairs.find(x=>x.p===t.p);if(!pr)continue;const im=pick(t.cues);pr.r.insertAdjacentHTML('afterbegin',im?'<div class="art" style="background-image:url(art/'+im+')"></div>':'');pr.r.dataset.im=im||''}
+(D.picks||[]).forEach(x=>x&&used.add(x));let pi=0;
+for(const t of tp){const pr=pairs.find(x=>x.p===t.p);if(!pr)continue;const im=((D.picks||[])[pi++])||pick(t.cues);pr.r.insertAdjacentHTML('afterbegin',im?'<div class="art" style="background-image:url(art/'+im+')"></div>':'');pr.r.dataset.im=im||''}
 document.title='done';
 })();
 </script></body></html>
