@@ -79,23 +79,28 @@ let p=page('night');p.innerHTML='<img src="title-flat.jpg" style="position:absol
 // foreword
 const F=D.foreword;let fpages=flow(F,()=>{const p=page();const fl=document.createElement('div');fl.className='flow';p.appendChild(fl);foot(p,'Keys to this Blood');return {p,fl}});
 {const c=page('night');c.innerHTML='<img src="credits-flat.jpg" style="position:absolute;inset:0;width:100%;height:100%">';}
-// chapter opener must start on a left page (card), so next page number even
-if(pn%2===0){const b=page();b.innerHTML='<div class="ttl"><img src="fw-ornament-4-flat.jpg" style="width:5in"></div>'} // blank right? (pn even means last was left) -> add blank right so card lands left
-p=page('night');p.innerHTML='<div class="art" style="background-image:url(ad/part-1/cards/book1-ch1.jpg)"></div>';
-// opener right page + chapter text
-const T=D.paras.map((x,i)=>{const b=P(x.t,i===0?'first':'');b.cue=x.cue;if(i===0){const m=x.t.match(/^(.*?—)(\s*)(\S)([\s\S]*)$/);if(m){b.html='<p class="first"><span class="k" style="display:block;font-size:8pt;margin-bottom:.06in">'+m[1].replace(/—$/,'').replace(/\.\s*$/,'')+'</span><span class="dc">'+m[3]+'</span>'+m[4]+'</p>'}else{b.html='<p class="first"><span class="dc">'+x.t[0]+'</span>'+x.t.slice(1)+'</p>'};b.words=null}return b});
-T[0].words=null;
-let first=true;const used=new Set();const pairs=[];
-function pick(cues){const c=cues.length?cues[Math.floor(cues.length/2)]:1;const keys=Object.keys(D.pics).map(Number).sort((a,b)=>a-b);
-  let best=null;for(const k of keys){if(k<=c)best=k}
-  for(let k=keys.indexOf(best);k<keys.length;k++){for(const im of D.pics[keys[k]]){if(!used.has(im)){used.add(im);return im}}}return null}
-const tp=flow(T,()=>{
-  if(first){first=false;const p=page();p.innerHTML='<div class="opener"><div class="k">Chapter</div><div class="num">I</div><div class="k" style="letter-spacing:.3em">Jonathan Harker’s Journal</div><div style="font:italic 10pt G;color:#7a6a55;margin-top:.1in">(Kept in shorthand.)</div></div><div class="qr"><img src="qr1.png">Play this chapter</div>';
+const used=new Set();
+function P2(t){return {html:'<p>'+t+'</p>',words:t.split(' ')}}
+for(const CH of D.chapters){
+ // chapter card must land on a left page
+ if(pn%2===0){const b=page();b.innerHTML='<div class="ttl"><img src="fw-ornament-4-flat.jpg" style="width:5in"></div>'}
+ let p=page('night');p.innerHTML='<div class="art" style="background-image:url(ad/part-1/cards/'+CH.card+')"></div>';
+ const T=CH.paras.map((x,i)=>{const b=P2(x.t);b.cue=x.cue;if(i===0){const m=x.t.match(/^(\d{1,2} [A-Z][a-z]+\.?[^—]{0,40}?)\s*—\s*(\S)([\s\S]*)$/);
+   if(m){b.html='<p class="first"><span class="k" style="display:block;font-size:8pt;margin-bottom:.06in">'+m[1].replace(/\.\s*$/,'')+'</span><span class="dc">'+m[2]+'</span>'+m[3]+'</p>'}
+   else{b.html='<p class="first"><span class="dc">'+x.t[0]+'</span>'+x.t.slice(1)+'</p>'};b.words=null}return b});
+ let first=true;const pairs=[];
+ function pick(cues){const c=cues.length?cues[Math.floor(cues.length/2)]:1;const keys=Object.keys(CH.pics).map(Number).sort((a,b)=>a-b);
+  let best=keys[0];for(const k of keys){if(k<=c)best=k}
+  for(let k=keys.indexOf(best);k<keys.length;k++){for(const im of CH.pics[keys[k]]){if(!used.has(im)){used.add(im);return im}}}return null}
+ const tp=flow(T,()=>{
+  if(first){first=false;const p=page();p.innerHTML='<div class="opener"><div class="k">Chapter</div><div class="num">'+CH.num+'</div><div class="k" style="letter-spacing:.3em">'+CH.sub+'</div>'+(CH.note?'<div style="font:italic 10pt G;color:#7a6a55;margin-top:.1in">'+CH.note+'</div>':'')+'</div><div class="qr"><img src="'+CH.qr+'">Play this chapter</div>';
     const fl=document.createElement('div');fl.className='flow';fl.style.top='3.4in';p.appendChild(fl);foot(p);return {p,fl}}
-  const p=page();const fl=document.createElement('div');fl.className='flow';p.appendChild(fl);foot(p,'Dracula · Book I');
+  const p=page();const fl=document.createElement('div');fl.className='flow';p.appendChild(fl);foot(p,'Dracula · Book I · Chapter '+CH.num);
   const r=page('night');foot(r);pairs.push({p,r});return {p,fl}});
-(D.picks||[]).forEach(x=>x&&used.add(x));let pi=0;
-for(const t of tp){const pr=pairs.find(x=>x.p===t.p);if(!pr)continue;const im=((D.picks||[])[pi++])||pick(t.cues);pr.r.insertAdjacentHTML('afterbegin',im?'<div class="art" style="background-image:url(art/'+im+')"></div>':'');pr.r.dataset.im=im||''}
+ (CH.picks||[]).forEach(x=>x&&used.add(x));let pi=0;
+ for(const t of tp){const pr=pairs.find(x=>x.p===t.p);if(!pr)continue;const im=((CH.picks||[])[pi++])||pick(t.cues);pr.r.insertAdjacentHTML('afterbegin',im?'<div class="art" style="background-image:url(art/'+im+')"></div>':'');pr.r.dataset.im=im||''}
+}
+[...book.children].forEach((pg,i)=>{const f=pg.querySelector('.fo');if(f)f.textContent=i+1});
 document.title='done';
 })();
 </script></body></html>
