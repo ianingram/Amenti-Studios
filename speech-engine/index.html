@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Amenti Speech Engine</title>
+<meta name="description" content="An engineering brief: how the Amenti Speech Engine casts, composes, speaks and archives every voice in the Library of Legends and in Amenti Studios.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,400&family=EB+Garamond:ital@0;1&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Amenti Display';font-weight:400;font-display:swap;src:url('../fonts/amenti-display-400.woff2') format('woff2')}
+:root{--night:#0d1220;--panel:#141a2e;--line:#2a3150;--ink:#e9e3d6;--dim:#a49d8e;--gold:#e0a53c;--red:#c2343f;
+--serif:'EB Garamond',Georgia,serif;--disp:'Cormorant Garamond',Georgia,serif;--mono:'IBM Plex Mono',ui-monospace,monospace}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--night);color:var(--ink);font:18px/1.62 var(--serif)}
+a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(224,165,60,.35)}a:hover{border-color:var(--gold)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+header{padding:72px 0 28px;text-align:center}
+.k{font:12px var(--mono);letter-spacing:.42em;text-transform:uppercase;color:var(--gold)}
+h1{font:300 clamp(40px,8vw,68px)/1.02 var(--disp);letter-spacing:.03em;margin:.35em 0 .2em}
+.lede{font:italic 22px/1.45 var(--disp);color:var(--dim);max-width:600px;margin:0 auto}
+svg.wave{display:block;width:100%;height:auto;margin:34px 0 8px}
+h2{font:300 34px/1.15 var(--disp);letter-spacing:.03em;margin:64px 0 10px;display:flex;align-items:baseline;gap:14px}
+h2 .n{font:13px var(--mono);color:var(--red);letter-spacing:.2em}
+p{margin:0 0 1em}
+.pull{border-left:2px solid var(--red);padding:2px 0 2px 18px;margin:26px 0;font:italic 22px/1.4 var(--disp);color:#f3ecdc}
+.code{font:14px/1.6 var(--mono);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 18px;overflow-x:auto;white-space:pre;color:#d9d2c2;margin:18px 0 22px}
+.code b{color:var(--gold);font-weight:400}.code i{color:var(--dim);font-style:normal}
+table{width:100%;border-collapse:collapse;font-size:16px;margin:16px 0 26px}
+th{font:11px var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--gold);text-align:left;padding:8px 8px;border-bottom:1px solid var(--line)}
+td{padding:8px 8px;border-bottom:1px solid rgba(42,49,80,.6);vertical-align:top}
+td.m{font:13px var(--mono);color:var(--dim)}
+.tw{overflow-x:auto}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:22px 0 28px}
+.stats div{background:var(--panel);padding:16px 14px}
+.stats b{display:block;font:300 34px/1 var(--disp);color:var(--gold)}
+.stats span{display:block;margin-top:8px;line-height:1.5;font:11px/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:18px 0 24px;font:13px var(--mono)}
+.flow span{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:7px 10px}
+.flow i{color:var(--red);font-style:normal}
+footer{margin:80px 0 0;padding:34px 0 60px;border-top:1px solid var(--line);text-align:center;color:var(--dim);font-size:15px}
+.cross{display:block;margin:0 auto 14px}
+@media (max-width:560px){body{font-size:17px}h2{font-size:28px}.code{font-size:12.5px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="k">Amenti Studios · Engineering Brief</div>
+  <h1>The Amenti Speech Engine</h1>
+  <p class="lede">One engine gives voice to every figure in the Library of Legends. It holds a conversation in the Amenti interface, and it reads <i>Dracula</i> aloud with a full cast.</p>
+  <svg class="wave" viewBox="0 0 1200 160" aria-hidden="true" id="wave"></svg>
+</header>
+
+<div class="stats">
+  <div><b>2,814</b><span>Spoken cues in Dracula</span></div>
+  <div><b>160,716</b><span>Words voiced</span></div>
+  <div><b>18</b><span>Roles cast from the Library</span></div>
+  <div><b>1</b><span>Engine for all of it</span></div>
+</div>
+
+<h2><span class="n">01</span>One engine, every voice</h2>
+<p>Most audiobooks have one reader. A few have a cast of actors. Amenti uses a cast of historical figures. Each figure in the Library of Legends has a voice of their own, and that same voice answers when a reader talks to them in the Amenti interface.</p>
+<p>Both jobs use the same engine. The voice that reads Harker's journal is the voice you can question afterwards. That rules out per-book voice files and hand-tuned recordings. Each voice has to be described once, as data, and give the same result every time.</p>
+
+<h2><span class="n">02</span>A voice from three columns</h2>
+<p>Every figure is a row in the Library's ledger, and three columns of that row make the voice:</p>
+<div class="tw"><table>
+<tr><th>Column</th><th>What it decides</th></tr>
+<tr><td>Gender</td><td>The base voice, a deep male voice or a clear female voice</td></tr>
+<tr><td>Dialect</td><td>The accent: <i>"Dutch, curious and plain"</i> or <i>"Texas Hill Country, overbearing and earthy"</i></td></tr>
+<tr><td>Voice</td><td>The manner: <i>"ironic and probing"</i>, <i>"haunted and hollow"</i></td></tr>
+</table></div>
+<p>The engine combines these into a short spoken direction and sends it with the text. Abraham Lincoln and Julius Caesar share a base voice. Their dialect and manner make them two different men. That's how the system is meant to work.</p>
+<div class="code"><i>// composed for Van Helsing, as cast</i>
+voice   <b>male base</b>
+style   Read clearly, in a measured, dignified tone.
+        Accent and dialect: <b>Dutch, curious and plain</b>.
+        Voice character: <b>ironic and probing</b>.
+        Speak at a brisk, lively, natural pace.</div>
+
+<h2><span class="n">03</span>Casting Dracula</h2>
+<p>A role in a book is played by a figure from the Library, not by a voice preset. The casting is part of the reading. A Victorian naturalist far from home reads Jonathan Harker's journal. A Wallachian prince speaks for the Count. Stoker narrates his own novel.</p>
+<div class="tw"><table>
+<tr><th>Role</th><th>Played by</th><th>Voice</th></tr>
+<tr><td>Narrator</td><td>Bram Stoker</td><td class="m">Anglo-Irish, gothic · haunted</td></tr>
+<tr><td>Count Dracula</td><td>Vlad the Impaler</td><td class="m">Romanian, cruel and grim</td></tr>
+<tr><td>Jonathan Harker</td><td>Charles Darwin</td><td class="m">English, careful and mild</td></tr>
+<tr><td>Mina Murray</td><td>Agatha Christie</td><td class="m">English, sharp and ingenious</td></tr>
+<tr><td>Lucy Westenra</td><td>Mary Shelley</td><td class="m">English, gothic and visionary</td></tr>
+<tr><td>Van Helsing</td><td>Antony van Leeuwenhoek</td><td class="m">Dutch, curious and plain</td></tr>
+<tr><td>Dr. Seward</td><td>William Harvey</td><td class="m">English, careful and probing</td></tr>
+<tr><td>Arthur Holmwood</td><td>J.R.R. Tolkien</td><td class="m">English, mythic and warm</td></tr>
+<tr><td>Quincey Morris</td><td>Lyndon B. Johnson</td><td class="m">Texas Hill Country, earthy</td></tr>
+<tr><td>Renfield</td><td>Jack the Ripper</td><td class="m">Victorian English, shadowed</td></tr>
+<tr><td>Captain of the Demeter</td><td>Vitus Bering</td><td class="m">Danish-Russian, hardy</td></tr>
+<tr><td>Mr. Swales</td><td>James Cook</td><td class="m">North Yorkshire, seafaring</td></tr>
+<tr><td>The three women</td><td>Empress Elisabeth, Elizabeth Báthory, Catherine de' Medici</td><td class="m">Austrian · Hungarian · Florentine</td></tr>
+</table></div>
+
+<h2><span class="n">04</span>The cue sheet</h2>
+<p>Before anything is spoken, each chapter is cut into a cue sheet. Each line of Stoker's text goes to the character who speaks it. "she said" stays with the narrator, and the quoted words go to Lucy. Every attribution is checked by hand.</p>
+<div class="code">{ "n": 95,  "role": "Lucy Westenra", "text": "“Now,”" }
+{ "n": 96,  "role": "Dr Seward",     "text": "she said," }
+{ "n": 97,  "role": "Lucy Westenra", "text": "“you must stay here. I shall leave this door open…”" }</div>
+<p>The same cue numbers place the paintings, sounds and music. A painting enters on cue 97, at a chosen phrase, and the sound of a telegraph lands on the word it belongs to. The voice is what everything else is timed to.</p>
+<div class="pull">Not one word of Stoker's text is rewritten. The engine speaks the novel exactly as it was published in 1897.</div>
+
+<h2><span class="n">05</span>Two registers</h2>
+<p>The engine speaks in two ways, and they are kept apart on purpose.</p>
+<div class="tw"><table>
+<tr><th></th><th>Recital</th><th>Conversation</th></tr>
+<tr><td>Where</td><td>Books, reading rooms, the podcast</td><td>The Amenti terminal</td></tr>
+<tr><td>Text</td><td>Fixed: the author's words</td><td>New every turn</td></tr>
+<tr><td>Tone</td><td>Locked once cast</td><td>Changes with the moment: warm, cool, sharp, grave, danger, humour</td></tr>
+<tr><td>Archive</td><td>Rendered once, kept for good</td><td>Never archived</td></tr>
+</table></div>
+<p>A recital can be stored because its words never change. A conversation can be expressive because nothing is stored. Mixing the two would lose both.</p>
+
+<h2><span class="n">06</span>The archive</h2>
+<p>Recital text is split into measures of up to 320 characters at sentence boundaries. Each measure is rendered once and filed under a fingerprint of everything that shaped it:</p>
+<div class="code">key = <b>sha256</b>( model + voice + style + text )</div>
+<p>The second time anyone plays that line, it comes from the archive and is not rendered again. Because the key covers the whole recipe, the archive can't serve a stale voice. Change the accent and the key changes with it.</p>
+<p>The key also brings a rule. The measure boundaries and the style wording are part of every key, so they are frozen. A fixed test passage is sent through the engine every six hours to check that they haven't drifted.</p>
+
+<h2><span class="n">07</span>Covering the wait</h2>
+<p>Measured on the live service, a fresh render takes about six seconds and an archived one about two:</p>
+<div class="stats">
+  <div><b>6.1 s</b><span>Median fresh render</span></div>
+  <div><b>1.9 s</b><span>Median from the archive</span></div>
+  <div><b>3.2×</b><span>Archive speed-up</span></div>
+</div>
+<p>Six seconds of silence after pressing a button feels broken. In conversation, the engine opens with a short first phrase to start sooner. The interface fills the gap the way a telephone does: an announcement, a tone, then a ring that stops on the figure's first sound.</p>
+
+<h2><span class="n">08</span>Listening</h2>
+<p>The engine listens too. When you talk with a figure, your voice is captured as 16 kHz mono speech. It decides you've finished after 1.2 seconds of silence, and it keeps the half-second before you began so your first syllable isn't lost. The microphone closes itself after 45 seconds with no speech, and no turn can run past five minutes.</p>
+<p>It also judges the room before it transcribes. If a dog barks, the figure may notice it. Words overheard from another room are never written down.</p>
+<div class="pull">Notice, do not record.</div>
+
+<h2><span class="n">09</span>Underneath</h2>
+<div class="flow"><span>Library ledger</span><i>→</i><span>Voice composed</span><i>→</i><span>Measures of 320</span><i>→</i><span>Archive lookup</span><i>→</i><span>Speech model</span><i>→</i><span>Archive</span><i>→</i><span>Your speaker</span></div>
+<p>The speech itself comes from Google's Gemini text-to-speech model. It runs through a Cloudflare Worker, and rendered audio is kept in Cloudflare R2 storage. The composing, measuring, archiving, casting and timing are Amenti's own, and they live in one place: one chunker, one style composition, one archive.</p>
+
+<h2><span class="n">10</span>Try it</h2>
+<p><a href="https://ianingram.github.io/Amenti.live/Page1.html?char=bram-stoker">Talk with Bram Stoker</a>. Ask him why he wrote <i>Dracula</i>, and he answers in the voice that narrates it.<br>
+<a href="https://ianingram.github.io/Amenti.live/Page1.html#codex">Browse the Library of Legends</a>, the full roster the cast is drawn from.<br>
+<a href="../dracula/">Play Dracula</a>, read by its cast and painted scene by scene.</p>
+
+<footer>
+  <svg class="cross" width="26" height="46" viewBox="0 0 26 46" aria-hidden="true"><path d="M13 2v42M3 14h20" stroke="#c2343f" stroke-width="2"/><circle cx="13" cy="14" r="5" fill="none" stroke="#c2343f" stroke-width="1.5"/></svg>
+  Amenti Studios · a production of Ingram Manor LLC<br>Production, direction and art direction by Ian Ingram
+</footer>
+</div>
+<script>
+(function(){const s=document.getElementById('wave');const W=1200,H=160,c=H/2;let out='';
+const env=x=>{let e=0;[[.12,.025,.25],[.18,.03,.45],[.25,.025,.35],[.33,.035,.7],[.40,.03,.55],[.47,.03,.9],[.53,.03,.95],[.60,.035,.6],[.67,.03,.75],[.74,.03,.45],[.81,.025,.35],[.88,.025,.2]].forEach(([m,w,a])=>e+=a*Math.exp(-(((x-m)/w)**2)));return Math.min(e,1)*Math.sqrt(Math.sin(Math.PI*x))};
+let r=7;const rnd=()=>(r=(r*9301+49297)%233280)/233280;
+for(let k=0;k<150;k++){const t=(k+.5)/150,x=t*W,h=Math.max(env(t)*(.55+.45*rnd())*H*.42,1.5),m=Math.exp(-(((t-.5)/.12)**2));
+const col=`rgb(${Math.round(224*(1-m)+194*m)},${Math.round(165*(1-m)+52*m)},${Math.round(60*(1-m)+63*m)})`;
+out+=`<line x1="${x}" x2="${x}" y1="${c-h}" y2="${c+h}" stroke="${col}" stroke-width="2.4" stroke-linecap="round"/>`}
+[[46,0,'#e9e3d6',1,.5,.55],[31,1.3,'#c2343f',.9,.35,.9]].forEach(([f,ph,col,w,a,o])=>{let d='';for(let i=0;i<=600;i++){const x=i/600;const y=c+Math.sin(2*Math.PI*f*x+ph)*env(x)*H*a*Math.sin(2*Math.PI*7*x+ph);d+=(i?'L':'M')+(x*W).toFixed(1)+' '+y.toFixed(1)}out+=`<path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" opacity="${o}"/>`});
+s.innerHTML=out})();
+</script>
+</body>
+</html>
