@@ -75,7 +75,7 @@ function flow(blocks,mk){ // blocks: {html, kind, cue}
 function P(t,cls){const w=t.split(' ');return {html:'<p'+(cls?' class="'+cls+'"':'')+'>'+t+'</p>',words:w}}
 // front matter
 let p=page();p.innerHTML='<div class="ttl"><div class="cross"><i></i></div><div class="k">Dracula</div></div>';
-p=page('night');p.innerHTML='<div class="bleed" style="background-image:url(art/ch02-c-court-1.jpg)"></div>';
+p=page();
 p=page();p.innerHTML='<div class="ttl"><div class="k">Bram Stoker</div><div class="big">DRACULA</div><div class="rule"></div><div class="k">Book I · The Castle</div><div style="height:1.2in"></div><div class="k" style="color:#7a6a55">Amenti Studios</div></div>';
 p=page();p.innerHTML='<div style="position:absolute;left:.75in;bottom:.8in;width:4.4in;font:9pt/1.5 G;color:#5a4c3c"><p><i>Dracula</i> by Bram Stoker, first published 1897.</p><p>This edition: production, direction and art direction by Ian Ingram. Voices from the Library of Legends, spoken by the Amenti Speech Engine.</p><p>An Amenti Studios production. © 2026 Ingram Manor LLC.</p><p style="color:#a8823f">ISBN to come</p></div>';
 // foreword
