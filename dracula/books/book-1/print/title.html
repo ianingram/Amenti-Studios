@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:G;src:url(node_modules/@fontsource/eb-garamond/files/eb-garamond-latin-400-normal.woff2)}
+@font-face{font-family:G;font-style:italic;src:url(node_modules/@fontsource/eb-garamond/files/eb-garamond-latin-400-italic.woff2)}
+@font-face{font-family:G;font-weight:600;src:url(node_modules/@fontsource/eb-garamond/files/eb-garamond-latin-500-normal.woff2)}
+@font-face{font-family:C;src:url(node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-300-normal.woff2)}
+@font-face{font-family:M;src:url(node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2)}
+@page{size:11in 8.5in;margin:0}
+:root{--ivory:#f5eee0;--ink:#2a2018;--gold:#a8823f;--red:#8a1020;--night:#141a2e}
+*{box-sizing:border-box}
+html,body{margin:0;background:#555}
+.pg{width:11in;height:8.5in;position:relative;overflow:hidden;background:var(--ivory);color:var(--ink);page-break-after:always;font:11.2pt/1.42 G;margin:0 auto}
+.night{background:var(--night);color:#e9e1d2}
+.flow{position:absolute;top:.95in;bottom:.9in;column-count:2;column-gap:.42in;column-fill:auto;overflow:hidden;hyphens:auto;text-align:justify}
+.L .flow{left:.75in;right:.95in}.R .flow{left:.95in;right:.75in}
+.flow p{margin:0;text-indent:1.3em}
+.flow p.first{text-indent:0}
+.flow p.cont{text-indent:0}
+.flow h2{font:300 22pt/1.1 C;letter-spacing:.04em;margin:.18in 0 .1in;text-align:left;column-span:none}
+.flow h3{font:italic 13pt G;margin:.12in 0 .04in}
+.flow img.inl{width:100%;display:block;margin:.08in 0 .1in;border-radius:1px}
+.flow img.orn{width:100%;display:block;margin:.12in 0 .04in}
+.flow ul{margin:.04in 0 .06in;padding-left:1.1em;text-align:left}
+.flow table{width:100%;border-collapse:collapse;font-size:10pt;margin:.06in 0 .1in;text-align:left}
+.flow td{padding:2px 0;border-bottom:1px solid #d9ccb3}.flow td:first-child{font-style:italic;padding-right:.15in}
+.rh{position:absolute;top:.48in;font:8pt M;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
+.L .rh{left:.75in}.R .rh{right:.75in}
+.fo{position:absolute;bottom:.45in;font:9pt G;color:#7a6a55}.L .fo{left:.75in}.R .fo{right:.75in}
+.night .fo{color:#8d8aa0}
+.art{position:absolute;left:0;right:0;top:.95in;height:6.19in;background:center/cover no-repeat}
+.cap{position:absolute;left:0;right:0;bottom:.5in;text-align:center;font:italic 11pt G;color:#b9ad95;padding:0 1.4in}
+.bleed{position:absolute;inset:0;background:center/cover no-repeat}
+.ttl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.k{font:8.5pt M;letter-spacing:.42em;text-transform:uppercase;color:var(--gold)}
+.big{font:300 76pt/1 C;letter-spacing:.12em;margin:.18in 0}
+.rule{width:.6in;height:1px;background:var(--gold);margin:.2in auto}
+.cross{width:.32in;height:.5in;position:relative;margin:0 auto .2in}
+.cross:before{content:"";position:absolute;left:50%;top:0;width:2px;height:100%;background:var(--red);transform:translateX(-50%)}
+.cross:after{content:"";position:absolute;left:0;top:28%;width:100%;height:2px;background:var(--red)}
+.cross i{position:absolute;left:50%;top:28%;width:.15in;height:.15in;border:1.6px solid var(--red);border-radius:50%;transform:translate(-50%,-50%)}
+.opener{position:absolute;left:.95in;right:.75in;top:.75in;height:2.55in}
+.opener .num{font:300 64pt/1 C;margin:.06in 0}
+.dc{float:left;font:300 52pt/0.8 C;margin:.06in .08in 0 0;color:var(--red)}
+.qr{position:absolute;right:.75in;top:.8in;width:1.05in;text-align:center;font:7pt M;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+.qr img{width:1.05in;height:1.05in;display:block;margin-bottom:.05in}
+</style></head><body style="margin:0;background:#000"><div class="pg night R" style="margin:0"><div class="bleed" style="background-image:url(title-sea.png)"></div><div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,0) 45%,rgba(8,10,16,.55) 100%)"></div><div style="position:absolute;right:.4in;top:.75in;width:4.9in;text-align:center;color:#efe7d8"><div class="cross"><i></i></div><div class="k">Bram Stoker</div><div class="big" style="color:#f1e9da;font-size:60pt;letter-spacing:.1em">DRACULA</div><div class="rule"></div><div class="k">Book I · The Castle</div><div style="height:.35in"></div><div class="k" style="color:#9a927f">Amenti Studios</div></div><div style="position:absolute;right:.7in;bottom:.4in;width:5.2in;text-align:right;font:8pt/1.55 G;color:#b3ab98;text-shadow:0 0 6px #000,0 0 2px #000"><i>Dracula</i> by Bram Stoker, first published 1897 · Production, direction and art direction by Ian Ingram<br>Voices from the Library of Legends, spoken by the Amenti Speech Engine · © 2026 Ingram Manor LLC · ISBN to come</div></div><script>document.fonts.ready.then(()=>document.title='done')</script></body></html>
