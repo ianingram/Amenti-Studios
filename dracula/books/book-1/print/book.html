@@ -61,7 +61,7 @@ function flow(blocks,mk){ // blocks: {html, kind, cue}
     while(q.length){
       const b=q[0];const el=document.createElement('div');el.innerHTML=b.html;const node=el.firstElementChild;fl.appendChild(node);
       if(!over(fl)){q.shift();if(b.cue)cues.push(b.cue);continue}
-      if(node.tagName==='P'){ // split by words
+      if(node.tagName==='P'&&b.words){ // split by words
         const words=b.words;let lo=0,hi=words.length;
         while(lo<hi){const m=(lo+hi+1)>>1;node.innerHTML=words.slice(0,m).join(' ');if(over(fl))hi=m-1;else lo=m}
         if(lo>3){node.innerHTML=words.slice(0,lo).join(' ');if(b.cue)cues.push(b.cue);
