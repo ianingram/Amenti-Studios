@@ -78,7 +78,7 @@ let p=page('night');p.innerHTML='<img src="title-flat.jpg" style="position:absol
 // foreword
 const F=D.foreword;let fpages=flow(F,()=>{const p=page();const fl=document.createElement('div');fl.className='flow';p.appendChild(fl);foot(p,'Keys to this Blood');return {p,fl}});
 // chapter opener must start on a left page (card), so next page number even
-if(pn%2===0){const b=page();b.innerHTML='<div class="ttl"><img src="fw-ornament-4.png" style="width:5in"></div>'} // blank right? (pn even means last was left) -> add blank right so card lands left
+if(pn%2===0){const b=page();b.innerHTML='<div class="ttl"><img src="fw-ornament-4-flat.jpg" style="width:5in"></div>'} // blank right? (pn even means last was left) -> add blank right so card lands left
 p=page('night');p.innerHTML='<div class="art" style="background-image:url(ad/part-1/cards/book1-ch1.jpg)"></div>';
 // opener right page + chapter text
 const T=D.paras.map((x,i)=>{const b=P(x.t,i===0?'first':'');b.cue=x.cue;if(i===0){b.html='<p class="first"><span class="dc">'+x.t[0]+'</span>'+x.t.slice(1)+'</p>';b.words=null}return b});
