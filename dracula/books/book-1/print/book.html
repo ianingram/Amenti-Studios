@@ -83,7 +83,7 @@ const F=D.foreword;let fpages=flow(F,()=>{const p=page();const fl=document.creat
 if(pn%2===0){const b=page();b.innerHTML='<div class="ttl"><img src="fw-ornament-4-flat.jpg" style="width:5in"></div>'} // blank right? (pn even means last was left) -> add blank right so card lands left
 p=page('night');p.innerHTML='<div class="art" style="background-image:url(ad/part-1/cards/book1-ch1.jpg)"></div>';
 // opener right page + chapter text
-const T=D.paras.map((x,i)=>{const b=P(x.t,i===0?'first':'');b.cue=x.cue;if(i===0){b.html='<p class="first"><span class="dc">'+x.t[0]+'</span>'+x.t.slice(1)+'</p>';b.words=null}return b});
+const T=D.paras.map((x,i)=>{const b=P(x.t,i===0?'first':'');b.cue=x.cue;if(i===0){const m=x.t.match(/^(.*?—)(\s*)(\S)([\s\S]*)$/);if(m){b.html='<p class="first"><span class="k" style="display:block;font-size:8pt;margin-bottom:.06in">'+m[1].replace(/—$/,'').replace(/\.\s*$/,'')+'</span><span class="dc">'+m[3]+'</span>'+m[4]+'</p>'}else{b.html='<p class="first"><span class="dc">'+x.t[0]+'</span>'+x.t.slice(1)+'</p>'};b.words=null}return b});
 T[0].words=null;
 let first=true;const used=new Set();const pairs=[];
 function pick(cues){const c=cues.length?cues[Math.floor(cues.length/2)]:1;const keys=Object.keys(D.pics).map(Number).sort((a,b)=>a-b);
