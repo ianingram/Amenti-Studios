@@ -101,7 +101,15 @@ for(const CH of D.chapters){
   const p=page();const fl=document.createElement('div');fl.className='flow';p.appendChild(fl);foot(p,(D.rh||'Dracula · Book I · Chapter ')+CH.num);
   const r=page('night');foot(r);pairs.push({p,r});return {p,fl}});
  (CH.picks||[]).forEach(x=>x&&used.add(x));let pi=0;
- for(const t of tp){const pr=pairs.find(x=>x.p===t.p);if(!pr)continue;const im=((CH.picks||[])[pi++])||pick(t.cues);pr.r.insertAdjacentHTML('afterbegin',im?'<div class="art" style="background-image:url('+(/^https?:/.test(im)?im:'art/'+im)+')"></div>':'');pr.r.dataset.im=im||''}
+ const SP=[];let lastc=0;for(const t of tp){const pr=pairs.find(x=>x.p===t.p);if(!pr)continue;const c=t.cues.length?t.cues[Math.floor(t.cues.length/2)]:lastc;if(t.cues.length)lastc=t.cues[t.cues.length-1];SP.push({t,pr,c})}
+ const asg=new Array(SP.length).fill(null);const SEL=CH.sel||[];SEL.forEach(x=>used.add(x[0]));
+ if(SEL.length){const N=SEL.length,S=SP.length,G=500;const dp=[...Array(N+1)].map(()=>new Array(S+1).fill(1e9)),bk=[...Array(N+1)].map(()=>new Array(S+1).fill(0));
+  dp[0][0]=0;for(let i=0;i<=N;i++)for(let j=0;j<=S;j++){if(i===0&&j===0)continue;let v=1e9,k=0;
+   if(i>0&&j>0){const x=dp[i-1][j-1]+Math.abs(SEL[i-1][1]-SP[j-1].c);if(x<v){v=x;k=1}}
+   if(i>0){const x=dp[i-1][j]+G;if(x<v){v=x;k=2}}
+   if(j>0){const x=dp[i][j-1]+G;if(x<v){v=x;k=3}}dp[i][j]=v;bk[i][j]=k}
+  let i=N,j=S;while(i>0||j>0){const k=bk[i][j];if(k===1){asg[j-1]=SEL[i-1][0];i--;j--}else if(k===2)i--;else j--}}
+ SP.forEach((s,j)=>{const t=s.t,pr=s.pr;const im=asg[j]||((CH.picks||[])[pi++])||pick(t.cues);pr.r.insertAdjacentHTML('afterbegin',im?'<div class="art" style="background-image:url('+(/^https?:/.test(im)?im:'art/'+im)+')"></div>':'');pr.r.dataset.im=im||''});
 }
 [...book.children].forEach((pg,i)=>{const f=pg.querySelector('.fo');if(f)f.textContent=i+1});
 document.title='done';
