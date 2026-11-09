@@ -439,7 +439,7 @@
    "picks": [
     "ch01-munich-carriage-3.jpg"
    ],
-   "cards": "ad/part-1/cards/",
+   "cards": "cu/part-1/cards/",
    "part": "ad/books/book-1/cover-front-print.jpg"
   },
   {
@@ -893,7 +893,7 @@
     ]
    },
    "picks": [],
-   "cards": "ad/part-1/cards/"
+   "cards": "cu/part-1/cards/"
   },
   {
    "num": "III",
@@ -1250,7 +1250,7 @@
     ]
    },
    "picks": [],
-   "cards": "ad/part-1/cards/"
+   "cards": "cu/part-1/cards/"
   },
   {
    "num": "IV",
@@ -1809,7 +1809,7 @@
     null,
     "ch04-r-3.jpg"
    ],
-   "cards": "ad/part-1/cards/"
+   "cards": "cu/part-1/cards/"
   },
   {
    "num": "V",
@@ -2199,7 +2199,7 @@
      19
     ]
    ],
-   "cards": "ad/part-2/cards/",
+   "cards": "cu/part-2/cards/",
    "part": "ad/books/book-2/cover-front-print.jpg"
   },
   {
@@ -2616,7 +2616,7 @@
      78
     ]
    ],
-   "cards": "ad/part-2/cards/"
+   "cards": "cu/part-2/cards/"
   },
   {
    "num": "VII",
@@ -3045,7 +3045,7 @@
      45
     ]
    ],
-   "cards": "ad/part-2/cards/"
+   "cards": "cu/part-2/cards/"
   },
   {
    "num": "VIII",
@@ -3504,7 +3504,7 @@
      53
     ]
    ],
-   "cards": "ad/part-2/cards/"
+   "cards": "cu/part-2/cards/"
   },
   {
    "num": "IX",
@@ -4125,7 +4125,7 @@
      82
     ]
    ],
-   "cards": "ad/part-2/cards/"
+   "cards": "cu/part-2/cards/"
   },
   {
    "num": "X",
@@ -4826,7 +4826,7 @@
      154
     ]
    ],
-   "cards": "ad/part-2/cards/"
+   "cards": "cu/part-2/cards/"
   },
   {
    "num": "XI",
@@ -5339,7 +5339,7 @@
      93
     ]
    ],
-   "cards": "ad/part-2/cards/"
+   "cards": "cu/part-2/cards/"
   },
   {
    "num": "XII",
@@ -6025,7 +6025,7 @@
      92
     ]
    ],
-   "cards": "ad/part-2/cards/"
+   "cards": "cu/part-2/cards/"
   },
   {
    "num": "XIII",
@@ -6735,7 +6735,7 @@
      124
     ]
    ],
-   "cards": "ad/part-2/cards/"
+   "cards": "cu/part-2/cards/"
   },
   {
    "num": "XIV",
@@ -7391,7 +7391,7 @@
      128
     ]
    ],
-   "cards": "ad/part-2/cards/"
+   "cards": "cu/part-2/cards/"
   },
   {
    "num": "XV",
@@ -8016,7 +8016,7 @@
      106
     ]
    ],
-   "cards": "ad/part-2/cards/"
+   "cards": "cu/part-2/cards/"
   },
   {
    "num": "XVI",
@@ -8440,10 +8440,10 @@
      56
     ]
    ],
-   "cards": "ad/part-2/cards/"
+   "cards": "cu/part-2/cards/"
   }
  ],
- "cards": "ad/part-2/cards/",
+ "cards": "cu/part-2/cards/",
  "rh": "Dracula · Volume One · Chapter ",
  "title": "title-flat.jpg",
  "foreword": [
