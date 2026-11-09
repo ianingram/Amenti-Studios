@@ -9,7 +9,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;background:#555}
 .pg{width:11in;height:8.5in;position:relative;overflow:hidden;background:var(--ivory);color:var(--ink);page-break-after:always;font:11.2pt/1.42 G;margin:0 auto}
-.night{background:var(--night);color:#e9e1d2}
+.night{background:var(--night);color:#e9e1d2}.night:has(>.art){background:#fff}.night:has(>.art) .fo{color:#7a6a55}
 .flow{position:absolute;top:.95in;bottom:.9in;column-count:2;column-gap:.42in;column-fill:auto;overflow:hidden;hyphens:auto;text-align:justify}
 .L .flow{left:.75in;right:.95in}.R .flow{left:.95in;right:.75in}
 .flow > div{break-inside:avoid}
