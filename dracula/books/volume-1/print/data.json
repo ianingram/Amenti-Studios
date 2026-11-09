@@ -436,11 +436,55 @@
      "ch01-w2-command-2.jpg"
     ]
    },
-   "picks": [
-    "ch01-munich-carriage-3.jpg"
-   ],
+   "picks": [],
    "cards": "cu/part-1/cards/",
-   "part": "ad/books/book-1/cover-front-print.jpg"
+   "part": "ad/books/book-1/cover-front-print.jpg",
+   "sel": [
+    [
+     "ch01-munich-carriage-3.jpg",
+     3
+    ],
+    [
+     "ch01-b1-1.jpg",
+     11
+    ],
+    [
+     "ch01-k-must-0.jpg",
+     17
+    ],
+    [
+     "ch01-b10-1.jpg",
+     30
+    ],
+    [
+     "ch01-x-inn-3.jpg",
+     30
+    ],
+    [
+     "ch01-y-orchard-2.jpg",
+     31
+    ],
+    [
+     "ch01-d13-2.jpg",
+     33
+    ],
+    [
+     "ch01-d14-2.jpg",
+     34
+    ],
+    [
+     "ch01-r-pass-2.jpg",
+     35
+    ],
+    [
+     "ch01-r-atmos-2.jpg",
+     35
+    ],
+    [
+     "ch01-n10-pass-1.jpg",
+     36
+    ]
+   ]
   },
   {
    "num": "II",
@@ -893,7 +937,49 @@
     ]
    },
    "picks": [],
-   "cards": "cu/part-1/cards/"
+   "cards": "cu/part-1/cards/",
+   "sel": [
+    [
+     "ch02-t-door-0.jpg",
+     5
+    ],
+    [
+     "ch02-b2-1.jpg",
+     10
+    ],
+    [
+     "ch02-bk-bedroom-0.jpg",
+     17
+    ],
+    [
+     "ch02-may7-breakfast-1.jpg",
+     35
+    ],
+    [
+     "ch02-may7-waking-0.jpg",
+     35
+    ],
+    [
+     "ch02-q-enters-0.jpg",
+     39
+    ],
+    [
+     "ch02-q-locked-0.jpg",
+     52
+    ],
+    [
+     "ch02-may7-flames-peasants-1.jpg",
+     60
+    ],
+    [
+     "ch02-q-signing-2.jpg",
+     67
+    ],
+    [
+     "ch02-i1-3.jpg",
+     92
+    ]
+   ]
   },
   {
    "num": "III",
@@ -1250,7 +1336,49 @@
     ]
    },
    "picks": [],
-   "cards": "cu/part-1/cards/"
+   "cards": "cu/part-1/cards/",
+   "sel": [
+    [
+     "ch03-a2-2.jpg",
+     4
+    ],
+    [
+     "ch03-bt-there-3.jpg",
+     5
+    ],
+    [
+     "ch03-hist-h18-1.jpg",
+     5
+    ],
+    [
+     "ch03-may-exeter-1.jpg",
+     12
+    ],
+    [
+     "ch03-d1-1.jpg",
+     22
+    ],
+    [
+     "ch03-bk-letters-1.jpg",
+     30
+    ],
+    [
+     "ch03-f2-4.jpg",
+     37
+    ],
+    [
+     "ch03-g2-3.jpg",
+     40
+    ],
+    [
+     "ch03-h1-2.jpg",
+     46
+    ],
+    [
+     "ch03-i1-1.jpg",
+     52
+    ]
+   ]
   },
   {
    "num": "IV",
@@ -1799,17 +1927,54 @@
      "ch04-e-goodbye-3.jpg"
     ]
    },
-   "picks": [
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    "ch04-r-3.jpg"
-   ],
-   "cards": "cu/part-1/cards/"
+   "picks": [],
+   "cards": "cu/part-1/cards/",
+   "sel": [
+    [
+     "ch04-c1-4.jpg",
+     8
+    ],
+    [
+     "ch04-e-writers-0.jpg",
+     19
+    ],
+    [
+     "ch04-h1-1.jpg",
+     35
+    ],
+    [
+     "ch04-w-wide-2.jpg",
+     46
+    ],
+    [
+     "ch04-bk-chapel-0.jpg",
+     47
+    ],
+    [
+     "ch04-c-box-0.jpg",
+     48
+    ],
+    [
+     "ch04-n-1.jpg",
+     67
+    ],
+    [
+     "ch04-s-vault-1.jpg",
+     75
+    ],
+    [
+     "ch04-s-london-3.jpg",
+     75
+    ],
+    [
+     "ch04-q2-2.jpg",
+     79
+    ],
+    [
+     "ch04-r-3.jpg",
+     81
+    ]
+   ]
   },
   {
    "num": "V",
@@ -2187,6 +2352,10 @@
      5
     ],
     [
+     "ch05-s-post-0.jpg",
+     6
+    ],
+    [
      "ch05-ar-party-0.jpg",
      7
     ],
@@ -2197,6 +2366,14 @@
     [
      "ch05-s-plea-1.jpg",
      19
+    ],
+    [
+     "ch05-q-happy-0.jpg",
+     20
+    ],
+    [
+     "ch05-telegram-0.jpg",
+     43
     ]
    ],
    "cards": "cu/part-2/cards/",
@@ -2585,10 +2762,10 @@
    "sel": [
     [
      "ch06-esk-viaduct-1.jpg",
-     0
+     3
     ],
     [
-     "ch06-view-a1.jpg",
+     "ch06-view-a3.jpg",
      3
     ],
     [
@@ -2610,6 +2787,14 @@
     [
      "ch06-sleepwalker-c3.jpg",
      63
+    ],
+    [
+     "ch06-waiting-b1.jpg",
+     65
+    ],
+    [
+     "ch06-kettleness-1.jpg",
+     67
     ],
     [
      "ch06-strange-ship-1.jpg",
@@ -3009,12 +3194,16 @@
    "sec": null,
    "sel": [
     [
-     "ch07-g-pier-1.jpg",
+     "ch07-still-a3.jpg",
      6
     ],
     [
      "ch07-sunset-demeter.jpg",
      6
+    ],
+    [
+     "ch07-s-abbey-2.jpg",
+     9
     ],
     [
      "ch07-searchlight-a0.jpg",
@@ -3026,6 +3215,10 @@
     ],
     [
      "ch07-helmsman-a0.jpg",
+     13
+    ],
+    [
+     "ch07-s-lashed-1.jpg",
      13
     ],
     [
@@ -3480,7 +3673,7 @@
      4
     ],
     [
-     "ch08-cloud-2.jpg",
+     "ch08-cloud-1.jpg",
      4
     ],
     [
@@ -3488,12 +3681,24 @@
      4
     ],
     [
+     "ch08-mina-steps-2.jpg",
+     4
+    ],
+    [
      "ch08-sleep-garden-2.jpg",
      4
     ],
     [
+     "ch08-cliff-b3.jpg",
+     7
+    ],
+    [
      "ch08-dream-2.jpg",
      33
+    ],
+    [
+     "ch08-letter-b0.jpg",
+     35
     ],
     [
      "ch08-hospital-b3.jpg",
@@ -4089,20 +4294,28 @@
    "sec": "book2-sec2.jpg",
    "sel": [
     [
+     "ch09-est-danube-0.jpg",
+     2
+    ],
+    [
      "ch09-wedding-a3.jpg",
      8
+    ],
+    [
+     "ch09-23a-1.jpg",
+     23
     ],
     [
      "ch09-sleep-statues-1.jpg",
      33
     ],
     [
-     "ch09-48a-1.jpg",
-     48
+     "ch09-36e-2.jpg",
+     36
     ],
     [
-     "ch09-microscope-c0.jpg",
-     50
+     "ch09-48a-1.jpg",
+     48
     ],
     [
      "ch09-50b-2.jpg",
@@ -4810,6 +5023,10 @@
      50
     ],
     [
+     "ch10-apparatus-a2.jpg",
+     50
+    ],
+    [
      "ch10-watch-b1.jpg",
      72
     ],
@@ -4820,6 +5037,14 @@
     [
      "ch10-diary-c1.jpg",
      100
+    ],
+    [
+     "ch10-diary-c3.jpg",
+     100
+    ],
+    [
+     "ch10-sleeve-b2.jpg",
+     117
     ],
     [
      "ch10-wreath-c0.jpg",
@@ -5307,10 +5532,6 @@
    "sec": null,
    "sel": [
     [
-     "ch11-flowers-a1.jpg",
-     3
-    ],
-    [
      "ch11-morning-a0.jpg",
      5
     ],
@@ -5319,8 +5540,16 @@
      36
     ],
     [
+     "ch11-keeper-a1.jpg",
+     41
+    ],
+    [
      "ch11-stranger-b1.jpg",
      51
+    ],
+    [
+     "ch11-floor-b0.jpg",
+     78
     ],
     [
      "ch11-train-b3.jpg",
@@ -5333,6 +5562,10 @@
     [
      "ch11-wolf-c1.jpg",
      91
+    ],
+    [
+     "ch11-grief-c1.jpg",
+     92
     ],
     [
      "ch11-maids-c1.jpg",
@@ -5981,16 +6214,16 @@
    "sec": null,
    "sel": [
     [
-     "ch12-avenue-a1.jpg",
-     3
-    ],
-    [
      "ch12-porch-a2.jpg",
      4
     ],
     [
      "ch12-bed-a0.jpg",
      13
+    ],
+    [
+     "ch12-fire-a2.jpg",
+     18
     ],
     [
      "ch12-quincey-b3.jpg",
@@ -6019,6 +6252,10 @@
     [
      "ch12-asylum-c1.jpg",
      74
+    ],
+    [
+     "ch12-hawkins-c1.jpg",
+     81
     ],
     [
      "ch12-wake-d1.jpg",
@@ -6703,16 +6940,24 @@
      15
     ],
     [
+     "ch13-lawyer-a721.jpg",
+     41
+    ],
+    [
      "ch13-a-lawn-1.jpg",
      51
     ],
     [
-     "ch13-funeral-b2b0.jpg",
-     88
+     "ch13-picc-giulianos-0.jpg",
+     90
     ],
     [
      "ch13-picc-across-2.jpg",
      96
+    ],
+    [
+     "ch13-picc-hansom-3.jpg",
+     97
     ],
     [
      "ch13-park-b150.jpg",
@@ -6723,12 +6968,12 @@
      106
     ],
     [
-     "ch13-b-tomb-2.jpg",
-     118
+     "ch13-b-weeping-3.jpg",
+     115
     ],
     [
-     "ch13-newspaper-c791.jpg",
-     122
+     "ch13-b-tomb-2.jpg",
+     118
     ],
     [
      "ch13-lady-c031.jpg",
@@ -7363,6 +7608,10 @@
      3
     ],
     [
+     "ch14-letter-a1.jpg",
+     10
+    ],
+    [
      "ch14-cathedral-a1.jpg",
      16
     ],
@@ -7371,11 +7620,7 @@
      46
     ],
     [
-     "ch14-supper-b1.jpg",
-     84
-    ],
-    [
-     "ch14-handshake-b1.jpg",
+     "ch14-handshake-b3.jpg",
      85
     ],
     [
@@ -7389,6 +7634,14 @@
     [
      "ch14-charcot-c1.jpg",
      128
+    ],
+    [
+     "ch14-lucy-c2.jpg",
+     139
+    ],
+    [
+     "ch14-window-c3.jpg",
+     143
     ]
    ],
    "cards": "cu/part-2/cards/"
@@ -8000,8 +8253,20 @@
      52
     ],
     [
+     "ch15-yews-a2.jpg",
+     52
+    ],
+    [
      "ch15-noon-b1.jpg",
      67
+    ],
+    [
+     "ch15-close-c1.jpg",
+     68
+    ],
+    [
+     "ch15-close-c3.jpg",
+     68
     ],
     [
      "ch15-watchers-c1.jpg",
@@ -8420,12 +8685,24 @@
      3
     ],
     [
+     "ch16-a-empty-3.jpg",
+     7
+    ],
+    [
+     "ch16-a-seal-3.jpg",
+     18
+    ],
+    [
      "ch16-a-wait-0.jpg",
      27
     ],
     [
      "ch16-undead-path-1.jpg",
      29
+    ],
+    [
+     "ch16-undead-mist-0.jpg",
+     31
     ],
     [
      "ch16-e-trapped-3.jpg",

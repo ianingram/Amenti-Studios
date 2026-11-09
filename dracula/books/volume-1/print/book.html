@@ -111,6 +111,13 @@ for(const CH of D.chapters){
    if(j>0){const x=dp[i][j-1]+G;if(x<v){v=x;k=3}}dp[i][j]=v;bk[i][j]=k}
   let i=N,j=S;while(i>0||j>0){const k=bk[i][j];if(k===1){asg[j-1]=SEL[i-1][0];i--;j--}else if(k===2)i--;else j--}}
  SP.forEach((s,j)=>{const t=s.t,pr=s.pr;const im=asg[j]||((CH.picks||[])[pi++])||pick(t.cues);pr.r.insertAdjacentHTML('afterbegin',im?'<div class="art" style="background-image:url('+(/^https?:/.test(im)?im:'art/'+im)+')"></div>':'');pr.r.dataset.im=im||''});
+ {const got=new Set(asg.filter(Boolean));const EX=SEL.filter(x=>!got.has(x[0])).sort((a,b)=>a[1]-b[1]);const groups=[];for(let i=0;i<EX.length;i+=2)groups.push(EX.slice(i,i+2));
+  const url=im=>'url('+(/^https?:/.test(im)?im:'art/'+im)+')';
+  groups.forEach(g=>{const c=g.reduce((s,x)=>s+x[1],0)/g.length;let j=0,bd=1e9;SP.forEach((s,k)=>{const d=Math.abs(s.c-c);if(d<bd){bd=d;j=k}});
+   let ref=SP[j].pr.r;while(ref.nextSibling&&ref.nextSibling.dataset&&ref.nextSibling.dataset.extra)ref=ref.nextSibling;
+   const mk=(side,im,style)=>{const d=document.createElement('div');d.className='pg '+side+' night';d.dataset.im=im;d.dataset.extra='1';d.innerHTML='<div class="art" style="background-image:'+url(im)+';'+(style||'')+'"></div>';return d};
+   let L,R;if(g.length===2){L=mk('L',g[0][0]);R=mk('R',g[1][0])}else{L=mk('L',g[0][0],'background-size:200% auto;background-position:left center');R=mk('R',g[0][0],'background-size:200% auto;background-position:right center')}
+   ref.after(L);L.after(R)})}
 }
 [...book.children].forEach((pg,i)=>{const f=pg.querySelector('.fo');if(f)f.textContent=i+1});
 if(location.hash==='#bleed'){const st=document.createElement('style');st.textContent='@page{size:11.25in 8.75in;margin:0}.sheet{width:11.25in;height:8.75in;padding:.125in;box-sizing:border-box;page-break-after:always;overflow:hidden;background:#fff}.sheet.n{background:var(--night)}.sheet .pg{overflow:visible;page-break-after:auto;margin:0}.sheet .art{left:-.125in;right:-.125in}.sheet .pg[data-im] .art{top:-.125in;height:8.75in}.sheet .pg>img{inset:-.125in!important;width:11.25in!important;height:8.75in!important;object-fit:cover}.sheet .rh{top:.58in}.sheet .fo{bottom:.55in}';document.head.appendChild(st);
