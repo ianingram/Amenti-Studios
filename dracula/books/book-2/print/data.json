@@ -6449,7 +6449,7 @@
    "words": null
   },
   {
-   "html": "<p class=first>The Amenti Speech Engine, deployed at the heart of the Amenti interface project, is what drives the vocal production of <i>Dracula</i>. Each figure in the Library of Legends has a voice composed for them that is uniquely their own. Leveraging this power, we have cast <i>Dracula</i>: Van Helsing speaks Dutch, curious and plain, and Renfield shadowed and menacing. The same engine lets a reader talk with any figure in Amenti, so the voice that narrates this book is the voice that answers when you speak with Stoker.</p>",
+   "html": "<p class=first>The Amenti Speech Engine, deployed at the heart of the <a href=\"https://ianingram.github.io/Amenti.live/Page1.html\" style=\"color:#8a1020;text-decoration:none;font-weight:600\">Amenti&nbsp;Interface</a> project, is what drives the vocal production of <i>Dracula</i>. Each figure in the Library of Legends has a voice composed for them that is uniquely their own. Leveraging this power, we have cast <i>Dracula</i>: Van Helsing speaks Dutch, curious and plain, and Renfield shadowed and menacing. The same engine lets a reader talk with any figure in Amenti, so the voice that narrates this book is the voice that answers when you speak with Stoker.</p>",
    "words": [
     "The",
     "Amenti",
@@ -6461,8 +6461,7 @@
     "heart",
     "of",
     "the",
-    "Amenti",
-    "interface",
+    "<a href=\"https://ianingram.github.io/Amenti.live/Page1.html\" style=\"color:#8a1020;text-decoration:none;font-weight:600\">Amenti&nbsp;Interface</a>",
     "project,",
     "is",
     "what",
