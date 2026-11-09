@@ -112,6 +112,8 @@ for(const CH of D.chapters){
  SP.forEach((s,j)=>{const t=s.t,pr=s.pr;const im=asg[j]||((CH.picks||[])[pi++])||pick(t.cues);pr.r.insertAdjacentHTML('afterbegin',im?'<div class="art" style="background-image:url('+(/^https?:/.test(im)?im:'art/'+im)+')"></div>':'');pr.r.dataset.im=im||''});
 }
 [...book.children].forEach((pg,i)=>{const f=pg.querySelector('.fo');if(f)f.textContent=i+1});
+if(location.hash==='#bleed'){const st=document.createElement('style');st.textContent='@page{size:11.25in 8.75in;margin:0}.sheet{width:11.25in;height:8.75in;padding:.125in;box-sizing:border-box;page-break-after:always;overflow:hidden;background:#fff}.sheet.n{background:var(--night)}.sheet .pg{overflow:visible;page-break-after:auto;margin:0}.sheet .art{left:-.125in;right:-.125in}.sheet .pg>img{inset:-.125in!important;width:11.25in!important;height:8.75in!important;object-fit:cover}.sheet .rh{top:.58in}.sheet .fo{bottom:.55in}';document.head.appendChild(st);
+ [...book.children].forEach(pg=>{const s=document.createElement('div');s.className='sheet'+(pg.classList.contains('night')?' n':'');pg.replaceWith(s);s.appendChild(pg);s.style.background=getComputedStyle(pg).backgroundColor})}//BLEED
 document.title='done';
 })();
 </script></body></html>
