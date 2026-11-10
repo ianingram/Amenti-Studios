@@ -78,6 +78,8 @@ function P(t,cls){const w=t.split(' ');return {html:'<p'+(cls?' class="'+cls+'"'
 let p=page('night');p.innerHTML='<img src="'+D.title+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">';
 // foreword
 const F=D.foreword||[];let fpages=F.length&&flow(F,()=>{const p=page();const fl=document.createElement('div');fl.className='flow';p.appendChild(fl);foot(p,'Keys to this Blood');return {p,fl}});
+if(pn%2===0){const b=page();b.innerHTML='<div class="ttl"><img src="fw-ornament-4-flat.jpg" style="width:5in"><div class="k" style="margin-top:.28in;font-size:9pt;letter-spacing:.5em">Amenti Studios</div></div>'}
+for(const f of ['cast-flat-0.jpg','cast-flat-1.jpg']){const c=page();c.innerHTML='<img src="'+f+'" style="position:absolute;inset:0;width:100%;height:100%">'}
 const used=new Set();
 function P2(t){return {html:'<p>'+t+'</p>',words:t.split(' ')}}
 for(const CH of D.chapters){
