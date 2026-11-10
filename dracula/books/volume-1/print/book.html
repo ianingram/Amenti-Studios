@@ -80,7 +80,6 @@ let p=page('night');p.innerHTML='<img src="'+D.title+'" style="position:absolute
 const F=D.foreword||[];let fpages=F.length&&flow(F,()=>{const p=page();const fl=document.createElement('div');fl.className='flow';p.appendChild(fl);foot(p,'Keys to this Blood');return {p,fl}});
 if(pn%2===0){const b=page();b.innerHTML='<div class="ttl"><img src="fw-ornament-4-flat.jpg" style="width:5in"></div>'}
 for(const f of ['cast-flat-0.jpg','cast-flat-1.jpg']){const c=page();c.innerHTML='<img src="'+f+'" style="position:absolute;inset:0;width:100%;height:100%">'}
-{const c=page('night');c.innerHTML='<img src="credits-flat.jpg" style="position:absolute;inset:0;width:100%;height:100%">';}
 const used=new Set();
 function P2(t){return {html:'<p>'+t+'</p>',words:t.split(' ')}}
 for(const CH of D.chapters){
@@ -121,6 +120,7 @@ for(const CH of D.chapters){
    let L,R;if(g.length===2){L=mk('L',g[0][0]);R=mk('R',g[1][0])}else{L=mk('L',g[0][0],'background-size:200% auto;background-position:left center');R=mk('R',g[0][0],'background-size:200% auto;background-position:right center')}
    ref.after(L);L.after(R)})}
 }
+{const c=page('night');c.innerHTML='<img src="credits-flat.jpg" style="position:absolute;inset:0;width:100%;height:100%">';}
 [...book.children].forEach((pg,i)=>{const f=pg.querySelector('.fo');if(f)f.textContent=i+1});
 if(location.hash==='#bleed'){const st=document.createElement('style');st.textContent='@page{size:11.25in 8.75in;margin:0}.sheet{width:11.25in;height:8.75in;padding:.125in;box-sizing:border-box;page-break-after:always;overflow:hidden;background:#fff}.sheet.n{background:var(--night)}.sheet .pg{overflow:visible;page-break-after:auto;margin:0}.sheet .art{left:-.125in;right:-.125in}.sheet .pg[data-im] .art{top:-.125in;height:8.75in}.sheet .pg>img{inset:-.125in!important;width:11.25in!important;height:8.75in!important;object-fit:cover}.sheet .rh{top:.58in}.sheet .fo{bottom:.55in}';document.head.appendChild(st);
  [...book.children].forEach(pg=>{const s=document.createElement('div');s.className='sheet'+(pg.classList.contains('night')?' n':'');pg.replaceWith(s);s.appendChild(pg);s.style.background=getComputedStyle(pg).backgroundColor})}//BLEED
