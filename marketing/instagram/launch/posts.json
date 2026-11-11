@@ -1,14 +1,74 @@
 [
-["01","ch07-s-abbey-2",0.62,null],
-["02","ch09-sleep-statues-1",0.5,null],
-["03","ch27-castle-0",0.4,null],
-["04","ch07-helmsman-a0",0.38,null],
-["05","ch27-redsky-0",0.42,"<div class=t style='bottom:120px'><div class=k>Introducing</div><div class=big style='font-size:112px'>AMENTI<br>STUDIOS</div><div class=q style='font-size:30px'>Great books, read aloud by a cast of legends,<br>scored, and painted scene by scene.</div></div>"],
-["06","ch07-sunset-demeter",0.55,null],
-["07","ch08-mina-steps-1",0.48,null],
-["08","ch24-sailing-1",0.42,null],
-["09","ch16-undead-mist-0",0.56,null],
-["10","ch16-undead-path-1",0.6,null],
-["11","ch01-r-pass-2",0.5,"<div class=t style='bottom:120px'><div class=k>Bram Stoker</div><div class=big>DRACULA</div><div class=k>Volume One · Coming soon</div></div>"],
-["12","ch13-picc-hansom-3",0.5,null]
+[
+"01",
+"ch07-s-abbey-2",
+0.62,
+"<div class=t style='bottom:120px'><div class=k>Chapter VII</div><div class=big><div class=fit>WHITBY</div></div><div class=k>The storm</div></div><div class=sig2>Amenti Studios · Dracula</div>"
+],
+[
+"02",
+"ch09-sleep-statues-1",
+0.5,
+"<div class=t style='bottom:120px'><div class=k>Chapter IX</div><div class=big><div class=fit>SLEEPWALKER</div></div><div class=k>Lucy among the statues</div></div><div class=sig2>Amenti Studios · Dracula</div>"
+],
+[
+"03",
+"ch27-castle-0",
+0.4,
+"<div class=topshade style='position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,10,22,.6),rgba(8,10,22,0) 32%)'></div><div class=t style='top:110px'><div class=k>Chapter XXVII</div><div class=big><div class=fit>THE CASTLE</div></div><div class=k>The last climb</div></div><div class=sig2>Amenti Studios · Dracula</div>"
+],
+[
+"04",
+"ch07-helmsman-a0",
+0.38,
+"<div class=t style='bottom:120px'><div class=k>Chapter VII</div><div class=big><div class=fit>THE HELMSMAN</div></div><div class=k>Lashed to the wheel</div></div><div class=sig2>Amenti Studios · Dracula</div>"
+],
+[
+"05",
+"ch27-redsky-0",
+0.42,
+"<div class=t style='bottom:120px'><div class=k>Introducing</div><div class=big style='font-size:112px'>AMENTI<br>STUDIOS</div><div class=q style='font-size:30px'>Great books, read aloud by a cast of legends,<br>scored, and painted scene by scene.</div></div>"
+],
+[
+"06",
+"ch07-sunset-demeter",
+0.55,
+"<div class=t style='bottom:120px'><div class=k>Chapters VI – VII</div><div class=big><div class=fit><small>Voyage of the</small></div><br><div class=fit>DEMETER</div></div><div class=k>Varna to Whitby</div></div><div class=sig2>Amenti Studios · Dracula</div>"
+],
+[
+"07",
+"ch08-mina-steps-1",
+0.48,
+"<div class=t style='bottom:120px'><div class=k>Chapter VIII</div><div class=big><div class=fit>MINA</div></div><div class=k>One in the morning</div></div><div class=sig2>Amenti Studios · Dracula</div>"
+],
+[
+"08",
+"ch24-sailing-1",
+0.42,
+"<div class=t style='bottom:120px'><div class=k>Chapter XXIV</div><div class=big><div class=fit>THE CHASE</div></div><div class=k>The Czarina Catherine sails east</div></div><div class=sig2>Amenti Studios · Dracula</div>"
+],
+[
+"09",
+"ch16-undead-mist-0",
+0.56,
+"<div class=t style='bottom:120px'><div class=k>Chapter XVI</div><div class=big><div class=fit>LUCY</div></div><div class=k>Hampstead churchyard</div></div><div class=sig2>Amenti Studios · Dracula</div>"
+],
+[
+"10",
+"ch16-undead-path-1",
+0.6,
+"<div class=t style='bottom:120px'><div class=k>Chapters XIII – XVI</div><div class=big><div class=fit>THE BLOOFER</div><br><div class=fit>LADY</div></div><div class=k>Hampstead, by night</div></div><div class=sig2>Amenti Studios · Dracula</div>"
+],
+[
+"11",
+"ch01-r-pass-2",
+0.5,
+"<div class=t style='bottom:120px'><div class=k>Bram Stoker</div><div class=big>DRACULA</div><div class=k>Volume One · Coming soon</div></div>"
+],
+[
+"12",
+"ch13-picc-hansom-3",
+0.5,
+"<div class=t style='bottom:120px'><div class=k>Chapter XIII</div><div class=big><div class=fit>PICCADILLY</div></div><div class=k>“He has grown young”</div></div><div class=sig2>Amenti Studios · Dracula</div>"
+]
 ]
