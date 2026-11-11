@@ -1,0 +1,470 @@
+{
+ "scenes": [
+  {
+   "n": 1,
+   "tag": "CCI-A",
+   "stave": 1,
+   "cue": 15,
+   "title": "Fred at the counting-house door",
+   "light": "candle",
+   "prompt": "CCI-A Christmas Eve in Scrooge's dim counting-house, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard at his high desk, Scrooge's nephew Fred, a ruddy handsome young man of twenty-eight with bright eyes, dark curly hair, a fine dark overcoat bursting in from the foggy street glowing with cold, Bob Cratchit, a thin careworn clerk of about thirty, clean-shaven, threadbare dark coat and a long white woollen comforter copying letters in a small dismal cell beyond, one tiny coal fire, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters, beard",
+   "img": "cc-01.jpg"
+  },
+  {
+   "n": 2,
+   "tag": "CCI-B",
+   "stave": 1,
+   "cue": 50,
+   "title": "Humbug",
+   "light": "candle",
+   "prompt": "CCI-B a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard scowling across his desk at Scrooge's nephew Fred, a ruddy handsome young man of twenty-eight with bright eyes, dark curly hair, a fine dark overcoat, who laughs good-humouredly with his hat in his hand, ledgers and a single candle, fog pressing at the windows, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters, beard",
+   "img": "cc-02.jpg"
+  },
+  {
+   "n": 3,
+   "tag": "CCI-C",
+   "stave": 1,
+   "cue": 100,
+   "title": "The two gentlemen",
+   "light": "candle",
+   "prompt": "CCI-C two portly pleasant gentlemen with books and papers in hand, hats off, standing before a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard at his desk, who regards them coldly, dim counting-house, fog at the window, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-03.jpg"
+  },
+  {
+   "n": 4,
+   "tag": "CCI-D",
+   "stave": 1,
+   "cue": 148,
+   "title": "Bob on the slide",
+   "light": "night",
+   "prompt": "CCI-D Bob Cratchit, a thin careworn clerk of about thirty, clean-shaven, threadbare dark coat and a long white woollen comforter sliding down an icy slide on Cornhill at the end of a line of laughing boys, the long ends of his comforter flying, snowy London street at dusk, warm gas-lit shop windows, church tower, oil painting, London 1843, rich academic realism, dramatic chiaroscuro, snowy gas-lit night --ar 16:9 --sref https://ianingram.github.io/Amenti-Studios/a-christmas-carol/carol-hero.jpg --no modern, text, letters",
+   "img": "cc-04.jpg"
+  },
+  {
+   "n": 5,
+   "tag": "CCI-E",
+   "stave": 1,
+   "cue": 150,
+   "title": "Marley's face in the knocker",
+   "light": "night",
+   "prompt": "CCI-E a dark old London door at night with a large brass knocker that has become the pale ghostly face of an old man, a dismal light about it, hair stirred as if by breath, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard with a key in the lock, staring, fog, oil painting, London 1843, rich academic realism, dramatic chiaroscuro, snowy gas-lit night --ar 16:9 --sref https://ianingram.github.io/Amenti-Studios/a-christmas-carol/carol-hero.jpg --no modern, text, letters",
+   "img": "cc-05.jpg"
+  },
+  {
+   "n": 6,
+   "tag": "CCI-F",
+   "stave": 1,
+   "cue": 162,
+   "title": "Marley comes through the door",
+   "light": "candle",
+   "prompt": "CCI-F the ghost of Jacob Marley, a transparent grey old man in pigtail, waistcoat, tights and boots, a white bandage tied round his jaw, a long chain wound about him made of cash-boxes, keys, padlocks, ledgers and heavy steel purses passing straight through a heavy closed door into a gloomy old bedroom, the dying flame in the small fireplace leaping up, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard in dressing-gown and nightcap seated by the fire with a basin of gruel, aghast, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-06.jpg"
+  },
+  {
+   "n": 7,
+   "tag": "CCI-G",
+   "stave": 1,
+   "cue": 185,
+   "title": "Marley's Ghost",
+   "light": "candle",
+   "prompt": "CCI-G the ghost of Jacob Marley, a transparent grey old man in pigtail, waistcoat, tights and boots, a white bandage tied round his jaw, a long chain wound about him made of cash-boxes, keys, padlocks, ledgers and heavy steel purses seated motionless across the low fireplace from a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard in dressing-gown and nightcap, the ghost's hair and coat-skirts stirring as if in hot vapour, Dutch tiles round the fireplace, deep shadows, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-07.jpg"
+  },
+  {
+   "n": 8,
+   "tag": "CCI-H",
+   "stave": 1,
+   "cue": 235,
+   "title": "Marley drops his jaw",
+   "light": "candle",
+   "prompt": "CCI-H the ghost of Jacob Marley, a transparent grey old man in pigtail, waistcoat, tights and boots, a white bandage tied round his jaw, a long chain wound about him made of cash-boxes, keys, padlocks, ledgers and heavy steel purses rising and raising a frightful cry, shaking his chain, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard fallen to his knees clasping his hands before his face in terror, gloomy bedroom, low fire, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-08.jpg"
+  },
+  {
+   "n": 9,
+   "tag": "CCI-I",
+   "stave": 1,
+   "cue": 295,
+   "title": "Mankind was my business",
+   "light": "candle",
+   "prompt": "CCI-I the ghost of Jacob Marley, a transparent grey old man in pigtail, waistcoat, tights and boots, a white bandage tied round his jaw, a long chain wound about him made of cash-boxes, keys, padlocks, ledgers and heavy steel purses standing erect, holding up his chain, wringing his hands, lamenting, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard trembling by the fireplace, candle guttering, deep chiaroscuro, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-09.jpg"
+  },
+  {
+   "n": 10,
+   "tag": "CCI-J",
+   "stave": 1,
+   "cue": 314,
+   "title": "The air filled with phantoms",
+   "light": "night",
+   "prompt": "CCI-J a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard in nightcap looking out of an open sash window at night, the foggy air filled with wailing phantoms wandering in restless haste, every one wearing chains, a ghost in a white waistcoat with a great iron safe, below a poor woman and infant on a doorstep in the snow, oil painting, London 1843, rich academic realism, dramatic chiaroscuro, snowy gas-lit night --ar 16:9 --sref https://ianingram.github.io/Amenti-Studios/a-christmas-carol/carol-hero.jpg --no modern, text, letters",
+   "img": "cc-10.jpg"
+  },
+  {
+   "n": 11,
+   "tag": "CCII-A",
+   "stave": 2,
+   "cue": 35,
+   "title": "The first of the three Spirits",
+   "light": "candle",
+   "prompt": "CCII-A the curtains of a dark old four-poster bed drawn aside by the Ghost of Christmas Past, a strange small figure like a child and an old man at once, long white hair, smooth youthful face, white tunic belted with a lustrous belt, a branch of fresh green holly in its hand, a bright clear jet of light springing from its crown, its light filling the room, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard in nightcap starting up half-recumbent, startled, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-11.jpg"
+  },
+  {
+   "n": 12,
+   "tag": "CCII-B",
+   "stave": 2,
+   "cue": 65,
+   "title": "The country road",
+   "light": "day",
+   "prompt": "CCII-B a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard in dressing-gown and the Ghost of Christmas Past, a strange small figure like a child and an old man at once, long white hair, smooth youthful face, white tunic belted with a lustrous belt, a branch of fresh green holly in its hand, a bright clear jet of light springing from its crown standing hand in hand on an open country road in winter, fields covered with snow, a little market town with bridge, church and winding river, boys on shaggy ponies trotting by calling Merry Christmas, clear cold day, oil painting, London 1843, rich academic realism, luminous winter daylight, plein air --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch01-b5-2.jpg --no modern, text, letters",
+   "img": "cc-12.jpg"
+  },
+  {
+   "n": 13,
+   "tag": "CCII-C",
+   "stave": 2,
+   "cue": 85,
+   "title": "The lonely boy",
+   "light": "candle",
+   "prompt": "CCII-C a long bare melancholy schoolroom with plain deal desks, a lonely boy of ten reading near a feeble fire, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard and the Ghost of Christmas Past, a strange small figure like a child and an old man at once, long white hair, smooth youthful face, white tunic belted with a lustrous belt, a branch of fresh green holly in its hand, a bright clear jet of light springing from its crown watching from the shadows, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard weeping silently, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-13.jpg"
+  },
+  {
+   "n": 14,
+   "tag": "CCII-D",
+   "stave": 2,
+   "cue": 110,
+   "title": "Fan comes for her brother",
+   "light": "candle",
+   "prompt": "CCII-D a little girl of eight in a bonnet running into a bare schoolroom and putting her arms about the neck of a boy of twelve, kissing him, joyful, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard and the Ghost of Christmas Past, a strange small figure like a child and an old man at once, long white hair, smooth youthful face, white tunic belted with a lustrous belt, a branch of fresh green holly in its hand, a bright clear jet of light springing from its crown watching, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-14.jpg"
+  },
+  {
+   "n": 15,
+   "tag": "CCII-E",
+   "stave": 2,
+   "cue": 150,
+   "title": "Old Fezziwig",
+   "light": "candle",
+   "prompt": "CCII-E a warm old London warehouse office on Christmas Eve, old Fezziwig, a jolly stout old gentleman in a Welsh wig and a long waistcoat behind a lofty desk laughing, rubbing his hands, calling Yo ho my boys, two young apprentices putting up the shutters, the floor swept for a dance, lamps trimmed, bright fire, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-15.jpg"
+  },
+  {
+   "n": 16,
+   "tag": "CCII-F",
+   "stave": 2,
+   "cue": 165,
+   "title": "Fezziwig's ball",
+   "light": "candle",
+   "prompt": "CCII-F Fezziwig's Christmas ball in a warehouse room, old Fezziwig, a jolly stout old gentleman in a Welsh wig and a long waistcoat and his stout smiling wife leading a country dance, a fiddler at the high desk, three daughters, young men and women, housemaid and baker, joyous, warm lamplight, a fire, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-16.jpg"
+  },
+  {
+   "n": 17,
+   "tag": "CCII-G",
+   "stave": 2,
+   "cue": 200,
+   "title": "Belle",
+   "light": "day",
+   "prompt": "CCII-G Belle, a fair young woman of twenty in a modest black mourning dress sitting beside young Scrooge, a man in the prime of life of about thirty, clean-shaven, dark hair, an eager greedy restless look in his eye, dark frock coat, she speaks gently and sadly while he looks away, an English parlour in the grey light of a winter afternoon, oil painting, London 1843, rich academic realism, luminous winter daylight, plein air --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch01-b5-2.jpg --no modern, text, letters, beard",
+   "img": "cc-17.jpg"
+  },
+  {
+   "n": 18,
+   "tag": "CCII-H",
+   "stave": 2,
+   "cue": 232,
+   "title": "Belle sets him free",
+   "light": "day",
+   "prompt": "CCII-H Belle, a fair young woman of twenty in a modest black mourning dress rising and turning away from young Scrooge, a man in the prime of life of about thirty, clean-shaven, dark hair, an eager greedy restless look in his eye, dark frock coat, who sits stiffly, a plain parlour, winter light from the window, quiet farewell, oil painting, London 1843, rich academic realism, luminous winter daylight, plein air --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch01-b5-2.jpg --no modern, text, letters, beard",
+   "img": "cc-18.jpg"
+  },
+  {
+   "n": 19,
+   "tag": "CCII-I",
+   "stave": 2,
+   "cue": 250,
+   "title": "The father comes home",
+   "light": "candle",
+   "prompt": "CCII-I a warm comfortable parlour on Christmas Eve, a happy mother and her pretty daughter by the winter fire, a crowd of joyful children rushing a father who comes in laden with Christmas toys and parcels, a porter carrying more, firelight, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-19.jpg"
+  },
+  {
+   "n": 20,
+   "tag": "CCIII-A",
+   "stave": 3,
+   "cue": 30,
+   "title": "The Ghost of Christmas Present",
+   "light": "candle",
+   "prompt": "CCIII-A a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard in dressing-gown at the door of his own room, transformed, walls hung with holly, mistletoe and ivy, a mighty roaring fire, heaped on the floor turkeys, geese, puddings, oysters, chestnuts, cakes and bowls of punch forming a throne, upon it the Ghost of Christmas Present, a jolly giant in a simple deep green robe bordered with white fur, bare feet, dark brown curls, a holly wreath with icicles on his head, carrying a glowing torch shaped like a horn of plenty, glorious, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-20.jpg"
+  },
+  {
+   "n": 21,
+   "tag": "CCIII-B",
+   "stave": 3,
+   "cue": 38,
+   "title": "Christmas morning in the city",
+   "light": "day",
+   "prompt": "CCIII-B London streets on Christmas morning, people scraping snow from the pavements and roofs, boys throwing snowballs, the sky gloomy with dingy mist, housetops white with snow, cheerful and brisk, oil painting, London 1843, rich academic realism, luminous winter daylight, plein air --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch01-b5-2.jpg --no modern, text, letters",
+   "img": "cc-21.jpg"
+  },
+  {
+   "n": 22,
+   "tag": "CCIII-C",
+   "stave": 3,
+   "cue": 50,
+   "title": "The Grocers'",
+   "light": "day",
+   "prompt": "CCIII-C a glowing Victorian grocer's shop on Christmas morning with shutters half down, canisters, raisins, figs and candied fruits, customers hurrying with parcels, people carrying their dinners to the bakers' shops, the Ghost of Christmas Present, a jolly giant in a simple deep green robe bordered with white fur, bare feet, dark brown curls, a holly wreath with icicles on his head, carrying a glowing torch shaped like a horn of plenty sprinkling incense from his torch over them unseen, oil painting, London 1843, rich academic realism, luminous winter daylight, plein air --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch01-b5-2.jpg --no modern, text, letters",
+   "img": "cc-22.jpg"
+  },
+  {
+   "n": 23,
+   "tag": "CCIII-D",
+   "stave": 3,
+   "cue": 85,
+   "title": "Bob comes home with Tiny Tim",
+   "light": "candle",
+   "prompt": "CCIII-D the Cratchits' small four-roomed house, Mrs Cratchit, a brave cheerful mother of forty in a twice-turned gown made brave with cheap ribbons laying the cloth, children around the boiling saucepan of potatoes, Bob Cratchit, a thin careworn clerk of about thirty, clean-shaven, threadbare dark coat and a long white woollen comforter coming in with Tiny Tim, a small pale boy of six with a little crutch and his limbs supported by an iron frame upon his shoulder, warm and poor, the Ghost of Christmas Present, a jolly giant in a simple deep green robe bordered with white fur, bare feet, dark brown curls, a holly wreath with icicles on his head, carrying a glowing torch shaped like a horn of plenty and a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard at the threshold, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-23.jpg"
+  },
+  {
+   "n": 24,
+   "tag": "CCIII-E",
+   "stave": 3,
+   "cue": 100,
+   "title": "The goose",
+   "light": "candle",
+   "prompt": "CCIII-E the Cratchit family at their small table for Christmas dinner, Mrs Cratchit, a brave cheerful mother of forty in a twice-turned gown made brave with cheap ribbons carving the goose, Bob Cratchit, a thin careworn clerk of about thirty, clean-shaven, threadbare dark coat and a long white woollen comforter with Tiny Tim, a small pale boy of six with a little crutch and his limbs supported by an iron frame beside him, children eager, apple sauce and mashed potatoes, warm candlelight, humble room, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-24.jpg"
+  },
+  {
+   "n": 25,
+   "tag": "CCIII-F",
+   "stave": 3,
+   "cue": 120,
+   "title": "The pudding",
+   "light": "candle",
+   "prompt": "CCIII-F Mrs Cratchit, a brave cheerful mother of forty in a twice-turned gown made brave with cheap ribbons entering the little room proudly bearing the Christmas pudding, like a speckled cannonball, blazing in brandy with a sprig of holly stuck in the top, the Cratchit family delighted, Bob Cratchit, a thin careworn clerk of about thirty, clean-shaven, threadbare dark coat and a long white woollen comforter and Tiny Tim, a small pale boy of six with a little crutch and his limbs supported by an iron frame, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-25.jpg"
+  },
+  {
+   "n": 26,
+   "tag": "CCIII-G",
+   "stave": 3,
+   "cue": 150,
+   "title": "God bless us every one",
+   "light": "candle",
+   "prompt": "CCIII-G the Cratchit family drawn round the hearth, Bob Cratchit, a thin careworn clerk of about thirty, clean-shaven, threadbare dark coat and a long white woollen comforter raising a glass in a toast, Tiny Tim, a small pale boy of six with a little crutch and his limbs supported by an iron frame on his little stool close at his father's side, chestnuts on the fire, glasses and a custard cup, firelight on their faces, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-26.jpg"
+  },
+  {
+   "n": 27,
+   "tag": "CCIII-H",
+   "stave": 3,
+   "cue": 160,
+   "title": "The lighthouse",
+   "light": "night",
+   "prompt": "CCIII-H a solitary lighthouse built on a dismal reef of sunken rocks far out at sea, the waters chafing and dashing, two lighthouse keepers in rough clothes wishing each other Merry Christmas by their fire, a streak of fiery red in the west, oil painting, London 1843, rich academic realism, dramatic chiaroscuro, snowy gas-lit night --ar 16:9 --sref https://ianingram.github.io/Amenti-Studios/a-christmas-carol/carol-hero.jpg --no modern, text, letters",
+   "img": "cc-27.jpg"
+  },
+  {
+   "n": 28,
+   "tag": "CCIII-I",
+   "stave": 3,
+   "cue": 180,
+   "title": "Fred's laugh",
+   "light": "candle",
+   "prompt": "CCIII-I a bright warm drawing-room at Christmas, Scrooge's nephew Fred, a ruddy handsome young man of twenty-eight with bright eyes, dark curly hair, a fine dark overcoat laughing heartily holding his sides, his very pretty young wife with a dimpled face laughing too, friends around, firelight and candles, the Ghost of Christmas Present, a jolly giant in a simple deep green robe bordered with white fur, bare feet, dark brown curls, a holly wreath with icicles on his head, carrying a glowing torch shaped like a horn of plenty and a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard watching unseen, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters, beard",
+   "img": "cc-28.jpg"
+  },
+  {
+   "n": 29,
+   "tag": "CCIII-J",
+   "stave": 3,
+   "cue": 197,
+   "title": "Blind man's buff",
+   "light": "candle",
+   "prompt": "CCIII-J a Christmas party game of blind man's buff in a warm drawing-room, a young man blindfolded chasing a plump young woman in a lace tucker among chairs and the piano, laughing guests, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard and the Ghost of Christmas Present, a jolly giant in a simple deep green robe bordered with white fur, bare feet, dark brown curls, a holly wreath with icicles on his head, carrying a glowing torch shaped like a horn of plenty watching unseen, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-29.jpg"
+  },
+  {
+   "n": 30,
+   "tag": "CCIII-K",
+   "stave": 3,
+   "cue": 215,
+   "title": "The Spirit grows old",
+   "light": "night",
+   "prompt": "CCIII-K the Ghost of Christmas Present, a jolly giant in a simple deep green robe bordered with white fur, bare feet, dark brown curls, a holly wreath with icicles on his head, carrying a glowing torch shaped like a horn of plenty, now grown old with grey hair, standing with a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard in an open snowy London place at night, children leaving a Twelfth Night party in the distance, lamps, oil painting, London 1843, rich academic realism, dramatic chiaroscuro, snowy gas-lit night --ar 16:9 --sref https://ianingram.github.io/Amenti-Studios/a-christmas-carol/carol-hero.jpg --no modern, text, letters",
+   "img": "cc-30.jpg"
+  },
+  {
+   "n": 31,
+   "tag": "CCIII-L",
+   "stave": 3,
+   "cue": 240,
+   "title": "Ignorance and Want",
+   "light": "night",
+   "prompt": "CCIII-L the Ghost of Christmas Present, a jolly giant in a simple deep green robe bordered with white fur, bare feet, dark brown curls, a holly wreath with icicles on his head, carrying a glowing torch shaped like a horn of plenty, old, opening the folds of his green robe to reveal two thin pale ragged children, a boy and a girl, kneeling down at his feet clinging to the outside of his garment, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard recoiling, a bleak open place at night, oil painting, London 1843, rich academic realism, dramatic chiaroscuro, snowy gas-lit night --ar 16:9 --sref https://ianingram.github.io/Amenti-Studios/a-christmas-carol/carol-hero.jpg --no modern, text, letters",
+   "img": "cc-31.jpg"
+  },
+  {
+   "n": 32,
+   "tag": "CCIV-A",
+   "stave": 4,
+   "cue": 30,
+   "title": "The Phantom",
+   "light": "night",
+   "prompt": "CCIV-A the Ghost of Christmas Yet to Come, a tall solemn phantom shrouded in a deep black hooded garment that hides its head and face entirely, one outstretched pale hand pointing moving slowly through a dark London street, its hand pointing, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard in dressing-gown following in the shadow of its dress, the city springing up about them, merchants in top hats on the Exchange, oil painting, London 1843, rich academic realism, dramatic chiaroscuro, snowy gas-lit night --ar 16:9 --sref https://ianingram.github.io/Amenti-Studios/a-christmas-carol/carol-hero.jpg --no modern, text, letters",
+   "img": "cc-32.jpg"
+  },
+  {
+   "n": 33,
+   "tag": "CCIV-B",
+   "stave": 4,
+   "cue": 50,
+   "title": "Old Joe's shop",
+   "light": "candle",
+   "prompt": "CCIV-B a low beetling rag-and-bone shop in a foul obscure part of London, iron, old rags, bottles, bones and greasy offal heaped inside, a grey-haired rascal of seventy smoking a pipe by a charcoal stove, a rag curtain behind him, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-33.jpg"
+  },
+  {
+   "n": 34,
+   "tag": "CCIV-C",
+   "stave": 4,
+   "cue": 65,
+   "title": "The bundles",
+   "light": "candle",
+   "prompt": "CCIV-C in a dim rag-and-bone shop a charwoman, a laundress and an undertaker's man in faded black opening bundles of bed-curtains, blankets and a shirt before an old man smoking a pipe by a small stove, a lamp, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard and the Ghost of Christmas Yet to Come, a tall solemn phantom shrouded in a deep black hooded garment that hides its head and face entirely, one outstretched pale hand pointing in the shadows, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-34.jpg"
+  },
+  {
+   "n": 35,
+   "tag": "CCIV-D",
+   "stave": 4,
+   "cue": 85,
+   "title": "The dark chamber",
+   "light": "night",
+   "prompt": "CCIV-D a bare dark bedroom, the curtains torn from the bed, on the bed under a ragged sheet a covered still form, face not shown, a pale light falling upon it, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard recoiling in horror, the Ghost of Christmas Yet to Come, a tall solemn phantom shrouded in a deep black hooded garment that hides its head and face entirely, one outstretched pale hand pointing pointing, oil painting, London 1843, rich academic realism, dramatic chiaroscuro, snowy gas-lit night --ar 16:9 --sref https://ianingram.github.io/Amenti-Studios/a-christmas-carol/carol-hero.jpg --no modern, text, letters",
+   "img": "cc-35.jpg"
+  },
+  {
+   "n": 36,
+   "tag": "CCIV-E",
+   "stave": 4,
+   "cue": 105,
+   "title": "A happier house",
+   "light": "candle",
+   "prompt": "CCIV-E a poor room by firelight, a young mother with her children waiting anxiously, her careworn husband coming in with a face of serious delight, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard and the Ghost of Christmas Yet to Come, a tall solemn phantom shrouded in a deep black hooded garment that hides its head and face entirely, one outstretched pale hand pointing watching, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-36.jpg"
+  },
+  {
+   "n": 37,
+   "tag": "CCIV-F",
+   "stave": 4,
+   "cue": 140,
+   "title": "The quiet house",
+   "light": "candle",
+   "prompt": "CCIV-F the Cratchits' small room, very quiet, Mrs Cratchit, a brave cheerful mother of forty in a twice-turned gown made brave with cheap ribbons sewing by the lamp, children still as statues in one corner, Peter reading a book, Tiny Tim, a small pale boy of six with a little crutch and his limbs supported by an iron frame's little crutch leaning by an empty stool by the fire, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-37.jpg"
+  },
+  {
+   "n": 38,
+   "tag": "CCIV-G",
+   "stave": 4,
+   "cue": 175,
+   "title": "Bob comes home",
+   "light": "candle",
+   "prompt": "CCIV-G Bob Cratchit, a thin careworn clerk of about thirty, clean-shaven, threadbare dark coat and a long white woollen comforter coming home and sitting by the fire, his family drawing about him, Mrs Cratchit, a brave cheerful mother of forty in a twice-turned gown made brave with cheap ribbons at his side, the children's faces pressed to his, quiet sorrowful love, lamplight, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters",
+   "img": "cc-38.jpg"
+  },
+  {
+   "n": 39,
+   "tag": "CCIV-H",
+   "stave": 4,
+   "cue": 215,
+   "title": "The churchyard",
+   "light": "night",
+   "prompt": "CCIV-H a neglected overgrown London churchyard behind an iron gate at night, walled in by houses, the Ghost of Christmas Yet to Come, a tall solemn phantom shrouded in a deep black hooded garment that hides its head and face entirely, one outstretched pale hand pointing pointing to a lonely untended gravestone, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard in dressing-gown creeping towards it trembling, oil painting, London 1843, rich academic realism, dramatic chiaroscuro, snowy gas-lit night --ar 16:9 --sref https://ianingram.github.io/Amenti-Studios/a-christmas-carol/carol-hero.jpg --no modern, text, letters",
+   "img": "cc-39.jpg"
+  },
+  {
+   "n": 40,
+   "tag": "CCV-A",
+   "stave": 5,
+   "cue": 40,
+   "title": "Hallo here!",
+   "light": "day",
+   "prompt": "CCV-A a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard in nightcap and nightgown leaning joyfully out of his opened window on a bright clear cold Christmas morning, golden sunlight, sweet fresh air, a boy in Sunday clothes in the snowy street below looking up, church bells, oil painting, London 1843, rich academic realism, luminous winter daylight, plein air --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch01-b5-2.jpg --no modern, text, letters",
+   "img": "cc-40.jpg"
+  },
+  {
+   "n": 41,
+   "tag": "CCV-B",
+   "stave": 5,
+   "cue": 90,
+   "title": "Scrooge in the streets",
+   "light": "day",
+   "prompt": "CCV-B a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard in his best clothes walking happily through snowy London streets on Christmas morning, smiling and patting children on the head, people pouring forth from their houses, sunlight, oil painting, London 1843, rich academic realism, luminous winter daylight, plein air --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch01-b5-2.jpg --no modern, text, letters",
+   "img": "cc-41.jpg"
+  },
+  {
+   "n": 42,
+   "tag": "CCV-C",
+   "stave": 5,
+   "cue": 125,
+   "title": "A merry Christmas, Bob",
+   "light": "candle",
+   "prompt": "CCV-C Scrooge's counting-house, a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard beaming and clapping Bob Cratchit, a thin careworn clerk of about thirty, clean-shaven, threadbare dark coat and a long white woollen comforter on the back, a big bright coal fire built up, a steaming bowl of Christmas punch on the desk, morning light, oil painting, London 1843, rich academic realism, warm candlelight and firelight, dramatic chiaroscuro --ar 16:9 --sref https://ianingram.github.io/Amenti-Readings/dracula/art/ch03-b1-1.jpg --no modern, text, letters, beard",
+   "img": "cc-42.jpg"
+  }
+ ],
+ "refs": [
+  {
+   "name": "scrooge",
+   "prompt": "CCREF-scrooge portrait of a thin old man of about seventy, pointed nose, shrivelled cheeks, thin pale lips, wiry white eyebrows and a frosty white stubble on his chin, clean-shaven, no beard, black frock coat, half-length, plain dark background, oil painting, 1843, rich academic realism, soft studio light --ar 3:4"
+  },
+  {
+   "name": "bob",
+   "prompt": "CCREF-bob portrait of Bob Cratchit, a thin careworn clerk of about thirty, clean-shaven, threadbare dark coat and a long white woollen comforter, half-length, plain dark background, oil painting, 1843, rich academic realism, soft studio light --ar 3:4"
+  },
+  {
+   "name": "fred",
+   "prompt": "CCREF-fred portrait of Scrooge's nephew Fred, a ruddy handsome young man of twenty-eight with bright eyes, dark curly hair, a fine dark overcoat, half-length, plain dark background, oil painting, 1843, rich academic realism, soft studio light --ar 3:4"
+  },
+  {
+   "name": "marley",
+   "prompt": "CCREF-marley portrait of the ghost of Jacob Marley, a transparent grey old man in pigtail, waistcoat, tights and boots, a white bandage tied round his jaw, a long chain wound about him made of cash-boxes, keys, padlocks, ledgers and heavy steel purses, half-length, plain dark background, oil painting, 1843, rich academic realism, soft studio light --ar 3:4"
+  },
+  {
+   "name": "past",
+   "prompt": "CCREF-past portrait of the Ghost of Christmas Past, a strange small figure like a child and an old man at once, long white hair, smooth youthful face, white tunic belted with a lustrous belt, a branch of fresh green holly in its hand, a bright clear jet of light springing from its crown, half-length, plain dark background, oil painting, 1843, rich academic realism, soft studio light --ar 3:4"
+  },
+  {
+   "name": "present",
+   "prompt": "CCREF-present portrait of the Ghost of Christmas Present, a jolly giant in a simple deep green robe bordered with white fur, bare feet, dark brown curls, a holly wreath with icicles on his head, carrying a glowing torch shaped like a horn of plenty, half-length, plain dark background, oil painting, 1843, rich academic realism, soft studio light --ar 3:4"
+  },
+  {
+   "name": "mrs-cratchit",
+   "prompt": "CCREF-mrs-cratchit portrait of Mrs Cratchit, a brave cheerful mother of forty in a twice-turned gown made brave with cheap ribbons, half-length, plain dark background, oil painting, 1843, rich academic realism, soft studio light --ar 3:4"
+  },
+  {
+   "name": "tiny-tim",
+   "prompt": "CCREF-tiny-tim portrait of Tiny Tim, a small pale boy of six with a little crutch and his limbs supported by an iron frame, half-length, plain dark background, oil painting, 1843, rich academic realism, soft studio light --ar 3:4"
+  },
+  {
+   "name": "belle",
+   "prompt": "CCREF-belle portrait of Belle, a fair young woman of twenty in a modest black mourning dress, half-length, plain dark background, oil painting, 1843, rich academic realism, soft studio light --ar 3:4"
+  },
+  {
+   "name": "young-scrooge",
+   "prompt": "CCREF-young-scrooge portrait of young Scrooge, a man in the prime of life of about thirty, clean-shaven, dark hair, an eager greedy restless look in his eye, dark frock coat, half-length, plain dark background, oil painting, 1843, rich academic realism, soft studio light --ar 3:4"
+  },
+  {
+   "name": "fezziwig",
+   "prompt": "CCREF-fezziwig portrait of old Fezziwig, a jolly stout old gentleman in a Welsh wig and a long waistcoat, half-length, plain dark background, oil painting, 1843, rich academic realism, soft studio light --ar 3:4"
+  }
+ ]
+}
