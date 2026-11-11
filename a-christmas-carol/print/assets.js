@@ -9,7 +9,7 @@ const holly=(w)=>`<svg width="${w}" height="${w*0.5}" viewBox="0 0 120 60"><g fi
 const jobs=[
  ['title-flat.jpg',2200,1700,`body{background:#0d1222}.bg{position:absolute;inset:0;background:url(file:///home/claude/as/a-christmas-carol/carol-hero.jpg) center/cover;filter:brightness(.55)}
  .t{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#f1e9da;text-align:center}`,
- `<div class=bg></div><div class=t><div class=k>Charles Dickens</div><div style="font:300 150px/1.02 C;letter-spacing:.08em;margin:40px 0 10px">A<br>CHRISTMAS<br>CAROL</div><div style="font:italic 36px G;color:#e8dcc6;margin:18px 0 50px">in Prose · Being a Ghost Story of Christmas</div><div class=k style="font-size:22px">Amenti Studios</div></div>`],
+ `<div class=bg></div><div class=t><div style="font:300 150px/1.02 C;letter-spacing:.08em;margin:0 0 34px">A<br>CHRISTMAS<br>CAROL</div><div class=k>Charles Dickens</div><div style="font:italic 36px G;color:#e8dcc6;margin:22px 0 50px">in Prose · Being a Ghost Story of Christmas</div><div class=k style="font-size:22px">Amenti Studios</div></div>`],
  ['orn-flat.jpg',3600,360,`body{background:#fff;display:flex;align-items:center;justify-content:center}`,`<div style="height:4px;width:1500px;background:#a8823f"></div><div style="margin:0 40px">${holly(300)}</div><div style="height:4px;width:1500px;background:#a8823f"></div>`],
 ];
 const st=['One','Two','Three','Four','Five'];const D=JSON.parse(fs.readFileSync('data.json'));
