@@ -76,6 +76,8 @@
   /* the introduction: a quiet programme serif; the script is kept for the credit alone, as a signature */
   .blurb{max-width:560px;margin:26px auto 0;font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;
     font-size:clamp(17px,1.55vw,20px);line-height:1.7;color:#b8b1a3;letter-spacing:.005em}
+  .reel{max-width:1000px;margin:30px auto 0;border:1px solid var(--rule);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .reel video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#090c10}
   .rule{height:1px;max-width:560px;margin:46px auto 0;
     background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 
@@ -135,6 +137,7 @@
     <button type="button" data-sky="now" class="on">Tonight</button><button type="button" data-sky="built">2560 BC</button></div>
   <h1 class="mark">AMENTI STUDIOS</h1>
   <div class="tag">Staged readings</div>
+  <div class="reel"><video src="media/studios-reel.mp4" poster="media/studios-reel.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Paintings from the Amenti Studios productions"></video></div>
   <p class="blurb">
     Public-domain works, cast from the Amenti Library of Legends. Every voice is a
     historical figure drawn from a ledger of more than two thousand, each carrying
