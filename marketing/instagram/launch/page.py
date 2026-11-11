@@ -13,17 +13,20 @@ P=[
 ("10","The Un-Dead","ch. XV–XVI","The children of Hampstead come home late and tell of a beautiful lady in white who walks with them at night. Van Helsing knows what she is, and Arthur must see it for himself. Lucy Westenra is Un-Dead.\n\nDracula, chapters XV–XVI.","#Dracula #BramStoker #LucyWestenra #AmentiStudios"),
 ("11","Dracula: The Borgo Pass","Coming soon","The Borgo Pass, where the road east runs out and the Count’s calèche is waiting.\n\nDracula · Volume One. Books I and II of Bram Stoker’s novel, chapters I–XVI, illustrated throughout, in hardcover. Every chapter links to its scored reading.\n\nComing soon from Amenti Studios.","#Dracula #BramStoker #IllustratedBooks #AmentiStudios"),
 ("12","Piccadilly","ch. XIII","London, broad daylight. Mina feels Jonathan’s arm grip hers. He is staring at a tall, thin man by a carriage.\n\n“I believe it is the Count, but he has grown young.”\n— Jonathan Harker, Dracula, chapter XIII","#Dracula #BramStoker #VictorianLondon #AmentiStudios"),
+("13","Buda-Pesth","ch. I","1 May. Jonathan Harker’s train reaches Buda-Pesth, the first stop on the road east.\n\n“Buda-Pesth seems a wonderful place, from the glimpse which I got of it from the train and the little I could walk through the streets.”\n— Jonathan Harker, Dracula, chapter I","#Dracula #BramStoker #Budapest #Danube #AmentiStudios"),
+("14","Leaving the West","ch. I","“The impression I had was that we were leaving the West and entering the East; the most western of splendid bridges over the Danube, which is here of noble width and depth, took us among the traditions of Turkish rule.”\n— Jonathan Harker, Dracula, chapter I","#Dracula #BramStoker #Danube #GothicArt #AmentiStudios"),
+("15","The Danube","ch. I","Dusk on the Danube. Jonathan has a few hours in the city before the night train carries him on towards Klausenburgh and the Carpathians.\n\nDracula, chapter I.","#Dracula #BramStoker #Budapest #Danube #AmentiStudios"),
 ]
 def enc(im,q):
   b=io.BytesIO();im.save(b,'JPEG',quality=q);return 'data:image/jpeg;base64,'+base64.b64encode(b.getvalue()).decode()
 def thumb(n):
   im=Image.open(f'posts/{n}.jpg');cw=int(1350*.75);x=(1080-cw)//2;return enc(im.crop((x,0,x+cw,1350)).resize((300,400)),78)
-grid=''.join(f'<a href="#p{n}"><img src="{thumb(n)}" alt="Post {int(n)}"></a>' for n in [f'{i:02d}' for i in range(12,0,-1)])
+grid=''.join(f'<a href="#p{n}"><img src="{thumb(n)}" alt="Post {int(n)}"></a>' for n in [f'{i:02d}' for i in range(len(P),0,-1)])
 cards=''
 for n,t,ch,cap,tags in P:
   i=int(n);day='Launch day' if i<=3 else f'Day {i-2}'
   cards+=f'''<article id="p{n}" class="post"><img class="full" src="{enc(Image.open(f'posts/{n}.jpg'),84)}" alt="{html.escape(t)}">
-<div class="meta"><div class="row"><span class="k">Post {i} of 12 · {day}</span>{'<span class="k dim">'+ch+'</span>' if ch else ''}</div>
+<div class="meta"><div class="row"><span class="k">Post {i} of {len(P)} · {day}</span>{'<span class="k dim">'+ch+'</span>' if ch else ''}</div>
 <h3>{html.escape(t)}</h3><pre id="c{n}">{html.escape(cap+chr(10)*2+tags)}</pre>
 <button type="button" data-c="c{n}">Copy caption</button></div></article>'''
 bio="Great books read aloud by a cast of legends, scored and painted scene by scene.\nNow: Bram Stoker’s Dracula\nVolume One coming soon ↓"
@@ -32,8 +35,8 @@ old=open(F).read()
 head=old[:old.index('<div class="wrap">')]
 script=old[old.index('<script>'):]
 body=f'''<div class="wrap">
-<header><div class="k">Instagram · first twelve posts</div><h1>AMENTI STUDIOS</h1>
-<p>This is how the profile grid will look once all twelve are up. The newest post sits top left, so they go up in reverse: post 1 first, post 12 last.</p></header>
+<header><div class="k">Instagram · first fifteen posts</div><h1>AMENTI STUDIOS</h1>
+<p>This is how the profile grid will look once all fifteen are up. The newest post sits top left, so they go up in reverse: post 1 first, post 15 last.</p></header>
 <div class="grid">{grid}</div>
 <section class="bio"><h2>Profile</h2><dl>
 <dt>Name</dt><dd>Amenti Studios</dd>
@@ -43,9 +46,9 @@ body=f'''<div class="wrap">
 <div class="row" style="justify-content:flex-start"><button type="button" data-c="cbio">Copy bio</button><button type="button" data-c="clink">Copy link</button></div></section>
 <section><h2>Posting plan</h2><ol>
 <li>Launch day: posts 1, 2 and 3, a few minutes apart, so the first visitors find a full row.</li>
-<li>Then one a day, posts 4 to 12, which takes nine more days. The Volume One announcement, post 11, goes up the day before the last post.</li>
+<li>Then one a day, posts 4 to 15, which takes twelve more days. Posts 13 to 15, the journey through Buda-Pesth, finish the run.</li>
 <li>To save a picture on your phone, press and hold it, then choose Save to Photos.</li></ol></section>
 {cards}
 </div>
 '''
-open(F,'w').write(head.replace('first nine posts','first twelve posts')+body+script);print(os.path.getsize(F)//1024,'KB')
+open(F,'w').write(head.replace('first nine posts','first fifteen posts')+body+script);print(os.path.getsize(F)//1024,'KB')
