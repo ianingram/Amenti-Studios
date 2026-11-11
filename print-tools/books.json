@@ -1,0 +1,103 @@
+{
+ "julius-caesar": {
+  "play": true,
+  "unit": "Act",
+  "rh": "Julius Caesar \u00b7 Act ",
+  "title": [
+   "JULIUS",
+   "CAESAR"
+  ],
+  "author": "William Shakespeare",
+  "tagline": "The Tragedy of Julius Caesar",
+  "hero": "/home/claude/as/julius-caesar/jc-hero.jpg",
+  "motif": "laurel",
+  "titleImage": true
+ },
+ "romeo-and-juliet": {
+  "play": true,
+  "unit": "Act",
+  "rh": "Romeo and Juliet \u00b7 Act ",
+  "title": [
+   "ROMEO",
+   "AND",
+   "JULIET"
+  ],
+  "author": "William Shakespeare",
+  "tagline": "The Most Excellent and Lamentable Tragedy",
+  "hero": "/home/claude/as/romeo-and-juliet/verona-3-sunrise.jpg",
+  "motif": "rose"
+ },
+ "treasure-island": {
+  "unit": "Chapter",
+  "rh": "Treasure Island \u00b7 Chapter ",
+  "title": [
+   "TREASURE",
+   "ISLAND"
+  ],
+  "author": "Robert Louis Stevenson",
+  "tagline": "",
+  "hero": "/home/claude/as/treasure-island/voyage/s00.jpg",
+  "motif": "anchor"
+ },
+ "quo-vadis": {
+  "unit": "Chapter",
+  "rh": "Quo Vadis \u00b7 Chapter ",
+  "title": [
+   "QUO",
+   "VADIS"
+  ],
+  "author": "Henryk Sienkiewicz",
+  "tagline": "A Narrative of the Time of Nero",
+  "hero": "/home/claude/as/quo-vadis/qv01.jpg",
+  "motif": "fish"
+ },
+ "quo-vadis-1": {
+  "unit": "Chapter",
+  "rh": "Quo Vadis \u00b7 Volume One \u00b7 Chapter ",
+  "title": [
+   "QUO",
+   "VADIS"
+  ],
+  "author": "Henryk Sienkiewicz",
+  "tagline": "A Narrative of the Time of Nero \u00b7 Volume One",
+  "hero": "/home/claude/as/quo-vadis/qv01.jpg",
+  "motif": "fish",
+  "src": "quo-vadis",
+  "only": [
+   1,
+   2
+  ]
+ },
+ "quo-vadis-2": {
+  "unit": "Chapter",
+  "rh": "Quo Vadis \u00b7 Volume Two \u00b7 Chapter ",
+  "title": [
+   "QUO",
+   "VADIS"
+  ],
+  "author": "Henryk Sienkiewicz",
+  "tagline": "A Narrative of the Time of Nero \u00b7 Volume Two",
+  "hero": "/home/claude/as/quo-vadis/qv01.jpg",
+  "motif": "fish",
+  "src": "quo-vadis",
+  "only": [
+   3
+  ]
+ },
+ "quo-vadis-3": {
+  "unit": "Chapter",
+  "rh": "Quo Vadis \u00b7 Volume Three \u00b7 Chapter ",
+  "title": [
+   "QUO",
+   "VADIS"
+  ],
+  "author": "Henryk Sienkiewicz",
+  "tagline": "A Narrative of the Time of Nero \u00b7 Volume Three",
+  "hero": "/home/claude/as/quo-vadis/qv01.jpg",
+  "motif": "fish",
+  "src": "quo-vadis",
+  "only": [
+   4
+  ]
+ }
+}
