@@ -29,7 +29,7 @@ for n,t,ch,cap,tags in P:
 <div class="meta"><div class="row"><span class="k">Post {i} of {len(P)} · {day}</span>{'<span class="k dim">'+ch+'</span>' if ch else ''}</div>
 <h3>{html.escape(t)}</h3><pre id="c{n}">{html.escape(cap+chr(10)*2+tags)}</pre>
 <button type="button" data-c="c{n}">Copy caption</button></div></article>'''
-bio="Great books read aloud by a cast of legends, scored and painted scene by scene.\nNow: Bram Stoker’s Dracula\nVolume One coming soon ↓"
+bio="Classic novels, voiced by history.\nDarwin reads Jonathan Harker. Mary Shelley reads Lucy.\nDracula · illustrated hardcover coming soon"
 F='/tmp/claude-0/-home-claude/2bd1063c-47d9-5020-8010-6af81f79ced0/scratchpad/instagram-launch.html'
 old=open(F).read()
 head=old[:old.index('<div class="wrap">')]
