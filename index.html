@@ -186,7 +186,11 @@ const PRODUCTIONS = [
   { key:'julius-caesar', title:'Julius Caesar', author:'William Shakespeare', year:1599,
     art:'julius-caesar/jc-hero.jpg', href:'julius-caesar/', ready:true, unit:'acts',
     line:'Beware the ides of March. The Romans speak their own lines \u2014 Caesar, Brutus, '
-       + 'Cassius, Antony \u2014 and the Forum opens it.' }
+       + 'Cassius, Antony \u2014 and the Forum opens it.' },
+  { key:'a-tale-of-two-cities', title:'A Tale of Two Cities', author:'Charles Dickens', year:1859,
+    art:'a-tale-of-two-cities/opening/ch39-1.jpg', href:'a-tale-of-two-cities/', ready:true,
+    line:'London and Paris, 1775 to the Terror. Dickens narrates; Carton by Christopher '
+       + 'Hitchens, Madame Defarge by Coco Chanel, the Marquis by the Marquis de Sade.' }
 ];
 
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,

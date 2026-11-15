@@ -1,0 +1,472 @@
+<!-- Amenti-Studios/a-tale-of-two-cities/index.html · 2026-11-15 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A Tale of Two Cities · Amenti Studios</title>
+<!-- ===========================================================================
+     AMENTI STUDIOS · the production front for A Tale of Two Cities
+     ---------------------------------------------------------------------------
+     A SIBLING OF THE TREASURE ISLAND PAGE. The night is Paris, and the motion is
+     ash drifting down over the city instead of spray off the sea.
+     THE OPENING: with the sound on, the book's own score plays as one suite
+     (sound/theme-two-cities.mp3 in Amenti-Readings: the overture, Recalled to Life,
+     Soho, the Revolution, the Terror, Carton's farewell) and the storyboard
+     paintings follow it, one moment per part of the story (opening/).
+     IT READS THE PRODUCTION LIVE from Amenti-Readings (cast.json and
+     a-tale-of-two-cities/index.json), and falls back to the cast as written.
+     =========================================================================== -->
+<style>
+  :root{
+    --ink:#07090c; --mist:#9fb3bd; --pale:#dfe8ec;
+    --gold:#e3b55a; --rule:rgba(255,255,255,.08);
+    --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+    --serif:Georgia,'Times New Roman',serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--ink);color:var(--pale);
+    font-family:var(--mono);-webkit-font-smoothing:antialiased}
+
+  /* ── the City on Christmas Eve ─────────────────────────────────────── */
+  .hero{position:relative;height:88vh;min-height:540px;overflow:hidden;
+    background:radial-gradient(120% 90% at 70% 105%,#2a1810 0%,#160d0a 45%,#07090c 82%)}
+  .shot{position:absolute;inset:-3%;background:url('opening/ch39-1.jpg') center 46%/cover no-repeat;opacity:0;
+    animation:push 48s ease-in-out infinite alternate, reveal 7s 11s ease-out forwards;
+    will-change:transform,opacity}
+  /* the same frame again, blurred and drifting: fog, with no second asset */
+  .drift{position:absolute;inset:-6%;background:url('opening/ch39-1.jpg') center 58%/cover no-repeat;
+    opacity:0;filter:blur(14px) saturate(1.1);mix-blend-mode:screen;
+    animation:drift 104s linear infinite, driftin 7s 11s ease-out forwards;will-change:transform,opacity}
+  @keyframes driftin{to{opacity:.16}}
+  @keyframes drift{from{transform:translate3d(-2.5%,0,0)}to{transform:translate3d(2.5%,0,0)}}
+  @keyframes reveal{to{opacity:1}}
+  /* THE OPENING (15 Nov 2026). With the sound on, the frame follows the book's score:
+     London and Paris from 1775 to the Terror, one storyboard painting per moment
+     (opening/), each placed on its part of the suite and read from the audio clock, so
+     picture and music cannot drift apart. Sound off: back to the still. */
+  .scene{position:absolute;inset:-3%;opacity:0;transition:opacity 3s ease-in-out;
+    background:center 50%/cover no-repeat;animation:push 30s ease-in-out infinite alternate;will-change:opacity,transform}
+  video.scene{width:106%;height:106%;object-fit:cover}
+  .scene.on{opacity:1}
+  .voycap{position:absolute;right:clamp(20px,4vw,48px);top:clamp(18px,4vh,40px);z-index:4;font-size:11px;
+    letter-spacing:.3em;text-transform:uppercase;color:var(--pale);opacity:0;transition:opacity 2.5s;text-shadow:0 1px 14px rgba(0,0,0,.9)}
+  .voycap.on{opacity:.85}
+  .titles{transition:opacity 4s} .hero.voyage .titles{opacity:.35}
+  @keyframes push{from{transform:scale(1)}to{transform:scale(1.06)}}
+  /* fog: the palpable brown air, very faint, drifting */
+  .fog{position:absolute;inset:-10%;pointer-events:none;opacity:0;
+    background:radial-gradient(60% 40% at 30% 70%,rgba(150,130,100,.10),transparent 70%),
+               radial-gradient(50% 35% at 75% 60%,rgba(140,140,130,.08),transparent 70%);
+    animation:fogdrift 90s linear infinite alternate, fogin 9s 4s ease-out forwards}
+  @keyframes fogin{to{opacity:1}}
+  @keyframes fogdrift{from{transform:translate3d(-3%,0,0)}to{transform:translate3d(3%,0,0)}}
+  canvas.snow{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;
+    animation:in 4s 1.5s forwards}
+  .veil{position:absolute;inset:0;pointer-events:none;
+    background:
+      linear-gradient(90deg,rgba(7,9,12,.82) 0%,rgba(7,9,12,.55) 24%,rgba(7,9,12,.15) 44%,rgba(7,9,12,0) 60%),
+      linear-gradient(180deg,rgba(7,9,12,0) 60%,rgba(7,9,12,.7) 88%,var(--ink) 100%)}
+
+  .titles{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;
+    align-items:flex-start;justify-content:center;text-align:left;
+    padding:0 20px 0 clamp(24px,7vw,110px)}
+  .studio{font-size:13px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;
+    opacity:0;animation:in 2s 1s forwards}
+  .presents{font-size:11px;letter-spacing:.3em;color:var(--mist);text-transform:uppercase;
+    margin-top:9px;opacity:0;animation:in 2s 2.2s forwards}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(34px,6.2vw,84px);
+    letter-spacing:.06em;margin:14px 0 0;color:#fff;line-height:1.02;
+    text-shadow:0 2px 60px rgba(0,0,0,.85),0 0 120px rgba(0,0,0,.6);
+    opacity:0;animation:in 2.6s 3.2s forwards}
+  .sub-title{font-family:var(--serif);font-style:italic;font-size:clamp(15px,1.6vw,19px);
+    color:var(--pale);margin:12px 0 0;opacity:0;animation:in 2s 4.4s forwards}
+  .byline{font-size:14px;letter-spacing:.26em;color:var(--pale);text-transform:uppercase;
+    margin:16px 0 0;text-shadow:0 1px 20px rgba(0,0,0,.9);opacity:0;animation:in 2s 5.4s forwards}
+  .form{font-size:12px;letter-spacing:.2em;color:var(--pale);margin:10px 0 0;
+    text-transform:uppercase;opacity:0;animation:in 2s 6.4s forwards}
+
+  /* THE MARK — the house cross, as on the Dracula page */
+  .mark{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    z-index:4;opacity:0;pointer-events:none;
+    animation:in 2.6s 7s forwards, markout 5s 15s ease-in forwards}
+  @keyframes markout{to{opacity:0}}
+  .mark svg{display:block;width:54px;height:82px;overflow:visible}
+  .mark line{stroke:var(--gold);stroke-width:1.1;opacity:.8}
+  .mark circle{fill:none;stroke:var(--gold);stroke-width:.8;opacity:.4}
+
+  .snd{position:absolute;right:20px;bottom:20px;z-index:5;display:flex;align-items:center;gap:9px;
+    background:rgba(7,9,12,.5);border:1px solid var(--rule);padding:8px 13px;cursor:pointer;
+    opacity:0;animation:in 2s 8s forwards;backdrop-filter:blur(6px);color:inherit;font:inherit}
+  .snd:hover{border-color:rgba(227,181,90,.5)}
+  .snd:focus-visible{outline:1px solid var(--gold);outline-offset:3px}
+  .snd span{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--mist)}
+  .snd.on span{color:var(--gold)}
+  .snd svg{width:13px;height:13px;overflow:visible}
+  .snd line{stroke:var(--mist);stroke-width:1.2;stroke-linecap:round}
+  .snd.on line{stroke:var(--gold)}
+  .snd .w2,.snd .w3{opacity:0;transition:opacity .4s}
+  .snd.on .w2{opacity:.8}
+  .snd.on .w3{opacity:.45}
+  @keyframes in{to{opacity:1}}
+
+  /* ── the production (as the Dracula page) ─────────────────────────── */
+  .wrap{max-width:900px;margin:0 auto;padding:0 22px 90px;text-align:left}
+  .band{font-size:13px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;
+    text-align:center;margin:56px 0 5px;display:block;width:100%}
+  .sub{font-size:13px;color:#8ea3ad;text-align:center;margin-bottom:24px;display:block;width:100%}
+  .company{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+  .member{display:flex;gap:16px;align-items:center;padding:18px 18px;background:#090c10}
+  .member:hover{background:#0d1216}
+  .face{width:48px;height:64px;flex:0 0 48px;border:1px solid var(--rule);background-size:cover;
+    background-position:50% 16%;display:flex;align-items:center;justify-content:center;font-size:19px;
+    color:var(--gold);background-color:rgba(255,255,255,.03)}
+  .who{flex:1;min-width:0}
+  .role{font-family:var(--serif);font-size:20px;color:#fff}
+  .as{font-size:10px;letter-spacing:.22em;color:#7d8d95;text-transform:uppercase;margin:3px 0 2px}
+  .actor{font-size:16px;color:var(--gold)}
+  .dialect{font-size:13px;color:var(--mist);margin-top:3px}
+  .chapters{border:1px solid var(--rule)}
+  .ch{display:flex;gap:14px;align-items:baseline;padding:12px 16px;border-bottom:1px solid var(--rule);
+    font-size:14px;background:#090c10}
+  .ch:last-child{border-bottom:none}
+  .ch.on{background:rgba(227,181,90,.07);cursor:pointer}
+  .ch.on:hover,.ch.on:focus-visible{background:rgba(227,181,90,.14);outline:none}
+  .n{color:#6c7c84;font-size:12px;width:30px;flex:0 0 30px}
+  .doc{color:var(--mist);font-size:11px;letter-spacing:.12em;text-transform:uppercase;width:250px;
+    flex:0 0 250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sum{color:#9fb3bd;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ch.on .sum{color:var(--pale)}
+  .tag{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#6c7c84}
+  .ch.on .tag{color:var(--gold)}
+  .note{margin-top:16px;font-size:12px;color:#8ea3ad;text-align:center;line-height:1.9}
+  .foot{margin-top:38px;text-align:center;font-size:12px;color:#6c7c84;line-height:2}
+  @media(max-width:620px){
+    .doc{display:none}
+    .hero{height:74vh}
+    .titles{align-items:center;text-align:center;padding:0 18px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .shot,.fog{animation:none}
+    .shot{opacity:1}
+    .drift{display:none}
+    canvas.snow{display:none}
+    .studio,.presents,h1,.sub-title,.byline,.form,.snd{animation:none;opacity:1}
+    .mark{animation:none;opacity:0}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="shot"></div>
+  <div class="drift"></div>
+  <div class="voyage" id="voyage"></div>
+  <div class="voycap" id="voycap"></div>
+  <div class="fog"></div>
+  <canvas class="snow" id="snow" aria-hidden="true"></canvas>
+  <div class="veil"></div>
+  <div class="mark" aria-hidden="true">
+    <svg viewBox="0 0 54 82">
+      <line x1="27" y1="0"  x2="27" y2="82"/>
+      <line x1="3"  y1="25" x2="51" y2="25"/>
+      <circle cx="27" cy="25" r="12"/>
+    </svg>
+  </div>
+  <button class="snd" id="snd" aria-label="Turn sound on">
+    <svg viewBox="0 0 13 13" aria-hidden="true">
+      <line x1="2" y1="4" x2="2" y2="9"/>
+      <line class="w2" x1="6" y1="2" x2="6" y2="11"/>
+      <line class="w3" x1="10" y1="4.5" x2="10" y2="8.5"/>
+    </svg>
+    <span>sound</span>
+  </button>
+  <div class="titles">
+    <div class="studio"><a href="../" style="color:inherit;text-decoration:none">Amenti Studios</a></div>
+    <div class="presents">presents</div>
+    <h1>A TALE OF<br>TWO CITIES</h1>
+    <div class="sub-title">It was the best of times, it was the worst of times&hellip;</div>
+    <div class="byline">Charles Dickens &middot; 1859</div>
+    <div class="form">Cast from the Amenti Interface Library of Legends</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="band">The Company</div>
+  <div class="sub" id="company-sub">&hellip;</div>
+  <div class="company" id="company"></div>
+
+  <div class="band">The Chapters</div>
+  <div class="sub" id="ch-sub"></div>
+  <div class="chapters" id="chapters"></div>
+
+  <div class="note" id="note"></div>
+  <div class="foot">
+    Ingram Manor LLC &middot; 2026 &middot; All Rights Reserved<br>
+    The text is public domain. The voices are not performances by the people named &mdash;
+    they are the ledger&rsquo;s record of how each figure spoke, used as a casting pool.
+  </div>
+</div>
+
+<script>
+/* ── ASH ──────────────────────────────────────────────────────────────────
+   The Carol's snow canvas, slowed and warmed: ash and a few embers drifting
+   down over the city at three depths, paused when the tab is hidden, absent
+   under prefers-reduced-motion. */
+(function () {
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c = document.getElementById('snow'); if (!c || !c.getContext) return;
+  var g = c.getContext('2d'), W, H, flakes = [], dpr = Math.min(2, window.devicePixelRatio || 1);
+  function size() { W = c.clientWidth; H = c.clientHeight; c.width = W * dpr; c.height = H * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0); }
+  size(); window.addEventListener('resize', size);
+  var n = Math.round(Math.min(110, (W * H) / 12000));
+  for (var i = 0; i < n; i++) {
+    var z = Math.random();
+    flakes.push({ x: Math.random() * W, y: Math.random() * H, z: z, r: 0.4 + z * 1.1,
+                  v: 0.25 + z * 0.9, s: Math.random() * 6.28, a: 0.12 + z * 0.35 });
+  }
+  var run = true;
+  document.addEventListener('visibilitychange', function () { run = !document.hidden; if (run) requestAnimationFrame(tick); });
+  function tick() {
+    if (!run) return;
+    g.clearRect(0, 0, W, H);
+    for (var i = 0; i < flakes.length; i++) {
+      var f = flakes[i]; f.y += f.v * 0.45; f.x += Math.sin(f.s) * 0.35 + 0.12; f.s += 0.012 + f.z * 0.008;
+      if (f.y > H + 4) { f.y = -4; f.x = Math.random() * W; }
+      g.globalAlpha = f.a; g.beginPath(); g.arc(f.x, f.y, f.r, 0, 6.283); g.fillStyle = (i % 9 === 0) ? '#f0a35a' : '#d9cfc4'; g.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
+const RAW = 'https://raw.githubusercontent.com/ianingram/Amenti-Readings/main/';
+const ART = 'https://raw.githubusercontent.com/ianingram/Amenti.live/main/img/';
+const WORK = 'a-tale-of-two-cities';
+/* the same rule as ingest.py's slug_key, so a page asks for exactly the file the
+   plate tool wrote: dots and apostrophes vanish (J.R.R. Tolkien -> jrr-tolkien),
+   everything else that is not a-z0-9 becomes one hyphen. */
+const slug = s => String(s||'').toLowerCase().replace(/[.'\u2019]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const esc  = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ROLE = {'jarvis-lorry':'Mr Lorry','marquis-st-evremonde':'The Marquis St. Evr\u00e9monde','the-vengeance':'The Vengeance','the-seamstress':'The Seamstress','mender-of-roads':'The Mender of Roads','mrs-cruncher':'Mrs Cruncher','attorney-general':'The Attorney-General'};
+const pretty = k => ROLE[k] || String(k).split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' ').replace(/\bOf\b/g,'of');
+
+function face(el,name){
+  const img = new Image();
+  img.onload = () => { el.textContent=''; el.style.backgroundImage=`url("${ART}${slug(name)}-card.jpg")`; };
+  img.src = `${ART}${slug(name)}-card.jpg`;
+}
+function drawCompany(rows){
+  const co = document.getElementById('company');
+  co.innerHTML = rows.map(r => `
+    <div class="member">
+      <div class="face" data-name="${esc(r[1])}">&#9672;</div>
+      <div class="who">
+        <div class="role">${esc(r[0])}</div>
+        <div class="as">as played by</div>
+        <div class="actor">${esc(r[1])}</div>
+        <div class="dialect">${esc(r[2])}</div>
+      </div>
+    </div>`).join('');
+  co.querySelectorAll('.face').forEach(f => face(f, f.dataset.name));
+  document.getElementById('company-sub').textContent = rows.length + ' voices, drawn from the Amenti ledger';
+}
+function open(ep){
+  if (window.Amenti && window.Amenti.playbill) { window.Amenti.playbill.open(ep); return; }
+  alert('The speech engine did not load. The console says which part is missing.');
+}
+
+Promise.all([
+  fetch(RAW+'cast.json').then(r=>r.json()),
+  fetch(RAW+WORK+'/index.json').then(r=>r.json())
+]).then(([cast, idx]) => {
+  const roles = (cast.roles && cast.roles[WORK]) || {};
+  drawCompany(Object.keys(roles).map(k =>
+    [pretty(k), roles[k].ledger_name, (roles[k].ledger||'').split('\u00b7')[0].trim()]));
+  const ch = idx.chapters || [];
+  document.getElementById('ch-sub').textContent =
+    ch.length + ' chapters in three books \u00b7 ' + ch.filter(c=>c.status==='scripted').length + ' ready to hear';
+  document.getElementById('chapters').innerHTML = ch.map(c => `
+    <div class="ch ${c.status==='scripted'?'on':''}" ${c.status==='scripted'?`data-ep="${esc(c.file)}" tabindex="0" role="button"`:''}>
+      <div class="n">${c.n}</div>
+      <div class="doc">${esc((c.document||'').split('\u00b7')[1] || c.document || '')}</div>
+      <div class="sum">${esc(c.summary||'')}</div>
+      <div class="tag">${c.status==='scripted'?'ready':''}</div>
+    </div>`).join('');
+  document.querySelectorAll('.ch.on').forEach(row=>{
+    row.onclick = () => open(row.dataset.ep);
+    row.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(row.dataset.ep); } };
+  });
+  document.getElementById('note').innerHTML =
+    'Dickens narrates, as he read his own books aloud on stage, and speaks the minor parts; the principals are cast from the ledger. Forty-five chapters in three books: Recalled to Life, The Golden Thread, The Track of a Storm.' +
+    '<br>Faces appear where a plate exists; a mark stands in where one does not yet.';
+}).catch(() => {
+  drawCompany([
+    ['Sydney Carton','Christopher Hitchens',''],
+    ['Charles Darnay','Louis Philippe I',''],
+    ['Lucie Manette','Jane Goodall',''],
+    ['Doctor Manette','Nostradamus',''],
+    ['Mr Lorry','Isaac Newton',''],
+    ['Miss Pross','Emmeline Pankhurst',''],
+    ['Madame Defarge','Coco Chanel',''],
+    ['Ernest Defarge','Victor Hugo',''],
+    ['The Marquis','Marquis de Sade',''],
+    ['Stryver','Pompey',''],
+    ['John Barsad','Richard III of England',''],
+    ['Jerry Cruncher','Plautus',''],
+    ['The Vengeance','Edith Piaf',''],
+    ['The Seamstress','Marie Antoinette','']
+  ]);
+  document.getElementById('ch-sub').textContent = '45 chapters in three books';
+  document.getElementById('note').innerHTML =
+    'Showing the cast as written &mdash; the live repo could not be reached, so this page is being viewed as a local file.';
+});
+</script>
+<!-- THE ENGINE — the same five files, from the same place, as the Dracula page. -->
+<script src="https://amenti.live/amenti-core.bundle.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/reader.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/casting.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/playbill.js"></script>
+<script src="https://ianingram.github.io/Amenti-Readings/player/sound.js"></script>
+<script>
+/* ─── THE BED ───────────────────────────────────────────────────────────
+   The theme — the book's own score as one suite — under the title, when asked for: the overture, Recalled to Life, Soho, the Revolution, the Terror and Carton's farewell. Same rules as the
+   Dracula page: probed before the control appears, every gain ramped, played
+   on the engine's audio context so a reading opened from the staves can duck
+   it, faded when the tab is hidden. When a stave begins, the bed steps aside
+   so the reading's own sound has the room. */
+(function () {
+  var TRACKS = [
+    { url: 'https://ianingram.github.io/Amenti-Readings/a-tale-of-two-cities/sound/theme-two-cities.mp3', gain: 0.8 }
+  ];
+  var btn = document.getElementById('snd');
+  if (!btn) return;
+  var ctx = null, nodes = [], on = false, loading = false;
+  Promise.all(TRACKS.map(function (t) {
+    return fetch(t.url, { method: 'HEAD' }).then(function (r) { return r.ok; }).catch(function () { return false; });
+  })).then(function (ok) { if (ok.indexOf(true) < 0) btn.style.display = 'none'; });
+  function getCtx() {
+    var T = window.Amenti && window.Amenti.throttle;
+    if (T && typeof T.audioContext === 'function') return T.audioContext();
+    return new (window.AudioContext || window.webkitAudioContext)();
+  }
+  function fade(g, to, secs) {
+    var t = ctx.currentTime; g.gain.cancelScheduledValues(t);
+    g.gain.setValueAtTime(Math.max(g.gain.value, 0.0001), t);
+    if (to <= 0) { g.gain.exponentialRampToValueAtTime(0.0001, t + secs); g.gain.setValueAtTime(0, t + secs + 0.01); }
+    else g.gain.exponentialRampToValueAtTime(to, t + secs);
+  }
+  function start() {
+    if (loading) return; loading = true;
+    ctx = getCtx(); if (ctx.state === 'suspended') ctx.resume();
+    Promise.all(TRACKS.map(function (t) {
+      return fetch(t.url).then(function (r) { if (!r.ok) throw 0; return r.arrayBuffer(); })
+        .then(function (b) { return ctx.decodeAudioData(b); })
+        .then(function (buf) { return { buf: buf, gain: t.gain }; }).catch(function () { return null; });
+    })).then(function (loaded) {
+      var any = loaded.filter(Boolean);
+      if (!any.length) { btn.style.display = 'none'; return; }
+      any.forEach(function (t) {
+        var src = ctx.createBufferSource(); src.buffer = t.buf; src.loop = true;
+        var g = ctx.createGain(); g.gain.value = 0.0001;
+        src.connect(g); g.connect(ctx.destination); src.start(0); fade(g, t.gain, 6);
+        window.TI_THEME = { ctx: ctx, t0: ctx.currentTime, dur: t.buf.duration };   /* the voyage reads this clock */
+        nodes.push({ g: g, target: t.gain });
+      });
+      on = true; btn.classList.add('on'); btn.setAttribute('aria-label', 'Turn sound off'); loading = false;
+    });
+  }
+  function set(v) {
+    on = v; btn.classList.toggle('on', on); btn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+    nodes.forEach(function (n) { fade(n.g, on ? n.target : 0, on ? 4 : 3); });
+  }
+  btn.onclick = function () { if (!ctx) { start(); return; } if (ctx.state === 'suspended') ctx.resume(); set(!on); };
+  /* a stave is beginning: the title bed steps aside */
+  var R = window.Amenti && window.Amenti.reading;
+  if (R && typeof R.play === 'function') {
+    var _play = R.play;
+    R.play = function () { if (on) set(false); return _play.apply(R, arguments); };
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (!ctx || !on) return;
+    nodes.forEach(function (n) { fade(n.g, document.hidden ? 0.0001 : n.target, 1.5); });
+  });
+})();
+</script>
+<script>
+/* ─── THE OPENING ─────────────────────────────────────────────────────────
+   Each picture starts where its part of the suite starts (seconds into the
+   234-second theme): the overture 0:00 (France and England, the Dover mail),
+   Recalled to Life 0:34, Soho 1:04, the Revolution 1:34, the Terror 2:08, and
+   Carton's farewell from 2:38 to the end. The storyboard paintings (opening/),
+   one moment from each chapter named; each pushes in slowly. */
+(function () {
+  var hero = document.querySelector('.hero'), btn = document.getElementById('snd'), box = document.getElementById('voyage'), cap = document.getElementById('voycap');
+  if (!hero || !btn || !box) return;
+  var O = 'opening/';
+  var SCENES = [
+    [0,   'img', O + 'ch01-1.jpg',       'The Period · 1775'],
+    [9,   'img', O + 'b1-2-hill-0.jpg',  'The Mail'],
+    [18,  'img', O + 'b1-2-rider-0.jpg', 'Recalled to life'],
+    [26,  'img', O + 'b1-4-dover-0.jpg', 'Dover'],
+    [34,  'img', O + 'b1-5-cask-0.jpg',  'The wine-shop'],
+    [42,  'img', O + 'b1-6-garret-0.jpg','The shoemaker'],
+    [50,  'img', O + 'b1-6-hair-1.jpg',  'The golden hair'],
+    [57,  'img', O + 'ch08-1.jpg',       'The Old Bailey'],
+    [64,  'img', O + 'ch12-1.jpg',       'The corner in Soho'],
+    [72,  'img', O + 'ch23-0.jpg',       'One night'],
+    [80,  'img', O + 'ch14-0.jpg',       'Monseigneur in the country'],
+    [87,  'img', O + 'ch26-0.jpg',       'A plea'],
+    [94,  'img', O + 'ch21-0.jpg',       'Knitting'],
+    [102, 'img', O + 'ch27-0.jpg',       'The Bastille'],
+    [111, 'img', O + 'ch28-0.jpg',       'The sea still rises'],
+    [119, 'img', O + 'ch29-0.jpg',       'Fire rises'],
+    [128, 'img', O + 'ch31-0.jpg',       'In secret'],
+    [135, 'img', O + 'ch32-0.jpg',       'The grindstone'],
+    [142, 'img', O + 'ch36-0.jpg',       'Triumph'],
+    [150, 'img', O + 'ch35-0.jpg',       'The wood-sawyer'],
+    [158, 'img', O + 'ch40-0.jpg',       'The substance of the shadow'],
+    [168, 'img', O + 'ch43-0.jpg',       'Fifty-two'],
+    [180, 'img', O + 'ch41-0.jpg',       'Dusk'],
+    [192, 'img', O + 'ch44-0.jpg',       'The knitting done'],
+    [204, 'img', O + 'ch45-0.jpg',       'The footsteps die out for ever'],
+    [218, 'img', O + 'ch39-1.jpg',       'A far, far better thing']
+  ];
+  var els = SCENES.map(function (sc) {
+    var el;
+    if (sc[1] === 'vid') {
+      el = document.createElement('video'); el.muted = true; el.playsInline = true; el.setAttribute('playsinline', ''); el.preload = 'none';
+      el.dataset.src = sc[2]; el.dataset.from = sc[3]; el.dataset.to = sc[4];
+      el.addEventListener('timeupdate', function () { if (el.currentTime >= +el.dataset.to - 0.05) el.pause(); });   /* hold the last frame */
+    } else { el = document.createElement('div'); el.dataset.bg = sc[2]; }
+    el.className = 'scene'; box.appendChild(el); return el;
+  });
+  function prime(i) {                                   /* load a scene just before it is needed */
+    var el = els[i]; if (!el || el.dataset.primed) return; el.dataset.primed = 1;
+    if (el.tagName === 'VIDEO') { el.preload = 'auto'; el.src = el.dataset.src; }
+    else el.style.backgroundImage = "url('" + el.dataset.bg + "')";
+  }
+  function show(i) {
+    els.forEach(function (el, j) { el.classList.toggle('on', j === i); });
+    var el = els[i], sc = SCENES[i];
+    if (el.tagName === 'VIDEO') { try { el.currentTime = +el.dataset.from; } catch (e) {} var p = el.play(); if (p && p.catch) p.catch(function () {}); }
+    cap.classList.remove('on'); setTimeout(function () { cap.textContent = sc[sc.length - 1]; cap.classList.add('on'); }, 1200);
+  }
+  var shown = -1;
+  function frame() {
+    var T = window.TI_THEME, on = btn.classList.contains('on');
+    if (!T || !on) {
+      if (shown !== -1) { els.forEach(function (el) { el.classList.remove('on'); if (el.pause) el.pause(); }); cap.classList.remove('on'); hero.classList.remove('voyage'); shown = -1; }
+      return requestAnimationFrame(frame);
+    }
+    var t = (T.ctx.currentTime - T.t0) % T.dur, k = 0;
+    for (var i = 0; i < SCENES.length; i++) if (t >= SCENES[i][0]) k = i;
+    prime(k); prime(k + 1); if (k === SCENES.length - 1) prime(0);
+    if (k !== shown) { hero.classList.add('voyage'); show(k); shown = k; }
+    requestAnimationFrame(frame);
+  }
+  if (!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
