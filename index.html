@@ -190,7 +190,15 @@ const PRODUCTIONS = [
   { key:'a-tale-of-two-cities', title:'A Tale of Two Cities', author:'Charles Dickens', year:1859,
     art:'a-tale-of-two-cities/opening/ch39-1.jpg', href:'a-tale-of-two-cities/', ready:true,
     line:'London and Paris, 1775 to the Terror. Dickens narrates; Carton by Christopher '
-       + 'Hitchens, Madame Defarge by Coco Chanel, the Marquis by the Marquis de Sade.' }
+       + 'Hitchens, Madame Defarge by Coco Chanel, the Marquis by the Marquis de Sade.' },
+  { key:'the-gallic-war', title:'The Gallic War', author:'Julius Caesar', year:-50, yearText:'58\u201350 BC',
+    art:'the-gallic-war/opening/plate.jpg', href:'the-gallic-war/', ready:true, unit:'parts',
+    line:'All Gaul is divided into three parts. Caesar narrates his own war, 58\u201350 BC; '
+       + 'Divico by Hannibal, Ariovistus by Charlemagne, and Vercingetorix plays himself.' },
+  { key:'the-three-musketeers', title:'The Three Musketeers', author:'Alexandre Dumas', year:1844,
+    art:'the-three-musketeers/opening/op-four.jpg', href:'the-three-musketeers/', ready:true,
+    line:'Gascony to Paris, 1625. Dumas narrates; D\u2019Artagnan by Jules Verne, Milady by '
+       + 'Sarah Bernhardt, and the Cardinal plays himself.' }
 ];
 
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,
@@ -217,7 +225,7 @@ function card(p, counts){
     ${art}
     <div class="meta">
       <h2>${esc(p.title)}</h2>
-      <div class="by">${esc(p.author)} &middot; ${p.year}</div>
+      <div class="by">${esc(p.author)} &middot; ${p.yearText || p.year}</div>
       <div class="line">${esc(p.line)}</div>
       <div class="state">${state}</div>
     </div>`;
