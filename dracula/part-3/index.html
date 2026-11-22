@@ -139,6 +139,17 @@
   .p2 h2{font-family:var(--serif);font-weight:400;font-size:clamp(44px,8vw,100px);letter-spacing:.09em;color:#fff;margin:12px 0 0;line-height:1;
     text-shadow:0 2px 60px rgba(0,0,0,.85)}
   .p2 .acts{margin-top:30px;display:flex;gap:14px;flex-wrap:wrap}
+
+  /* ── the curtain call (22 Nov 2026, Ian): each player a full page, the character and who plays them ── */
+  .cc{position:absolute;inset:0;z-index:4;opacity:0;transition:opacity 1.4s ease;display:flex;align-items:stretch;background:#05070a}
+  .cc.on{opacity:1}
+  .cc .ph{flex:0 0 50%;background-size:cover;background-position:center 25%;transform:scale(1.04);transition:transform 7s ease-out}
+  .cc.on .ph{transform:scale(1)}
+  .cc .tx{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 clamp(24px,6vw,96px)}
+  .cc .who{font-family:var(--serif);font-weight:400;font-size:clamp(34px,5.4vw,76px);color:#fff;line-height:1.02;letter-spacing:.02em}
+  .cc .by{font-size:13px;letter-spacing:.42em;color:var(--gold);text-transform:uppercase;margin:28px 0 10px}
+  .cc .fig{font-family:var(--serif);font-style:italic;font-size:clamp(20px,2.6vw,34px);color:var(--pale)}
+  @media (max-width:700px){.cc{flex-direction:column}.cc .ph{flex:0 0 58%}.cc .tx{padding:22px 24px}}
   @media (prefers-reduced-motion:reduce){.sc.kb{animation:none}}
 </style>
 </head>
@@ -202,6 +213,8 @@
     <div class="k">Seven years later</div>
     <div class="t">Abraham Van Helsing</div>
   </div>
+  <div class="cc" id="cc-a"><div class="ph"></div><div class="tx"><div class="who"></div><div class="by">played by</div><div class="fig"></div></div></div>
+  <div class="cc" id="cc-b"><div class="ph"></div><div class="tx"><div class="who"></div><div class="by">played by</div><div class="fig"></div></div></div>
   <div class="roll" id="roll"><div class="in" id="roll-in"></div></div>
   <div class="blk p2" id="end-2">
     <div class="cr-a">Bram Stoker &middot; Dracula</div>
@@ -472,7 +485,35 @@
     var t = function (s, fn) { endT.push(setTimeout(fn, s * 1000)); };
     t(3, function () { $('end-1').classList.add('on'); });
     t(17, function () { $('end-1').classList.remove('on'); });
-    t(19, rollCredits);
+    t(19, curtainCall);
+  }
+  /* THE CURTAIN CALL · 22 Nov 2026 (Ian: "each cast member gets a full page… kind of a curtain call").
+     The smaller parts first, the leads last; each character in their own painting from the book. */
+  var CURTAIN = [
+    ['The Narrator', 'Bram Stoker', 'ch27-papers-1.jpg'],
+    ['Renfield', 'Jack the Ripper', 'ref/bk2-renfield.jpg'],
+    ['The Fair Woman', 'Empress Elisabeth of Austria', 'ch03-i1-1.jpg'],
+    ['Quincey Morris', 'Lyndon B. Johnson', 'ref/bk2-quincey.jpg'],
+    ['Arthur Holmwood', 'J.R.R. Tolkien', 'ref/bk2-arthur.jpg'],
+    ['Lucy Westenra', 'Mary Shelley', 'ref/bk2-lucy.jpg'],
+    ['Dr John Seward', 'William Harvey', 'ref/bk2-seward.jpg'],
+    ['Professor Van Helsing', 'Antony van Leeuwenhoek', 'ref/bk2-van-helsing.jpg'],
+    ['Jonathan Harker', 'Charles Darwin', 'ref/bk3-jonathan-white.jpg'],
+    ['Mina Murray', 'Agatha Christie', 'ref/bk2-mina.jpg'],
+    ['Count Dracula', 'Vlad the Impaler', 'ref/bk1-count.jpg']];
+  var CC_SECS = 5.2;
+  CURTAIN.forEach(function (c) { var i = new Image(); i.src = ART + c[2]; });
+  function curtainCall() {
+    $('end').classList.add('rolling'); var k = 0, flip = 0;
+    (function next() {
+      var a = $(flip ? 'cc-b' : 'cc-a'), b = $(flip ? 'cc-a' : 'cc-b');
+      if (k >= CURTAIN.length) { b.classList.remove('on'); a.classList.remove('on'); endT.push(setTimeout(rollCredits, 1500)); return; }
+      var c = CURTAIN[k++];
+      a.querySelector('.ph').style.backgroundImage = 'url("' + ART + c[2] + '")';
+      a.querySelector('.who').textContent = c[0]; a.querySelector('.fig').textContent = c[1];
+      a.classList.remove('on'); void a.offsetWidth; a.classList.add('on'); b.classList.remove('on');
+      flip = 1 - flip; endT.push(setTimeout(next, CC_SECS * 1000));
+    })();
   }
   function rollCredits() {
     var r = $('roll'), inr = $('roll-in');
