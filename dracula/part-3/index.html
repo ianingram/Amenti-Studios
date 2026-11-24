@@ -297,7 +297,7 @@
   $('cast').innerHTML = CAST.map(function (c) { return '<div><div class="who">' + c[0] + '</div><div class="as">as ' + c[1] + '</div></div>'; }).join('');
 
   /* ── audio: one context for the film and the ending, made inside the first click ── */
-  var ctx = null, bufs = {}, master = null, srcs = [];
+  var ctx = null, bufs = {}, master = null, srcs = [], reading = false;   /* 24 Nov: once the reading starts, no film sound may start late */
   function audioCtx() {
     if (!ctx) { var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null; ctx = new AC(); master = ctx.createGain(); master.connect(ctx.destination); }
     if (ctx.state === 'suspended') ctx.resume();
@@ -311,6 +311,7 @@
   function playLoop(name, level, fadeIn, delay) {
     if (!audioCtx()) return;
     buf(name).then(function (b) {
+      if (reading) return;                 /* its file finished loading after the reading began (the sea and wind kept looping under Chapter XVII) */
       var s = ctx.createBufferSource(), g = ctx.createGain(); s.buffer = b; s.loop = true;
       var t = ctx.currentTime + (delay || 0);
       g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(level, t + (fadeIn || 3));
@@ -321,6 +322,7 @@
   function playOnce(name, level, delay, rate) {
     if (!audioCtx()) return;
     buf(name).then(function (b) {
+      if (reading) return;
       var s = ctx.createBufferSource(), g = ctx.createGain(); s.buffer = b; s.playbackRate.value = rate || 1;
       var t = ctx.currentTime + (delay || 0);
       g.gain.setValueAtTime(level, t); s.connect(g); g.connect(master); s.start(t);
@@ -380,7 +382,7 @@
     });
   }
   function film() {
-    clearFilm(); filmOn = true;
+    clearFilm(); filmOn = true; reading = false;
     $('hero').classList.add('playing'); $('start').classList.add('gone');
     $('title').classList.remove('on', 'ready'); $('credit').classList.remove('on');
     /* London to music of the boxes; at sea the pursuit takes over (132 BPM, the gallop east) with the sea under
@@ -434,6 +436,7 @@
   function startAt(k, seekN) {
     if (!R) { alert('The speech engine did not load. Check the console — the reader says so plainly.'); return; }
     audioCtx(); if (R.unlock) R.unlock();
+    clearFilm(); filmOn = false; reading = true;     /* stop the film's timers too: its sea and wind were scheduled for later */
     fadeAll(3); running = true; at = k;
     card(k, function () { playCh(k, seekN); });
   }
@@ -477,7 +480,7 @@
   }
   var endT = [];
   function ending() {
-    endT.forEach(clearTimeout); endT = [];
+    endT.forEach(clearTimeout); endT = []; reading = false;
     var E = $('end'); E.classList.add('on');
     bg($('end-a'), ART + 'ch27-oldground-0.jpg', null); $('end-a').classList.add('on'); $('end-b').classList.remove('on');
     $('end-1').classList.remove('on'); $('end-2').classList.remove('on'); $('roll').classList.remove('on'); E.classList.remove('rolling');
