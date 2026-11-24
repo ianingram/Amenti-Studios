@@ -438,7 +438,9 @@
     audioCtx(); if (R.unlock) R.unlock();
     clearFilm(); filmOn = false; reading = true;     /* stop the film's timers too: its sea and wind were scheduled for later */
     fadeAll(3); running = true; at = k;
-    card(k, function () { playCh(k, seekN); });
+    /* 24 Nov (Ian: the intro score is discontinuous): the reading starts WITH the cards, so the chapter's
+       32 s lead of score plays under them instead of after 12 s of silence; playCh lifts the card when it ends */
+    card(k, function () {}); playCh(k, seekN);
   }
   /* the Chronometer can steer the book: a date or chapter tapped on the dial (25 Oct 2026) */
   window.amentiChronoJump = function (ep, n) {
